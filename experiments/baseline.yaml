@@ -1,0 +1,15 @@
+name: baseline_mock_pipeline
+description: Baseline experiment for the mock DeepResearch Agent pipeline.
+dataset: data/benchmarks/researchbench.jsonl
+suite: researchbench
+experiments: baseline
+llm_backend: mock
+planner_mode: template
+metrics:
+  - factual_accuracy
+  - hallucination_rate
+  - citation_coverage
+  - weak_support_rate
+  - atomic_support_rate
+  - repair_precision
+  - judge_score

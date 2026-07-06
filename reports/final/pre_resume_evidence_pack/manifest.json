@@ -1,0 +1,123 @@
+{
+  "generated_at": "2026-07-06T14:03:35",
+  "output_dir": "reports\\final\\pre_resume_evidence_pack",
+  "source_artifacts": {
+    "extended_run": "reports\\experiments\\20260705_020934_092414_researchbench_263e905e",
+    "formal_verifier": "reports\\verifier_benchmark\\formal_deepseek_v4_flash_120x3",
+    "final_pack": "reports\\final\\final_sprint_check",
+    "web_demo_screenshot": "docs\\assets\\web_demo_showcase.png"
+  },
+  "datasets": {
+    "researchbench": {
+      "path": "data/benchmarks/researchbench.jsonl",
+      "case_count": 35,
+      "answer_type_counts": {
+        "factual_explanation": 29,
+        "multi_hop_reasoning": 1,
+        "risk_analysis": 2,
+        "technical_comparison": 1,
+        "solution_design": 2
+      },
+      "domain_counts": {
+        "citation_verification": 3,
+        "agent_orchestration": 5,
+        "memory_retrieval": 3,
+        "context_compression": 2,
+        "redblue_repair": 3,
+        "evaluation": 5,
+        "multi_hop": 2,
+        "llm_backend": 3,
+        "engineering_tradeoff": 5,
+        "reliability": 2,
+        "rag_system": 2
+      },
+      "difficulty_counts": {
+        "easy": 11,
+        "medium": 19,
+        "hard": 5
+      },
+      "suite_source_counts": {
+        "researchbench": 35
+      },
+      "average_required_hops": 1.4,
+      "multi_hop_count": 13,
+      "hotpot_style_count": 6
+    },
+    "researchbench_extended": {
+      "path": "data/benchmarks/researchbench_extended.jsonl",
+      "case_count": 60,
+      "answer_type_counts": {
+        "factual_explanation": 12,
+        "multi_hop_reasoning": 12,
+        "risk_analysis": 12,
+        "technical_comparison": 12,
+        "solution_design": 12
+      },
+      "domain_counts": {
+        "citation_verification": 11,
+        "memory_retrieval": 2,
+        "context_compression": 4,
+        "llm_backend": 6,
+        "rag_system": 8,
+        "evaluation": 7,
+        "redblue_repair": 5,
+        "agent_orchestration": 4,
+        "engineering_tradeoff": 11,
+        "reliability": 2
+      },
+      "difficulty_counts": {
+        "easy": 13,
+        "medium": 42,
+        "hard": 5
+      },
+      "suite_source_counts": {
+        "researchbench_extended": 60
+      },
+      "average_required_hops": 1.2,
+      "multi_hop_count": 12,
+      "hotpot_style_count": 12
+    }
+  },
+  "extended_ablation": {
+    "run_id": "20260705_020934_092414_researchbench_263e905e",
+    "dataset": "data\\benchmarks\\researchbench_extended.jsonl",
+    "profiles": [
+      "baseline",
+      "full",
+      "redblue",
+      "verifier"
+    ],
+    "baseline_judge": 0.7642222222222216,
+    "verifier_judge": 0.8720000000000001,
+    "redblue_judge": 0.8807777777777778,
+    "full_judge": 0.8796666666666667,
+    "judge_delta_full_vs_baseline": 0.11544444444444513,
+    "baseline_weak_support_rate": 1.0,
+    "full_weak_support_rate": 0.4305555555555557,
+    "weak_support_delta_full_vs_baseline": -0.5694444444444443,
+    "full_repair_precision": 0.9444444444444444,
+    "full_repair_coverage": 1.0,
+    "full_macro_note": "End-to-end pipeline metric, not verifier-only macro-F1."
+  },
+  "formal_verifier": {
+    "dataset": "synthetic_balanced_verifier",
+    "model": "deepseek-v4-flash",
+    "repetitions": 3,
+    "case_count_per_repetition": 120,
+    "total_cases": 360,
+    "accuracy": 0.8416666666666667,
+    "heuristic_accuracy_mean": 0.4666666666666666,
+    "macro_precision": 0.856558391686102,
+    "macro_recall": 0.8416666666666667,
+    "macro_f1": 0.830781834161506,
+    "estimated_cost_rmb": 0.05893803,
+    "total_tokens": 63211
+  },
+  "boundaries": [
+    "Extended ResearchBench metrics are offline/mock pipeline metrics.",
+    "Formal verifier benchmark is claim/evidence classification, not end-to-end DeepResearch quality.",
+    "DeepSeek provider outputs are real API calls but remain separate from offline/mock benchmark metrics.",
+    "The Web Demo is a local portfolio app, not a production multi-user SaaS."
+  ],
+  "ready_for_resume_draft": true
+}

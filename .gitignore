@@ -1,0 +1,71 @@
+# Python / tooling caches
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.uv-cache/
+
+# Virtual environments and build outputs
+.venv/
+venv/
+dist/
+build/
+
+# Local Codex/app metadata
+.agents/
+.codex/
+
+# Secrets
+.env
+
+# Runtime databases / vector stores
+*.sqlite3
+*.db
+*.npz
+data/memory/
+
+# Keep source datasets, docs, and selected frozen evidence.
+# Ignore ad-hoc report outputs by default.
+reports/*
+!reports/.gitkeep
+
+# Small examples are safe to keep.
+!reports/examples/
+!reports/examples/**
+
+# Demo default showcase used by the local Web app.
+!reports/showcase/
+reports/showcase/*
+!reports/showcase/final_check/
+!reports/showcase/final_check/**
+
+# Final frozen project evidence.
+!reports/final/
+reports/final/*
+!reports/final/final_sprint_check/
+!reports/final/final_sprint_check/**
+!reports/final/pre_resume_evidence_pack/
+!reports/final/pre_resume_evidence_pack/**
+
+# Frozen benchmark runs referenced by README / traceability docs.
+!reports/experiments/
+reports/experiments/*
+!reports/experiments/20260702_162345_148429_researchbench_21c535de/
+!reports/experiments/20260702_162345_148429_researchbench_21c535de/**
+!reports/experiments/20260702_163315_852511_adversarial_f47f9b96/
+!reports/experiments/20260702_163315_852511_adversarial_f47f9b96/**
+!reports/experiments/20260705_020934_092414_researchbench_263e905e/
+!reports/experiments/20260705_020934_092414_researchbench_263e905e/**
+
+# Formal DeepSeek verifier benchmark aggregate and repetitions.
+!reports/verifier_benchmark/
+reports/verifier_benchmark/*
+!reports/verifier_benchmark/formal_deepseek_v4_flash_120x3/
+!reports/verifier_benchmark/formal_deepseek_v4_flash_120x3/**
+
+# Re-apply binary/runtime ignores inside selected report directories.
+reports/**/*.sqlite3
+reports/**/*.db
+reports/**/*.npz

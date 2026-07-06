@@ -1,0 +1,46 @@
+import json
+
+import pytest
+
+from deepresearch_agent.corpus_profiles import (
+    build_profile,
+    get_corpus_profile,
+    list_corpus_profiles,
+)
+
+
+def test_list_corpus_profiles_contains_resume_ready_profiles() -> None:
+    keys = {profile.key for profile in list_corpus_profiles()}
+
+    assert keys >= {"offline_agent_docs", "resume_agent_docs", "paper_reading_docs"}
+
+
+def test_build_profile_writes_searcher_compatible_jsonl(tmp_path) -> None:
+    source_dir = tmp_path / "source"
+    source_dir.mkdir()
+    (source_dir / "agent.md").write_text(
+        "# Agent KB\n\nDeepResearch keeps citation quotes for verifier and repair traces.",
+        encoding="utf-8",
+    )
+    profile = get_corpus_profile("resume_agent_docs")
+    local_profile = type(profile)(
+        key=profile.key,
+        name=profile.name,
+        description=profile.description,
+        source_dir=source_dir,
+        output_path=tmp_path / "resume_agent_docs.jsonl",
+    )
+
+    output = build_profile(local_profile)
+    rows = [json.loads(line) for line in output.read_text(encoding="utf-8").splitlines()]
+
+    assert rows
+    assert rows[0]["source_type"] == "corpus_profile"
+    assert rows[0]["profile"] == "resume_agent_docs"
+    assert "citation" in rows[0]["topics"]
+    assert rows[0]["url"].startswith("profile://resume_agent_docs/")
+
+
+def test_unknown_profile_has_clear_error() -> None:
+    with pytest.raises(KeyError, match="Unknown corpus profile"):
+        get_corpus_profile("missing")

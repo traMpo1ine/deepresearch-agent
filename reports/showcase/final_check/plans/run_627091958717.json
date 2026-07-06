@@ -1,0 +1,192 @@
+{
+  "root_question": "为什么 DeepResearch Agent 需要引用验证？",
+  "tasks": [
+    {
+      "question": "为什么 DeepResearch Agent 需要引用验证？",
+      "id": "task_69e50ac5c6af",
+      "task_type": "root",
+      "parent_id": null,
+      "dependencies": [],
+      "status": "pending",
+      "priority": 0,
+      "expected_evidence": "Clarify the user's full research intent.",
+      "retry_count": 0,
+      "max_retries": 1,
+      "timeout_seconds": 30.0,
+      "error": null,
+      "created_at": "2026-06-27T12:39:27.091324+00:00",
+      "updated_at": "2026-06-27T12:39:27.091324+00:00"
+    },
+    {
+      "question": "Establish the background concepts and scope for: 为什么 DeepResearch Agent 需要引用验证？",
+      "id": "task_989200526d4c",
+      "task_type": "search",
+      "parent_id": "task_69e50ac5c6af",
+      "dependencies": [
+        "task_69e50ac5c6af"
+      ],
+      "status": "pending",
+      "priority": 1,
+      "expected_evidence": "Find evidence about: Establish the background concepts and scope for: 为什么 DeepResearch Agent 需要引用验证？",
+      "retry_count": 0,
+      "max_retries": 1,
+      "timeout_seconds": 30.0,
+      "error": null,
+      "created_at": "2026-06-27T12:39:27.091324+00:00",
+      "updated_at": "2026-06-27T12:39:27.091324+00:00"
+    },
+    {
+      "question": "Identify failure modes, reliability risks, and affected claims for: 为什么 DeepResearch Agent 需要引用验证？",
+      "id": "task_33d912dc205b",
+      "task_type": "search",
+      "parent_id": "task_69e50ac5c6af",
+      "dependencies": [
+        "task_69e50ac5c6af"
+      ],
+      "status": "pending",
+      "priority": 2,
+      "expected_evidence": "Find evidence about: Identify failure modes, reliability risks, and affected claims for: 为什么 DeepResearch Agent 需要引用验证？",
+      "retry_count": 0,
+      "max_retries": 1,
+      "timeout_seconds": 30.0,
+      "error": null,
+      "created_at": "2026-06-27T12:39:27.091324+00:00",
+      "updated_at": "2026-06-27T12:39:27.091324+00:00"
+    },
+    {
+      "question": "Investigate implementation mechanisms and mitigations for: 为什么 DeepResearch Agent 需要引用验证？",
+      "id": "task_b985eb204147",
+      "task_type": "search",
+      "parent_id": "task_69e50ac5c6af",
+      "dependencies": [
+        "task_69e50ac5c6af",
+        "task_33d912dc205b"
+      ],
+      "status": "pending",
+      "priority": 3,
+      "expected_evidence": "Find evidence about: Investigate implementation mechanisms and mitigations for: 为什么 DeepResearch Agent 需要引用验证？",
+      "retry_count": 0,
+      "max_retries": 1,
+      "timeout_seconds": 30.0,
+      "error": null,
+      "created_at": "2026-06-27T12:39:27.091324+00:00",
+      "updated_at": "2026-06-27T12:39:27.091324+00:00"
+    },
+    {
+      "question": "Define evaluation metrics and verification criteria for: 为什么 DeepResearch Agent 需要引用验证？",
+      "id": "task_94b53b633d24",
+      "task_type": "search",
+      "parent_id": "task_69e50ac5c6af",
+      "dependencies": [
+        "task_69e50ac5c6af",
+        "task_33d912dc205b",
+        "task_b985eb204147"
+      ],
+      "status": "pending",
+      "priority": 4,
+      "expected_evidence": "Find evidence about: Define evaluation metrics and verification criteria for: 为什么 DeepResearch Agent 需要引用验证？",
+      "retry_count": 0,
+      "max_retries": 1,
+      "timeout_seconds": 30.0,
+      "error": null,
+      "created_at": "2026-06-27T12:39:27.091324+00:00",
+      "updated_at": "2026-06-27T12:39:27.091324+00:00"
+    },
+    {
+      "question": "Analyze residual tradeoffs and limitations after mitigation for: 为什么 DeepResearch Agent 需要引用验证？",
+      "id": "task_05b44a535f1f",
+      "task_type": "search",
+      "parent_id": "task_69e50ac5c6af",
+      "dependencies": [
+        "task_69e50ac5c6af",
+        "task_b985eb204147"
+      ],
+      "status": "pending",
+      "priority": 5,
+      "expected_evidence": "Find evidence about: Analyze residual tradeoffs and limitations after mitigation for: 为什么 DeepResearch Agent 需要引用验证？",
+      "retry_count": 0,
+      "max_retries": 1,
+      "timeout_seconds": 30.0,
+      "error": null,
+      "created_at": "2026-06-27T12:39:27.091324+00:00",
+      "updated_at": "2026-06-27T12:39:27.091324+00:00"
+    },
+    {
+      "question": "Synthesize evidence into a cited research answer for: 为什么 DeepResearch Agent 需要引用验证？",
+      "id": "task_d587e6803dba",
+      "task_type": "synthesize",
+      "parent_id": "task_69e50ac5c6af",
+      "dependencies": [
+        "task_989200526d4c",
+        "task_33d912dc205b",
+        "task_b985eb204147",
+        "task_94b53b633d24",
+        "task_05b44a535f1f"
+      ],
+      "status": "pending",
+      "priority": 10,
+      "expected_evidence": "Use retrieved evidence to draft report claims and sections.",
+      "retry_count": 0,
+      "max_retries": 1,
+      "timeout_seconds": 30.0,
+      "error": null,
+      "created_at": "2026-06-27T12:39:27.091324+00:00",
+      "updated_at": "2026-06-27T12:39:27.091324+00:00"
+    },
+    {
+      "question": "Verify claim-evidence alignment for: 为什么 DeepResearch Agent 需要引用验证？",
+      "id": "task_b26843bec991",
+      "task_type": "verify",
+      "parent_id": "task_69e50ac5c6af",
+      "dependencies": [
+        "task_d587e6803dba"
+      ],
+      "status": "pending",
+      "priority": 11,
+      "expected_evidence": "Check unsupported claims, missing citations, and contradictions.",
+      "retry_count": 0,
+      "max_retries": 1,
+      "timeout_seconds": 30.0,
+      "error": null,
+      "created_at": "2026-06-27T12:39:27.091324+00:00",
+      "updated_at": "2026-06-27T12:39:27.091324+00:00"
+    },
+    {
+      "question": "Repair weak claims for: 为什么 DeepResearch Agent 需要引用验证？",
+      "id": "task_d2a0d8135b3e",
+      "task_type": "repair",
+      "parent_id": "task_69e50ac5c6af",
+      "dependencies": [
+        "task_b26843bec991"
+      ],
+      "status": "pending",
+      "priority": 12,
+      "expected_evidence": "Apply ADD, DELETE, MODIFY, or VERIFY actions when needed.",
+      "retry_count": 0,
+      "max_retries": 1,
+      "timeout_seconds": 30.0,
+      "error": null,
+      "created_at": "2026-06-27T12:39:27.091324+00:00",
+      "updated_at": "2026-06-27T12:39:27.091324+00:00"
+    }
+  ],
+  "rationale": "Use the heuristic planner for a risk_analysis question, gather evidence through dependency-aware subtasks, then synthesize, verify, and repair.",
+  "plan_type": "risk_analysis",
+  "sub_questions": [
+    "Establish the background concepts and scope for: 为什么 DeepResearch Agent 需要引用验证？",
+    "Identify failure modes, reliability risks, and affected claims for: 为什么 DeepResearch Agent 需要引用验证？",
+    "Investigate implementation mechanisms and mitigations for: 为什么 DeepResearch Agent 需要引用验证？",
+    "Define evaluation metrics and verification criteria for: 为什么 DeepResearch Agent 需要引用验证？",
+    "Analyze residual tradeoffs and limitations after mitigation for: 为什么 DeepResearch Agent 需要引用验证？"
+  ],
+  "quality_report": {
+    "task_count": 9,
+    "dependency_count": 16,
+    "has_background": true,
+    "has_implementation": true,
+    "has_risk": true,
+    "has_evaluation": true,
+    "has_tradeoffs": true,
+    "issues": []
+  }
+}

@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>DeepResearch Agent Demo</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <h1>DeepResearch Agent Demo</h1>
+        <p id="healthText">Loading backend status...</p>
+      </div>
+      <button id="loadDefaultBtn" type="button">Load Default Pack</button>
+    </header>
+
+    <main class="layout">
+      <aside class="sidebar">
+        <section>
+          <h2>Run</h2>
+          <label for="questionInput">Question</label>
+          <textarea id="questionInput" rows="5">为什么 DeepResearch Agent 需要引用验证？</textarea>
+          <label for="corpusProfile">Corpus profile</label>
+          <select id="corpusProfile">
+            <option value="offline_agent_docs">Offline Agent Docs</option>
+          </select>
+          <div class="row">
+            <label for="repairRounds">Repair rounds</label>
+            <input id="repairRounds" min="0" max="5" value="2" type="number" />
+          </div>
+          <button id="startRunBtn" type="button">Start Mock Run</button>
+          <p id="runStatus" class="status">No demo run started.</p>
+        </section>
+
+        <section>
+          <h2>DeepSeek Smoke</h2>
+          <label for="deepseekQuestion">Question</label>
+          <textarea id="deepseekQuestion" rows="4">为什么 DeepResearch Agent 需要引用验证和 Red-Blue 修复？</textarea>
+          <div class="row">
+            <label for="deepseekTokens">Max tokens</label>
+            <input id="deepseekTokens" min="64" max="2048" value="512" type="number" />
+          </div>
+          <label class="checkline">
+            <input id="runRealDeepSeek" type="checkbox" />
+            Call real provider
+          </label>
+          <button id="deepseekBtn" type="button">Run Provider Smoke</button>
+          <p id="deepseekStatus" class="status">Dry-run by default.</p>
+        </section>
+      </aside>
+
+      <section class="content">
+        <nav class="tabs" aria-label="Demo sections">
+          <button class="tab active" data-panel="overviewPanel" type="button">Overview</button>
+          <button class="tab" data-panel="planPanel" type="button">Plan DAG</button>
+          <button class="tab" data-panel="reportPanel" type="button">Report</button>
+          <button class="tab" data-panel="evidencePanel" type="button">Evidence & Memory</button>
+          <button class="tab" data-panel="verificationPanel" type="button">Verification & Repair</button>
+        </nav>
+
+        <section id="overviewPanel" class="panel active">
+          <h2>Overview</h2>
+          <div id="overviewGrid" class="metric-grid"></div>
+          <h3>LLM Backend</h3>
+          <pre id="backendTrace"></pre>
+        </section>
+
+        <section id="planPanel" class="panel">
+          <h2>Plan DAG</h2>
+          <div id="taskList" class="task-list"></div>
+          <h3>Mermaid</h3>
+          <pre id="planMermaid"></pre>
+        </section>
+
+        <section id="reportPanel" class="panel">
+          <h2>Report</h2>
+          <div id="claimsList" class="claim-list"></div>
+          <h3>Markdown</h3>
+          <pre id="reportMarkdown"></pre>
+        </section>
+
+        <section id="evidencePanel" class="panel">
+          <h2>Evidence & Memory</h2>
+          <div id="evidenceList" class="evidence-list"></div>
+          <h3>Memory Trace</h3>
+          <pre id="memoryTrace"></pre>
+        </section>
+
+        <section id="verificationPanel" class="panel">
+          <h2>Verification & Repair</h2>
+          <div id="repairSummary" class="repair-summary"></div>
+          <h3>Verifier Trace</h3>
+          <pre id="verifierTrace"></pre>
+          <h3>Red-Blue Trace</h3>
+          <pre id="redblueTrace"></pre>
+        </section>
+      </section>
+    </main>
+
+    <script src="/static/app.js"></script>
+  </body>
+</html>

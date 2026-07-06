@@ -1,0 +1,630 @@
+{
+  "run_id": "run_e924ae8a7b05",
+  "question": "Why does DeepResearch need atomic verification and Red-Blue repair?",
+  "title": "DeepResearch Agent Offline Research Report",
+  "summary": "A credible DeepResearch Agent should be engineered as an inspectable pipeline: planning creates task structure, retrieval and memory provide evidence, compression keeps useful context, and verification plus repair reduce unsupported claims.",
+  "created_at": "2026-05-22T12:23:59.335505+00:00",
+  "sections": [
+    {
+      "title": "System Design",
+      "body": "The offline pipeline decomposes the research question, retrieves local evidence, compresses context, writes cited claims, and verifies the claim-evidence relation.",
+      "claim_ids": [
+        "claim_804794d499d9"
+      ]
+    },
+    {
+      "title": "Reliability Mechanisms",
+      "body": "Citation tracking, verifier traces, and Red-Blue repair actions make failure modes visible instead of hiding them inside a final answer.",
+      "claim_ids": [
+        "claim_4a520477d756",
+        "claim_b218b119f8bd"
+      ]
+    },
+    {
+      "title": "Compressed Evidence Snapshot",
+      "body": "[ev_eda1a159716d] Generated research reports are more trustworthy when important claims are bound to inspectable citations.\n[ev_28f1d60710e2] Runs, tasks, evidence, claims, reports, and agent events can be stored in relational tables.\n[ev_d189d3bf1ca1] In a research agent, multi-hop tasks test whether the system can connect planner decomposition, retrieval, synthesis, and verification rather than answer from a single snippet.\n[ev_8a20388bcfd0] A planner decomposes the user question into search, reading, synthesis, verification, and repair tasks.\n[ev_44fb121c9d84] The repair log should keep before and after text so improvements are auditable.\n[ev_9e392d1d920a] A strong technical blog explains the problem, design choices, implementation details, experiments, failures, and next steps.\n[ev_83eb6d2212bc] Metrics such as citation coverage and hallucination rate should come from reproducible evaluation scripts.\n[ev_440955502f7b] TextRank scores sentences by building a sentence similarity graph and running a PageRank-style iteration.\n[ev_440955502f7b] Compression that drops the cited quote can make later verification unreliable.\n[ev_9a0d4d4dd00a] For internship preparation, blog posts shou",
+      "claim_ids": []
+    }
+  ],
+  "claims": [
+    {
+      "text": "DeepResearch Agent should bind important claims to inspectable evidence and source chunks.",
+      "citation_ids": [
+        "ev_eda1a159716d"
+      ],
+      "id": "claim_804794d499d9",
+      "verification_status": "supported",
+      "confidence": 0.75,
+      "needs_verification": false,
+      "verification_reason": "Matched 4/7 important terms; missing=['agent', 'chunks', 'deepresearch'].",
+      "matched_evidence_ids": [
+        "ev_eda1a159716d"
+      ],
+      "missing_terms": [
+        "agent",
+        "chunks",
+        "deepresearch"
+      ],
+      "verification_trace": {
+        "claim_id": "claim_804794d499d9",
+        "status": "supported",
+        "matched_evidence_ids": [
+          "ev_eda1a159716d"
+        ],
+        "support_terms": [
+          "claims",
+          "evidence",
+          "inspectable",
+          "source"
+        ],
+        "missing_terms": [
+          "agent",
+          "chunks",
+          "deepresearch"
+        ],
+        "reason": "Matched 4/7 important terms; missing=['agent', 'chunks', 'deepresearch'].",
+        "citation_presence": true,
+        "term_overlap": 0.55,
+        "quote_overlap": 0.2,
+        "contradiction_cues": [],
+        "support_level": "supported",
+        "atomic_claims": [
+          "DeepResearch Agent should bind important claims to inspectable evidence",
+          "source chunks"
+        ],
+        "atomic_results": [
+          {
+            "text": "DeepResearch Agent should bind important claims to inspectable evidence",
+            "status": "supported",
+            "support_terms": [
+              "claims",
+              "evidence",
+              "inspectable"
+            ],
+            "missing_terms": [
+              "agent",
+              "deepresearch"
+            ],
+            "term_overlap": 0.6,
+            "quote_overlap": 0.4,
+            "contradiction_cues": [],
+            "reason": "Atomic claim matched 3/5 important terms; status=supported."
+          },
+          {
+            "text": "source chunks",
+            "status": "supported",
+            "support_terms": [
+              "source"
+            ],
+            "missing_terms": [
+              "chunks"
+            ],
+            "term_overlap": 0.5,
+            "quote_overlap": 0.0,
+            "contradiction_cues": [],
+            "reason": "Atomic claim matched 1/2 important terms; status=supported."
+          }
+        ],
+        "id": "trace_87def62ad794"
+      }
+    },
+    {
+      "text": "Evidence suggests that a DAG coordinator with asyncio and semaphores can run independent research tasks concurrently while preserving dependency order.",
+      "citation_ids": [
+        "ev_8a20388bcfd0"
+      ],
+      "id": "claim_4a520477d756",
+      "verification_status": "partial",
+      "confidence": 0.6,
+      "needs_verification": true,
+      "verification_reason": "Matched 5/12 important terms; missing=['asyncio', 'coordinator', 'dependency', 'order', 'preserving'].",
+      "matched_evidence_ids": [
+        "ev_8a20388bcfd0"
+      ],
+      "missing_terms": [
+        "asyncio",
+        "coordinator",
+        "dependency",
+        "order",
+        "preserving",
+        "semaphores",
+        "suggests"
+      ],
+      "verification_trace": {
+        "claim_id": "claim_4a520477d756",
+        "status": "partial",
+        "matched_evidence_ids": [
+          "ev_8a20388bcfd0"
+        ],
+        "support_terms": [
+          "concurrently",
+          "evidence",
+          "independent",
+          "research",
+          "tasks"
+        ],
+        "missing_terms": [
+          "asyncio",
+          "coordinator",
+          "dependency",
+          "order",
+          "preserving",
+          "semaphores",
+          "suggests"
+        ],
+        "reason": "Matched 5/12 important terms; missing=['asyncio', 'coordinator', 'dependency', 'order', 'preserving'].",
+        "citation_presence": true,
+        "term_overlap": 0.35000000000000003,
+        "quote_overlap": 0.06666666666666667,
+        "contradiction_cues": [],
+        "support_level": "partial",
+        "atomic_claims": [
+          "Evidence suggests that a DAG coordinator with asyncio",
+          "semaphores can run independent research tasks concurrently",
+          "preserving dependency order"
+        ],
+        "atomic_results": [
+          {
+            "text": "Evidence suggests that a DAG coordinator with asyncio",
+            "status": "partial",
+            "support_terms": [
+              "evidence"
+            ],
+            "missing_terms": [
+              "asyncio",
+              "coordinator",
+              "suggests"
+            ],
+            "term_overlap": 0.25,
+            "quote_overlap": 0.0,
+            "contradiction_cues": [],
+            "reason": "Atomic claim matched 1/4 important terms; status=partial."
+          },
+          {
+            "text": "semaphores can run independent research tasks concurrently",
+            "status": "supported",
+            "support_terms": [
+              "concurrently",
+              "independent",
+              "research",
+              "tasks"
+            ],
+            "missing_terms": [
+              "semaphores"
+            ],
+            "term_overlap": 0.8,
+            "quote_overlap": 0.2,
+            "contradiction_cues": [],
+            "reason": "Atomic claim matched 4/5 important terms; status=supported."
+          },
+          {
+            "text": "preserving dependency order",
+            "status": "unsupported",
+            "support_terms": [],
+            "missing_terms": [
+              "dependency",
+              "order",
+              "preserving"
+            ],
+            "term_overlap": 0.0,
+            "quote_overlap": 0.0,
+            "contradiction_cues": [],
+            "reason": "Atomic claim matched 0/3 important terms; status=unsupported."
+          }
+        ],
+        "id": "trace_286faf7cd73a"
+      }
+    },
+    {
+      "text": "A Red-Blue repair loop can improve reliability by detecting weak claims and applying ADD, DELETE, MODIFY, or VERIFY actions.",
+      "citation_ids": [
+        "ev_44fb121c9d84"
+      ],
+      "id": "claim_b218b119f8bd",
+      "verification_status": "supported",
+      "confidence": 0.75,
+      "needs_verification": false,
+      "verification_reason": "Matched 7/11 important terms; missing=['applying', 'claims', 'detecting', 'reliability'].",
+      "matched_evidence_ids": [
+        "ev_44fb121c9d84"
+      ],
+      "missing_terms": [
+        "applying",
+        "claims",
+        "detecting",
+        "reliability"
+      ],
+      "verification_trace": {
+        "claim_id": "claim_b218b119f8bd",
+        "status": "supported",
+        "matched_evidence_ids": [
+          "ev_44fb121c9d84"
+        ],
+        "support_terms": [
+          "actions",
+          "delete",
+          "improve",
+          "modify",
+          "red-blue",
+          "repair",
+          "verify"
+        ],
+        "missing_terms": [
+          "applying",
+          "claims",
+          "detecting",
+          "reliability"
+        ],
+        "reason": "Matched 7/11 important terms; missing=['applying', 'claims', 'detecting', 'reliability'].",
+        "citation_presence": true,
+        "term_overlap": 0.65,
+        "quote_overlap": 0.08333333333333333,
+        "contradiction_cues": [],
+        "support_level": "supported",
+        "atomic_claims": [
+          "A Red-Blue repair loop can improve reliability by detecting weak claims",
+          "applying ADD, DELETE, MODIFY, or VERIFY actions"
+        ],
+        "atomic_results": [
+          {
+            "text": "A Red-Blue repair loop can improve reliability by detecting weak claims",
+            "status": "supported",
+            "support_terms": [
+              "improve",
+              "red-blue",
+              "repair"
+            ],
+            "missing_terms": [
+              "claims",
+              "detecting",
+              "reliability"
+            ],
+            "term_overlap": 0.5,
+            "quote_overlap": 0.16666666666666666,
+            "contradiction_cues": [],
+            "reason": "Atomic claim matched 3/6 important terms; status=supported."
+          },
+          {
+            "text": "applying ADD, DELETE, MODIFY, or VERIFY actions",
+            "status": "supported",
+            "support_terms": [
+              "actions",
+              "delete",
+              "modify",
+              "verify"
+            ],
+            "missing_terms": [
+              "applying"
+            ],
+            "term_overlap": 0.8,
+            "quote_overlap": 0.0,
+            "contradiction_cues": [],
+            "reason": "Atomic claim matched 4/5 important terms; status=supported."
+          }
+        ],
+        "id": "trace_c0af7f5de29a"
+      }
+    }
+  ],
+  "evidence": [
+    {
+      "task_id": "task_dcca88b4aee0",
+      "title": "Red-Blue Adversarial Repair",
+      "text": "A Red Agent attacks a draft report along factuality, logic, citation quality, and omissions. A Blue Agent repairs the report using explicit actions such as ADD, DELETE, MODIFY, and VERIFY. The repair log should keep before and after text so improvements are auditable.",
+      "url": "local://trust/red-blue",
+      "quote": "The repair log should keep before and after text so improvements are auditable.",
+      "source_id": "red_blue_repair",
+      "chunk_id": "red_blue_repair#chunk-1",
+      "quote_start": 189,
+      "quote_end": 268,
+      "score": 2.407957010190689,
+      "id": "ev_44fb121c9d84",
+      "metadata": {
+        "agent": "reader",
+        "task_question": "What engineering tradeoffs and limitations matter for: Why does DeepResearch need atomic verification and Red-Blue repair?",
+        "chunk_index": 1,
+        "dedupe_key": "red_blue_repair:The repair log should keep before and after text so improvements are auditable.",
+        "source_type": "trust_note",
+        "topics": [],
+        "trust_level": "medium",
+        "lexical_score": 2.2814659016539687,
+        "vector_score": 0.3614031672477722,
+        "hybrid_score": 2.407957010190689
+      }
+    },
+    {
+      "task_id": "task_361a4892d943",
+      "title": "Citation Tracking and Claim Binding",
+      "text": "Generated research reports are more trustworthy when important claims are bound to inspectable citations. A citation id should point to a concrete evidence object, which points to a source document, chunk, and quote span. This allows a verifier or human reader to audit the report.",
+      "url": "local://trust/citations",
+      "quote": "Generated research reports are more trustworthy when important claims are bound to inspectable citations.",
+      "source_id": "citation_tracking",
+      "chunk_id": "citation_tracking#chunk-1",
+      "quote_start": 0,
+      "quote_end": 105,
+      "score": 2.344262012230366,
+      "id": "ev_eda1a159716d",
+      "metadata": {
+        "agent": "reader",
+        "task_question": "What background concepts are needed to answer: Why does DeepResearch need atomic verification and Red-Blue repair?",
+        "chunk_index": 1,
+        "dedupe_key": "citation_tracking:Generated research reports are more trustworthy when important claims are bound to inspectable citations.",
+        "source_type": "trust_note",
+        "topics": [
+          "citation"
+        ],
+        "trust_level": "medium",
+        "lexical_score": 2.2112689086665807,
+        "vector_score": 0.37998029589653015,
+        "hybrid_score": 2.344262012230366
+      }
+    },
+    {
+      "task_id": "task_dcca88b4aee0",
+      "title": "Technical Blogging for Engineering Projects",
+      "text": "A strong technical blog explains the problem, design choices, implementation details, experiments, failures, and next steps. For internship preparation, blog posts should connect code decisions to measurable outcomes and interview explanations.",
+      "url": "local://career/blog",
+      "quote": "For internship preparation, blog posts should connect code decisions to measurable outcomes and interview explanations.",
+      "source_id": "technical_blog",
+      "chunk_id": "technical_blog#chunk-1",
+      "quote_start": 125,
+      "quote_end": 244,
+      "score": 1.9543981977171885,
+      "id": "ev_9a0d4d4dd00a",
+      "metadata": {
+        "agent": "reader",
+        "task_question": "What engineering tradeoffs and limitations matter for: Why does DeepResearch need atomic verification and Red-Blue repair?",
+        "chunk_index": 1,
+        "dedupe_key": "technical_blog:For internship preparation, blog posts should connect code decisions to measurable outcomes and interview explanations.",
+        "source_type": "local_note",
+        "topics": [],
+        "trust_level": "medium",
+        "lexical_score": 1.802843754775046,
+        "vector_score": 0.4330126941204071,
+        "hybrid_score": 1.9543981977171885
+      }
+    },
+    {
+      "task_id": "task_54828c925a71",
+      "title": "Structured Outputs for Agent Systems",
+      "text": "Structured outputs make agent systems easier to test and debug. Plans, evidence, claims, findings, repair actions, and evaluation results should be represented as typed objects that can be serialized to JSON.",
+      "url": "local://agent/structured-output",
+      "quote": "Plans, evidence, claims, findings, repair actions, and evaluation results should be represented as typed objects that can be serialized to JSON.",
+      "source_id": "structured_outputs",
+      "chunk_id": "structured_outputs#chunk-1",
+      "quote_start": 64,
+      "quote_end": 208,
+      "score": 1.7963250289379686,
+      "id": "ev_51667053afbb",
+      "metadata": {
+        "agent": "reader",
+        "task_question": "What evaluation metrics can measure success for: Why does DeepResearch need atomic verification and Red-Blue repair?",
+        "chunk_index": 1,
+        "dedupe_key": "structured_outputs:Plans, evidence, claims, findings, repair actions, and evaluation results should be represented as typed objects that can be serialized to JSON.",
+        "source_type": "agent_note",
+        "topics": [],
+        "trust_level": "medium",
+        "lexical_score": 1.6767772744118303,
+        "vector_score": 0.34156501293182373,
+        "hybrid_score": 1.7963250289379686
+      }
+    },
+    {
+      "task_id": "task_4a5fb3b939a3",
+      "title": "Hallucination Detection in Research Agents",
+      "text": "Hallucination detection checks whether claims are supported by retrieved evidence. Unsupported claims, missing citations, and contradictions should be surfaced with a reason. A simple first verifier can combine citation presence, lexical overlap, and contradiction heuristics before using an LLM verifier.",
+      "url": "local://trust/hallucination",
+      "quote": "Hallucination detection checks whether claims are supported by retrieved evidence.",
+      "source_id": "hallucination_detection",
+      "chunk_id": "hallucination_detection#chunk-1",
+      "quote_start": 0,
+      "quote_end": 82,
+      "score": 1.6951279670849058,
+      "id": "ev_8bc726f4f613",
+      "metadata": {
+        "agent": "reader",
+        "task_question": "What reliability risks or hallucination risks appear in: Why does DeepResearch need atomic verification and Red-Blue repair?",
+        "chunk_index": 1,
+        "dedupe_key": "hallucination_detection:Hallucination detection checks whether claims are supported by retrieved evidence.",
+        "source_type": "trust_note",
+        "topics": [
+          "hallucination"
+        ],
+        "trust_level": "medium",
+        "lexical_score": 1.5619153053417418,
+        "vector_score": 0.38060760498046875,
+        "hybrid_score": 1.6951279670849058
+      }
+    },
+    {
+      "task_id": "task_54828c925a71",
+      "title": "Resume Alignment for Agent Projects",
+      "text": "A credible resume project should avoid inflated claims. Each bullet should point to working code, experiment results, and a clear explanation. Metrics such as citation coverage and hallucination rate should come from reproducible evaluation scripts.",
+      "url": "local://career/resume",
+      "quote": "Metrics such as citation coverage and hallucination rate should come from reproducible evaluation scripts.",
+      "source_id": "resume_alignment",
+      "chunk_id": "resume_alignment#chunk-1",
+      "quote_start": 143,
+      "quote_end": 249,
+      "score": 1.5897345144969952,
+      "id": "ev_83eb6d2212bc",
+      "metadata": {
+        "agent": "reader",
+        "task_question": "What evaluation metrics can measure success for: Why does DeepResearch need atomic verification and Red-Blue repair?",
+        "chunk_index": 1,
+        "dedupe_key": "resume_alignment:Metrics such as citation coverage and hallucination rate should come from reproducible evaluation scripts.",
+        "source_type": "local_note",
+        "topics": [
+          "resume"
+        ],
+        "trust_level": "medium",
+        "lexical_score": 1.4773802761656774,
+        "vector_score": 0.32101210951805115,
+        "hybrid_score": 1.5897345144969952
+      }
+    },
+    {
+      "task_id": "task_dcca88b4aee0",
+      "title": "SQLite Shared Memory for Agents",
+      "text": "SQLite provides a lightweight persistent memory layer for local agent systems. Runs, tasks, evidence, claims, reports, and agent events can be stored in relational tables. This makes debugging and reproducible experiments easier because every claim can be traced back to evidence and source chunks.",
+      "url": "local://memory/sqlite",
+      "quote": "Runs, tasks, evidence, claims, reports, and agent events can be stored in relational tables.",
+      "source_id": "sqlite_memory",
+      "chunk_id": "sqlite_memory#chunk-1",
+      "quote_start": 79,
+      "quote_end": 171,
+      "score": 1.5050182195305188,
+      "id": "ev_28f1d60710e2",
+      "metadata": {
+        "agent": "reader",
+        "task_question": "What engineering tradeoffs and limitations matter for: Why does DeepResearch need atomic verification and Red-Blue repair?",
+        "chunk_index": 1,
+        "dedupe_key": "sqlite_memory:Runs, tasks, evidence, claims, reports, and agent events can be stored in relational tables.",
+        "source_type": "memory_note",
+        "topics": [
+          "memory"
+        ],
+        "trust_level": "medium",
+        "lexical_score": 1.3585012229084332,
+        "vector_score": 0.4186199903488159,
+        "hybrid_score": 1.5050182195305188
+      }
+    },
+    {
+      "task_id": "task_dcca88b4aee0",
+      "title": "Agent Planning and Task Decomposition",
+      "text": "A deep research agent benefits from explicit planning because complex questions often contain multiple subproblems. A planner decomposes the user question into search, reading, synthesis, verification, and repair tasks. The plan should expose dependencies so the runtime can execute independent tasks concurrently while blocking dependent tasks until evidence is available.",
+      "url": "local://agent/planning",
+      "quote": "A planner decomposes the user question into search, reading, synthesis, verification, and repair tasks.",
+      "source_id": "agent_planning",
+      "chunk_id": "agent_planning#chunk-1",
+      "quote_start": 116,
+      "quote_end": 219,
+      "score": 1.414135557340823,
+      "id": "ev_8a20388bcfd0",
+      "metadata": {
+        "agent": "reader",
+        "task_question": "What engineering tradeoffs and limitations matter for: Why does DeepResearch need atomic verification and Red-Blue repair?",
+        "chunk_index": 1,
+        "dedupe_key": "agent_planning:A planner decomposes the user question into search, reading, synthesis, verification, and repair tasks.",
+        "source_type": "agent_note",
+        "topics": [],
+        "trust_level": "medium",
+        "lexical_score": 1.3065210490696055,
+        "vector_score": 0.30747002363204956,
+        "hybrid_score": 1.414135557340823
+      }
+    },
+    {
+      "task_id": "task_760fe1eeafbe",
+      "title": "Technical Blogging for Engineering Projects",
+      "text": "A strong technical blog explains the problem, design choices, implementation details, experiments, failures, and next steps. For internship preparation, blog posts should connect code decisions to measurable outcomes and interview explanations.",
+      "url": "local://career/blog",
+      "quote": "A strong technical blog explains the problem, design choices, implementation details, experiments, failures, and next steps.",
+      "source_id": "technical_blog",
+      "chunk_id": "technical_blog#chunk-1",
+      "quote_start": 0,
+      "quote_end": 124,
+      "score": 1.3897989837278295,
+      "id": "ev_9e392d1d920a",
+      "metadata": {
+        "agent": "reader",
+        "task_question": "What implementation mechanisms are central to: Why does DeepResearch need atomic verification and Red-Blue repair?",
+        "chunk_index": 1,
+        "dedupe_key": "technical_blog:A strong technical blog explains the problem, design choices, implementation details, experiments, failures, and next steps.",
+        "source_type": "local_note",
+        "topics": [],
+        "trust_level": "medium",
+        "lexical_score": 1.2757718203414845,
+        "vector_score": 0.3257918953895569,
+        "hybrid_score": 1.3897989837278295
+      }
+    },
+    {
+      "task_id": "task_361a4892d943",
+      "title": "HotpotQA Style Multi-Hop Reasoning",
+      "text": "HotpotQA style questions require combining evidence from multiple sources. In a research agent, multi-hop tasks test whether the system can connect planner decomposition, retrieval, synthesis, and verification rather than answer from a single snippet.",
+      "url": "local://eval/hotpotqa",
+      "quote": "In a research agent, multi-hop tasks test whether the system can connect planner decomposition, retrieval, synthesis, and verification rather than answer from a single snippet.",
+      "source_id": "hotpotqa_multihop",
+      "chunk_id": "hotpotqa_multihop#chunk-1",
+      "quote_start": 75,
+      "quote_end": 251,
+      "score": 1.330533838052305,
+      "id": "ev_d189d3bf1ca1",
+      "metadata": {
+        "agent": "reader",
+        "task_question": "What background concepts are needed to answer: Why does DeepResearch need atomic verification and Red-Blue repair?",
+        "chunk_index": 1,
+        "dedupe_key": "hotpotqa_multihop:In a research agent, multi-hop tasks test whether the system can connect planner decomposition, retrieval, synthesis, and verification rather than answer from a single snippet.",
+        "source_type": "evaluation_note",
+        "topics": [],
+        "trust_level": "medium",
+        "lexical_score": 1.1763989163227404,
+        "vector_score": 0.44038549065589905,
+        "hybrid_score": 1.330533838052305
+      }
+    },
+    {
+      "task_id": "task_361a4892d943",
+      "title": "TextRank Context Compression",
+      "text": "TextRank scores sentences by building a sentence similarity graph and running a PageRank-style iteration. In deep research, compression should keep high-salience sentences while preserving quoted evidence needed for citation checks. Compression that drops the cited quote can make later verification unreliable.",
+      "url": "local://compression/textrank",
+      "quote": "TextRank scores sentences by building a sentence similarity graph and running a PageRank-style iteration.",
+      "source_id": "textrank_context",
+      "chunk_id": "textrank_context#chunk-1",
+      "quote_start": 0,
+      "quote_end": 105,
+      "score": 1.2199741023389319,
+      "id": "ev_440955502f7b",
+      "metadata": {
+        "agent": "reader",
+        "task_question": "What background concepts are needed to answer: Why does DeepResearch need atomic verification and Red-Blue repair?",
+        "chunk_index": 1,
+        "dedupe_key": "textrank_context:TextRank scores sentences by building a sentence similarity graph and running a PageRank-style iteration.",
+        "source_type": "local_note",
+        "topics": [
+          "textrank"
+        ],
+        "trust_level": "medium",
+        "lexical_score": 1.089133762082241,
+        "vector_score": 0.37382954359054565,
+        "hybrid_score": 1.2199741023389319
+      }
+    }
+  ],
+  "limitations": [
+    "This offline v1 uses deterministic local retrieval and heuristic verification.",
+    "Real LLM backends are adapter-ready but should be enabled only after the offline pipeline is stable."
+  ],
+  "repair_actions": [
+    {
+      "action_type": "modify",
+      "target_claim_id": "claim_4a520477d756",
+      "reason": "Claim is only partially supported by cited evidence.",
+      "patch": "Qualified wording for partially supported claim.",
+      "before": "A DAG coordinator with asyncio and semaphores can run independent research tasks concurrently while preserving dependency order.",
+      "after": "Evidence suggests that a DAG coordinator with asyncio and semaphores can run independent research tasks concurrently while preserving dependency order.",
+      "id": "repair_d23af0b9ed74"
+    }
+  ],
+  "run_summary": {
+    "run_id": "run_e924ae8a7b05",
+    "total_latency_seconds": 0.7350524999201298,
+    "task_count": 9,
+    "succeeded_tasks": 9,
+    "failed_tasks": 0,
+    "blocked_tasks": 0,
+    "retry_count": 0,
+    "evidence_count": 11,
+    "recalled_evidence_count": 0,
+    "repair_count": 1,
+    "repair_success_rate": 1.0,
+    "compression_ratio": 0.4330474934036939,
+    "avg_task_latency": 0.053335226361492745,
+    "llm_backend": "mock",
+    "model": "mock-researcher-v0",
+    "llm_timeout_seconds": 60.0,
+    "llm_max_retries": 2
+  }
+}

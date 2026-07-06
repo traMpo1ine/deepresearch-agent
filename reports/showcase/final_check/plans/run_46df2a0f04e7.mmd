@@ -1,0 +1,26 @@
+flowchart TD
+    task_d3966671af48["root: 为什么 DeepResearch Agent 需要引用验证？"]
+    task_690469f01b49["search: Establish the background concepts and scop"]
+    task_74b20fbbe82d["search: Identify failure modes, reliability risks,"]
+    task_36133b3e2b73["search: Investigate implementation mechanisms and "]
+    task_0dd97ec4ef23["search: Define evaluation metrics and verification"]
+    task_6ccc0aa9e047["search: Analyze residual tradeoffs and limitations"]
+    task_c812f77c8088["synthesize: Synthesize evidence into a cited research "]
+    task_ecc19624ca8e["verify: Verify claim-evidence alignment for: 为什么 D"]
+    task_4b9f173fbf96["repair: Repair weak claims for: 为什么 DeepResearch A"]
+    task_d3966671af48 --> task_690469f01b49
+    task_d3966671af48 --> task_74b20fbbe82d
+    task_d3966671af48 --> task_36133b3e2b73
+    task_74b20fbbe82d --> task_36133b3e2b73
+    task_d3966671af48 --> task_0dd97ec4ef23
+    task_74b20fbbe82d --> task_0dd97ec4ef23
+    task_36133b3e2b73 --> task_0dd97ec4ef23
+    task_d3966671af48 --> task_6ccc0aa9e047
+    task_36133b3e2b73 --> task_6ccc0aa9e047
+    task_690469f01b49 --> task_c812f77c8088
+    task_74b20fbbe82d --> task_c812f77c8088
+    task_36133b3e2b73 --> task_c812f77c8088
+    task_0dd97ec4ef23 --> task_c812f77c8088
+    task_6ccc0aa9e047 --> task_c812f77c8088
+    task_c812f77c8088 --> task_ecc19624ca8e
+    task_ecc19624ca8e --> task_4b9f173fbf96

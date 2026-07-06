@@ -1,0 +1,50 @@
+{"id":"strict_001","text":"{\"title\":\"A\",\"claims\":[\"c1\"],\"citations\":[\"ev1\"]}","expected_ok":true,"expected_level":1}
+{"id":"strict_002","text":"{\"title\":\"B\",\"claims\":[],\"citations\":[]}","expected_ok":true,"expected_level":1}
+{"id":"strict_003","text":"{\"title\":\"C\",\"claims\":[\"c\"],\"citations\":[],\"limitations\":[\"l\"]}","expected_ok":true,"expected_level":1}
+{"id":"fenced_001","text":"Here is JSON:\n```json\n{\"title\":\"D\",\"claims\":[\"c\"],\"citations\":[\"ev\"]}\n```","expected_ok":true,"expected_level":2}
+{"id":"fenced_002","text":"```JSON\n{\"title\":\"E\",\"claims\":[],\"citations\":[]}\n```","expected_ok":true,"expected_level":2}
+{"id":"fenced_003","text":"Answer:\n```\n{\"title\":\"F\",\"claims\":[\"c\"],\"citations\":[]}\n```","expected_ok":true,"expected_level":2}
+{"id":"substring_001","text":"prefix {\"title\":\"G\",\"claims\":[\"c\"],\"citations\":[\"ev\"]} suffix","expected_ok":true,"expected_level":2}
+{"id":"substring_002","text":"The object is {\"title\":\"H\",\"claims\":[],\"citations\":[]} and done.","expected_ok":true,"expected_level":2}
+{"id":"substring_003","text":"noise\n{\"title\":\"I\",\"claims\":[\"c\"],\"citations\":[]}\nnoise","expected_ok":true,"expected_level":2}
+{"id":"repair_single_quote_001","text":"{'title':'J','claims':['c'],'citations':['ev']}","expected_ok":true,"expected_level":3}
+{"id":"repair_single_quote_002","text":"prefix {'title':'K','claims':[],'citations':[]} suffix","expected_ok":true,"expected_level":3}
+{"id":"repair_single_quote_003","text":"```json\n{'title':'L','claims':['c'],'citations':[]}\n```","expected_ok":true,"expected_level":3}
+{"id":"repair_trailing_comma_001","text":"{\"title\":\"M\",\"claims\":[\"c\"],\"citations\":[\"ev\"],}","expected_ok":true,"expected_level":3}
+{"id":"repair_trailing_comma_002","text":"{\"title\":\"N\",\"claims\":[],\"citations\":[],}","expected_ok":true,"expected_level":3}
+{"id":"repair_trailing_comma_003","text":"prefix {\"title\":\"O\",\"claims\":[\"c\",],\"citations\":[],} suffix","expected_ok":true,"expected_level":3}
+{"id":"repair_unquoted_key_001","text":"{title:\"P\", claims:[\"c\"], citations:[\"ev\"]}","expected_ok":true,"expected_level":3}
+{"id":"repair_unquoted_key_002","text":"{title:\"Q\", claims:[], citations:[]}","expected_ok":true,"expected_level":3}
+{"id":"repair_unquoted_key_003","text":"prefix {title:\"R\", claims:[\"c\"], citations:[]} suffix","expected_ok":true,"expected_level":3}
+{"id":"schema_missing_001","text":"{\"title\":\"S\",\"claims\":[\"c\"]}","expected_ok":true,"expected_level":3}
+{"id":"schema_missing_002","text":"{\"title\":\"T\",\"citations\":[\"ev\"]}","expected_ok":true,"expected_level":3}
+{"id":"schema_missing_003","text":"{\"claims\":[\"c\"],\"citations\":[]}","expected_ok":true,"expected_level":3}
+{"id":"combo_repair_001","text":"```json\n{title:'U', claims:['c'], citations:['ev'],}\n```","expected_ok":true,"expected_level":3}
+{"id":"combo_repair_002","text":"prefix {title:'V', claims:[], citations:[],} suffix","expected_ok":true,"expected_level":3}
+{"id":"combo_repair_003","text":"{title:'W', claims:['c'], citations:[], limitations:['l'],}","expected_ok":true,"expected_level":3}
+{"id":"defaults_001","text":"not json at all","expected_ok":true,"expected_level":3}
+{"id":"defaults_002","text":"title: X claims: c","expected_ok":true,"expected_level":3}
+{"id":"defaults_003","text":"```text\nnot an object\n```","expected_ok":true,"expected_level":3}
+{"id":"strict_004","text":"{\"title\":\"Y\",\"claims\":[\"c1\",\"c2\"],\"citations\":[\"ev1\",\"ev2\"]}","expected_ok":true,"expected_level":1}
+{"id":"fenced_004","text":"Some prose\n```json\n{\"title\":\"Z\",\"claims\":[\"c\"],\"citations\":[\"ev\"]}\n```\nmore prose","expected_ok":true,"expected_level":2}
+{"id":"repair_004","text":"{title:'AA', claims:['c'], citations:['ev'], extra:'ok',}","expected_ok":true,"expected_level":3}
+{"id":"strict_005","text":"{\"title\":\"AB\",\"claims\":[\"c\"],\"citations\":[\"ev\"],\"limitations\":[]}","expected_ok":true,"expected_level":1}
+{"id":"strict_006","text":"{\"title\":\"AC\",\"claims\":[],\"citations\":[\"ev1\"]}","expected_ok":true,"expected_level":1}
+{"id":"fenced_005","text":"The object is below:\n```json\n{\"title\":\"AD\",\"claims\":[\"c\"],\"citations\":[\"ev\"],\"notes\":\"ok\"}\n```","expected_ok":true,"expected_level":2}
+{"id":"fenced_006","text":"```json\n{\"title\":\"AE\",\"claims\":[],\"citations\":[],\"limitations\":[\"l\"]}\n```\nTrailing text.","expected_ok":true,"expected_level":2}
+{"id":"substring_004","text":"prefix before {\"title\":\"AF\",\"claims\":[\"c\"],\"citations\":[\"ev\"]} suffix after","expected_ok":true,"expected_level":2}
+{"id":"substring_005","text":"Result => {\"title\":\"AG\",\"claims\":[],\"citations\":[]} <= done","expected_ok":true,"expected_level":2}
+{"id":"repair_005","text":"{title:'AH', claims:['c1','c2'], citations:['ev1'],}","expected_ok":true,"expected_level":3}
+{"id":"repair_006","text":"{title:'AI', claims:[], citations:[], limitations:['missing evidence'],}","expected_ok":true,"expected_level":3}
+{"id":"repair_007","text":"```json\n{title:'AJ', claims:['c'], citations:['ev'],}\n```","expected_ok":true,"expected_level":3}
+{"id":"repair_008","text":"prefix {title:'AK', claims:[], citations:[],} suffix","expected_ok":true,"expected_level":3}
+{"id":"schema_missing_004","text":"{\"title\":\"AL\",\"citations\":[\"ev\"]}","expected_ok":true,"expected_level":3}
+{"id":"schema_missing_005","text":"{\"claims\":[\"c\"],\"title\":\"AM\"}","expected_ok":true,"expected_level":3}
+{"id":"schema_missing_006","text":"{\"citations\":[],\"limitations\":[\"l\"]}","expected_ok":true,"expected_level":3}
+{"id":"defaults_004","text":"The model produced bullets instead of JSON.","expected_ok":true,"expected_level":3}
+{"id":"defaults_005","text":"```markdown\n# Not JSON\n- claim\n```","expected_ok":true,"expected_level":3}
+{"id":"defaults_006","text":"title = AN; claims = c; citations = ev","expected_ok":true,"expected_level":3}
+{"id":"combo_repair_004","text":"Here:\n```json\n{title:'AO', claims:['c'], citations:['ev'],}\n```\nThanks.","expected_ok":true,"expected_level":3}
+{"id":"combo_repair_005","text":"noise {title:'AP', claims:[], citations:['ev'], trailing:'x',} noise","expected_ok":true,"expected_level":3}
+{"id":"combo_repair_006","text":"{title:'AQ', claims:['c'], citations:[], metadata:{source:'mock'},}","expected_ok":true,"expected_level":3}
+{"id":"defaults_007","text":"plain text answer without braces","expected_ok":true,"expected_level":3}

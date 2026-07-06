@@ -1,0 +1,863 @@
+{
+  "question": "为什么 DeepResearch Agent 需要引用验证？",
+  "title": "DeepResearch Agent Risk Analysis Report",
+  "summary": "This report treats the question as a reliability problem: it identifies failure modes, mitigation mechanisms, verification signals, and remaining limitations.",
+  "claims": [
+    {
+      "text": "DeepResearch Agents can fail when claims are not grounded in inspectable evidence.",
+      "citation_ids": [
+        "ev_d07db64e3d8a"
+      ],
+      "id": "claim_c934ffb7afa5",
+      "verification_status": "supported",
+      "confidence": 0.75,
+      "needs_verification": false,
+      "verification_reason": "Matched 3/6 important terms; missing=['deepresearch', 'grounded', 'inspectable'].",
+      "matched_evidence_ids": [
+        "ev_d07db64e3d8a"
+      ],
+      "missing_terms": [
+        "deepresearch",
+        "grounded",
+        "inspectable"
+      ],
+      "verification_trace": {
+        "claim_id": "claim_c934ffb7afa5",
+        "status": "supported",
+        "matched_evidence_ids": [
+          "ev_d07db64e3d8a"
+        ],
+        "support_terms": [
+          "agents",
+          "claims",
+          "evidence"
+        ],
+        "missing_terms": [
+          "deepresearch",
+          "grounded",
+          "inspectable"
+        ],
+        "reason": "Matched 3/6 important terms; missing=['deepresearch', 'grounded', 'inspectable'].",
+        "citation_presence": true,
+        "term_overlap": 0.5,
+        "quote_overlap": 0.0,
+        "contradiction_cues": [],
+        "support_level": "supported",
+        "atomic_claims": [
+          "DeepResearch Agents can fail when claims are not grounded in inspectable evidence"
+        ],
+        "atomic_results": [
+          {
+            "text": "DeepResearch Agents can fail when claims are not grounded in inspectable evidence",
+            "status": "supported",
+            "support_terms": [
+              "agents",
+              "claims",
+              "evidence"
+            ],
+            "missing_terms": [
+              "deepresearch",
+              "grounded",
+              "inspectable"
+            ],
+            "term_overlap": 0.5,
+            "quote_overlap": 0.0,
+            "contradiction_cues": [],
+            "evidence_id": "ev_d07db64e3d8a",
+            "best_quote": "A simple first verifier can combine citation presence, lexical overlap, and contradiction heuristics before using an LLM verifier.",
+            "decision_reason": "Best evidence=ev_d07db64e3d8a; term_overlap=0.50; quote_overlap=0.00; contradiction_cues=[].",
+            "evidence_scores": [
+              {
+                "evidence_id": "ev_d07db64e3d8a",
+                "term_overlap": 0.5,
+                "quote_overlap": 0.0,
+                "source_trust": 0.7,
+                "score": 0.395
+              }
+            ],
+            "reason": "Atomic claim matched 3/6 important terms; status=supported."
+          }
+        ],
+        "id": "trace_0858488dfeaf"
+      }
+    },
+    {
+      "text": "Citation tracking helps connect each important claim to a concrete source chunk and quote span.",
+      "citation_ids": [
+        "ev_e14a6e750d5c"
+      ],
+      "id": "claim_8b7b6f62908c",
+      "verification_status": "supported",
+      "confidence": 0.75,
+      "needs_verification": false,
+      "verification_reason": "Matched 7/9 important terms; missing=['connect', 'helps'].",
+      "matched_evidence_ids": [
+        "ev_e14a6e750d5c"
+      ],
+      "missing_terms": [
+        "connect",
+        "helps"
+      ],
+      "verification_trace": {
+        "claim_id": "claim_8b7b6f62908c",
+        "status": "supported",
+        "matched_evidence_ids": [
+          "ev_e14a6e750d5c"
+        ],
+        "support_terms": [
+          "chunk",
+          "citation",
+          "claim",
+          "concrete",
+          "quote",
+          "source",
+          "tracking"
+        ],
+        "missing_terms": [
+          "connect",
+          "helps"
+        ],
+        "reason": "Matched 7/9 important terms; missing=['connect', 'helps'].",
+        "citation_presence": true,
+        "term_overlap": 0.875,
+        "quote_overlap": 0.75,
+        "contradiction_cues": [],
+        "support_level": "supported",
+        "atomic_claims": [
+          "Citation tracking helps connect each important claim to a concrete source chunk",
+          "quote span"
+        ],
+        "atomic_results": [
+          {
+            "text": "Citation tracking helps connect each important claim to a concrete source chunk",
+            "status": "supported",
+            "support_terms": [
+              "chunk",
+              "citation",
+              "claim",
+              "concrete",
+              "source",
+              "tracking"
+            ],
+            "missing_terms": [
+              "connect",
+              "helps"
+            ],
+            "term_overlap": 0.75,
+            "quote_overlap": 0.5,
+            "contradiction_cues": [],
+            "evidence_id": "ev_e14a6e750d5c",
+            "best_quote": "A citation id should point to a concrete evidence object, which points to a source document, chunk, and quote span.",
+            "decision_reason": "Best evidence=ev_e14a6e750d5c; term_overlap=0.75; quote_overlap=0.50; contradiction_cues=[].",
+            "evidence_scores": [
+              {
+                "evidence_id": "ev_e14a6e750d5c",
+                "term_overlap": 0.75,
+                "quote_overlap": 0.5,
+                "source_trust": 0.7,
+                "score": 0.6825
+              }
+            ],
+            "reason": "Atomic claim matched 6/8 important terms; status=supported."
+          },
+          {
+            "text": "quote span",
+            "status": "supported",
+            "support_terms": [
+              "quote"
+            ],
+            "missing_terms": [],
+            "term_overlap": 1.0,
+            "quote_overlap": 1.0,
+            "contradiction_cues": [],
+            "evidence_id": "ev_e14a6e750d5c",
+            "best_quote": "A citation id should point to a concrete evidence object, which points to a source document, chunk, and quote span.",
+            "decision_reason": "Best evidence=ev_e14a6e750d5c; term_overlap=1.00; quote_overlap=1.00; contradiction_cues=[].",
+            "evidence_scores": [
+              {
+                "evidence_id": "ev_e14a6e750d5c",
+                "term_overlap": 1.0,
+                "quote_overlap": 1.0,
+                "source_trust": 0.7,
+                "score": 0.97
+              }
+            ],
+            "reason": "Atomic claim matched 1/1 important terms; status=supported."
+          }
+        ],
+        "id": "trace_7c093816c0bb"
+      }
+    },
+    {
+      "text": "Evidence suggests that Verifier and Red-Blue repair loops make weak support visible and provide explicit ADD, DELETE, MODIFY, or VERIFY actions.",
+      "citation_ids": [
+        "ev_d07db64e3d8a"
+      ],
+      "id": "claim_f234c8c6cc04",
+      "verification_status": "partial",
+      "confidence": 0.6,
+      "needs_verification": true,
+      "verification_reason": "Matched 3/14 important terms; missing=['actions', 'delete', 'explicit', 'loops', 'modify'].",
+      "matched_evidence_ids": [
+        "ev_d07db64e3d8a"
+      ],
+      "missing_terms": [
+        "actions",
+        "delete",
+        "explicit",
+        "loops",
+        "modify",
+        "provide",
+        "red-blue",
+        "repair",
+        "suggests",
+        "verify",
+        "visible"
+      ],
+      "verification_trace": {
+        "claim_id": "claim_f234c8c6cc04",
+        "status": "partial",
+        "matched_evidence_ids": [
+          "ev_d07db64e3d8a"
+        ],
+        "support_terms": [
+          "evidence",
+          "support",
+          "verifier"
+        ],
+        "missing_terms": [
+          "actions",
+          "delete",
+          "explicit",
+          "loops",
+          "modify",
+          "provide",
+          "red-blue",
+          "repair",
+          "suggests",
+          "verify",
+          "visible"
+        ],
+        "reason": "Matched 3/14 important terms; missing=['actions', 'delete', 'explicit', 'loops', 'modify'].",
+        "citation_presence": true,
+        "term_overlap": 0.2888888888888889,
+        "quote_overlap": 0.1111111111111111,
+        "contradiction_cues": [],
+        "support_level": "partial",
+        "atomic_claims": [
+          "Evidence suggests that Verifier",
+          "Red-Blue repair loops make weak support visible",
+          "provide explicit ADD, DELETE, MODIFY, or VERIFY actions"
+        ],
+        "atomic_results": [
+          {
+            "text": "Evidence suggests that Verifier",
+            "status": "supported",
+            "support_terms": [
+              "evidence",
+              "verifier"
+            ],
+            "missing_terms": [
+              "suggests"
+            ],
+            "term_overlap": 0.6666666666666666,
+            "quote_overlap": 0.3333333333333333,
+            "contradiction_cues": [],
+            "evidence_id": "ev_d07db64e3d8a",
+            "best_quote": "A simple first verifier can combine citation presence, lexical overlap, and contradiction heuristics before using an LLM verifier.",
+            "decision_reason": "Best evidence=ev_d07db64e3d8a; term_overlap=0.67; quote_overlap=0.33; contradiction_cues=[].",
+            "evidence_scores": [
+              {
+                "evidence_id": "ev_d07db64e3d8a",
+                "term_overlap": 0.6666666666666666,
+                "quote_overlap": 0.3333333333333333,
+                "source_trust": 0.7,
+                "score": 0.5866666666666667
+              }
+            ],
+            "reason": "Atomic claim matched 2/3 important terms; status=supported."
+          },
+          {
+            "text": "Red-Blue repair loops make weak support visible",
+            "status": "partial",
+            "support_terms": [
+              "support"
+            ],
+            "missing_terms": [
+              "loops",
+              "red-blue",
+              "repair",
+              "visible"
+            ],
+            "term_overlap": 0.2,
+            "quote_overlap": 0.0,
+            "contradiction_cues": [],
+            "evidence_id": "ev_d07db64e3d8a",
+            "best_quote": "A simple first verifier can combine citation presence, lexical overlap, and contradiction heuristics before using an LLM verifier.",
+            "decision_reason": "Best evidence=ev_d07db64e3d8a; term_overlap=0.20; quote_overlap=0.00; contradiction_cues=[].",
+            "evidence_scores": [
+              {
+                "evidence_id": "ev_d07db64e3d8a",
+                "term_overlap": 0.2,
+                "quote_overlap": 0.0,
+                "source_trust": 0.7,
+                "score": 0.2
+              }
+            ],
+            "reason": "Atomic claim matched 1/5 important terms; status=partial."
+          },
+          {
+            "text": "provide explicit ADD, DELETE, MODIFY, or VERIFY actions",
+            "status": "unsupported",
+            "support_terms": [],
+            "missing_terms": [
+              "actions",
+              "delete",
+              "explicit",
+              "modify",
+              "provide",
+              "verify"
+            ],
+            "term_overlap": 0.0,
+            "quote_overlap": 0.0,
+            "contradiction_cues": [],
+            "evidence_id": "ev_d07db64e3d8a",
+            "best_quote": "A simple first verifier can combine citation presence, lexical overlap, and contradiction heuristics before using an LLM verifier.",
+            "decision_reason": "Best evidence=ev_d07db64e3d8a; term_overlap=0.00; quote_overlap=0.00; contradiction_cues=[].",
+            "evidence_scores": [
+              {
+                "evidence_id": "ev_d07db64e3d8a",
+                "term_overlap": 0.0,
+                "quote_overlap": 0.0,
+                "source_trust": 0.7,
+                "score": 0.06999999999999999
+              }
+            ],
+            "reason": "Atomic claim matched 0/6 important terms; status=unsupported."
+          }
+        ],
+        "id": "trace_bdcc5cb9f2db"
+      }
+    }
+  ],
+  "evidence": [
+    {
+      "task_id": "task_3245a55894e7",
+      "title": "Failure Modes in Deep Research Agents",
+      "text": "Common failure modes include shallow planning, duplicate evidence, unsupported claims, stale memory, over-compression, and judge bias. A reliable system makes these failures visible through statuses, traces, and evaluation reports.",
+      "url": "local://agent/failure-modes",
+      "quote": "Common failure modes include shallow planning, duplicate evidence, unsupported claims, stale memory, over-compression, and judge bias.",
+      "source_id": "failure_modes",
+      "chunk_id": "failure_modes#chunk-1",
+      "quote_start": 0,
+      "quote_end": 134,
+      "score": 3.439995885343749,
+      "id": "ev_18272e560282",
+      "metadata": {
+        "agent": "reader",
+        "task_question": "Identify failure modes, reliability risks, and affected claims for: 为什么 DeepResearch Agent 需要引用验证？",
+        "chunk_index": 1,
+        "dedupe_key": "failure_modes:Common failure modes include shallow planning, duplicate evidence, unsupported claims, stale memory, over-compression, and judge bias.",
+        "source_type": "agent_note",
+        "topics": [],
+        "trust_level": "medium",
+        "lexical_score": 3.3465066064908093,
+        "vector_score": 0.26711222529411316,
+        "hybrid_score": 3.439995885343749
+      }
+    },
+    {
+      "task_id": "task_3245a55894e7",
+      "title": "Citation Tracking and Claim Binding",
+      "text": "Generated research reports are more trustworthy when important claims are bound to inspectable citations. A citation id should point to a concrete evidence object, which points to a source document, chunk, and quote span. This allows a verifier or human reader to audit the report.",
+      "url": "local://trust/citations",
+      "quote": "A citation id should point to a concrete evidence object, which points to a source document, chunk, and quote span.",
+      "source_id": "citation_tracking",
+      "chunk_id": "citation_tracking#chunk-1",
+      "quote_start": 106,
+      "quote_end": 221,
+      "score": 3.3904983829282216,
+      "id": "ev_e14a6e750d5c",
+      "metadata": {
+        "agent": "reader",
+        "task_question": "Identify failure modes, reliability risks, and affected claims for: 为什么 DeepResearch Agent 需要引用验证？",
+        "chunk_index": 1,
+        "dedupe_key": "citation_tracking:A citation id should point to a concrete evidence object, which points to a source document, chunk, and quote span.",
+        "source_type": "trust_note",
+        "topics": [
+          "citation"
+        ],
+        "trust_level": "medium",
+        "lexical_score": 3.2143822498939922,
+        "vector_score": 0.2746175229549408,
+        "hybrid_score": 3.3904983829282216
+      }
+    },
+    {
+      "task_id": "task_3245a55894e7",
+      "title": "SQLite Shared Memory for Agents",
+      "text": "SQLite provides a lightweight persistent memory layer for local agent systems. Runs, tasks, evidence, claims, reports, and agent events can be stored in relational tables. This makes debugging and reproducible experiments easier because every claim can be traced back to evidence and source chunks.",
+      "url": "local://memory/sqlite",
+      "quote": "Runs, tasks, evidence, claims, reports, and agent events can be stored in relational tables.",
+      "source_id": "sqlite_memory",
+      "chunk_id": "sqlite_memory#chunk-1",
+      "quote_start": 79,
+      "quote_end": 171,
+      "score": 3.0687294366876543,
+      "id": "ev_7c5b3d3b9b3a",
+      "metadata": {
+        "agent": "reader",
+        "task_question": "Identify failure modes, reliability risks, and affected claims for: 为什么 DeepResearch Agent 需要引用验证？",
+        "chunk_index": 1,
+        "dedupe_key": "sqlite_memory:Runs, tasks, evidence, claims, reports, and agent events can be stored in relational tables.",
+        "source_type": "memory_note",
+        "topics": [
+          "memory"
+        ],
+        "trust_level": "medium",
+        "lexical_score": 2.9252568188230454,
+        "vector_score": 0.4099217653274536,
+        "hybrid_score": 3.0687294366876543
+      }
+    },
+    {
+      "task_id": "task_414a0c73c3e2",
+      "title": "SQLite and Vector Retrieval Tradeoffs",
+      "text": "SQLite and vector retrieval solve different parts of an agent memory problem. SQLite is strong for durable records, relational queries, audit trails, and exact traceability from runs to tasks, evidence, claims, reports, and events. Vector retrieval is strong for semantic similarity, fuzzy recall, and reusing evidence when a new query is related but does not share exact keywords.",
+      "url": "local://comparison/sqlite-vector-tradeoffs",
+      "quote": "SQLite and vector retrieval solve different parts of an agent memory problem.",
+      "source_id": "sqlite_vector_tradeoffs",
+      "chunk_id": "sqlite_vector_tradeoffs#chunk-1",
+      "quote_start": 0,
+      "quote_end": 77,
+      "score": 2.864389259518444,
+      "id": "ev_ee689cbfa994",
+      "metadata": {
+        "agent": "reader",
+        "task_question": "Analyze residual tradeoffs and limitations after mitigation for: 为什么 DeepResearch Agent 需要引用验证？",
+        "chunk_index": 1,
+        "dedupe_key": "sqlite_vector_tradeoffs:SQLite and vector retrieval solve different parts of an agent memory problem.",
+        "source_type": "comparison_note",
+        "topics": [
+          "comparison",
+          "sqlite",
+          "memory",
+          "retrieval",
+          "vector"
+        ],
+        "trust_level": "high",
+        "lexical_score": 2.67639997393018,
+        "vector_score": 0.3942551016807556,
+        "hybrid_score": 2.864389259518444
+      }
+    },
+    {
+      "task_id": "task_414a0c73c3e2",
+      "title": "SQLite and Vector Retrieval Tradeoffs",
+      "text": "A practical DeepResearch Agent often combines both: SQLite stores canonical records and the vector index stores ids for similarity search.",
+      "url": "local://comparison/sqlite-vector-tradeoffs",
+      "quote": "A practical DeepResearch Agent often combines both: SQLite stores canonical records and the vector index stores ids for similarity search.",
+      "source_id": "sqlite_vector_tradeoffs",
+      "chunk_id": "sqlite_vector_tradeoffs#chunk-2",
+      "quote_start": 0,
+      "quote_end": 138,
+      "score": 2.864389259518444,
+      "id": "ev_a8843be46ccf",
+      "metadata": {
+        "agent": "reader",
+        "task_question": "Analyze residual tradeoffs and limitations after mitigation for: 为什么 DeepResearch Agent 需要引用验证？",
+        "chunk_index": 2,
+        "dedupe_key": "sqlite_vector_tradeoffs:A practical DeepResearch Agent often combines both: SQLite stores canonical records and the vector index stores ids for similarity search.",
+        "source_type": "comparison_note",
+        "topics": [
+          "comparison",
+          "sqlite",
+          "memory",
+          "retrieval",
+          "vector"
+        ],
+        "trust_level": "high",
+        "lexical_score": 2.67639997393018,
+        "vector_score": 0.3942551016807556,
+        "hybrid_score": 2.864389259518444
+      }
+    },
+    {
+      "task_id": "task_414a0c73c3e2",
+      "title": "SQLite Shared Memory for Agents",
+      "text": "SQLite provides a lightweight persistent memory layer for local agent systems. Runs, tasks, evidence, claims, reports, and agent events can be stored in relational tables. This makes debugging and reproducible experiments easier because every claim can be traced back to evidence and source chunks.",
+      "url": "local://memory/sqlite",
+      "quote": "This makes debugging and reproducible experiments easier because every claim can be traced back to evidence and source chunks.",
+      "source_id": "sqlite_memory",
+      "chunk_id": "sqlite_memory#chunk-1",
+      "quote_start": 172,
+      "quote_end": 298,
+      "score": 2.80202680526257,
+      "id": "ev_03fc6a5662a4",
+      "metadata": {
+        "agent": "reader",
+        "task_question": "Analyze residual tradeoffs and limitations after mitigation for: 为什么 DeepResearch Agent 需要引用验证？",
+        "chunk_index": 1,
+        "dedupe_key": "sqlite_memory:This makes debugging and reproducible experiments easier because every claim can be traced back to evidence and source chunks.",
+        "source_type": "memory_note",
+        "topics": [
+          "memory"
+        ],
+        "trust_level": "medium",
+        "lexical_score": 2.6545562237310456,
+        "vector_score": 0.421344518661499,
+        "hybrid_score": 2.80202680526257
+      }
+    },
+    {
+      "task_id": "task_bb068818900a",
+      "title": "Hybrid Memory Design for Research Agents",
+      "text": "A hybrid memory design separates source-of-truth storage from retrieval acceleration. SQLite keeps structured tables for runs, tasks, evidence, claims, reports, verification traces, and repair actions. A vector index stores embeddings keyed by evidence ids and returns candidates for semantic recall.",
+      "url": "local://comparison/hybrid-memory-design",
+      "quote": "SQLite keeps structured tables for runs, tasks, evidence, claims, reports, verification traces, and repair actions.",
+      "source_id": "hybrid_memory_design",
+      "chunk_id": "hybrid_memory_design#chunk-1",
+      "quote_start": 86,
+      "quote_end": 201,
+      "score": 2.7318592977134837,
+      "id": "ev_2f0c39f70b19",
+      "metadata": {
+        "agent": "reader",
+        "task_question": "Establish the background concepts and scope for: 为什么 DeepResearch Agent 需要引用验证？",
+        "chunk_index": 1,
+        "dedupe_key": "hybrid_memory_design:SQLite keeps structured tables for runs, tasks, evidence, claims, reports, verification traces, and repair actions.",
+        "source_type": "comparison_note",
+        "topics": [
+          "comparison",
+          "memory",
+          "sqlite",
+          "vector",
+          "architecture"
+        ],
+        "trust_level": "high",
+        "lexical_score": 2.5621358882991925,
+        "vector_score": 0.3420668840408325,
+        "hybrid_score": 2.7318592977134837
+      }
+    },
+    {
+      "task_id": "task_bb068818900a",
+      "title": "Hybrid Memory Design for Research Agents",
+      "text": "The coordinator can retrieve from the vector index, load full evidence from SQLite, and still preserve citation traceability. This design avoids treating vectors as a replacement for auditable storage.",
+      "url": "local://comparison/hybrid-memory-design",
+      "quote": "The coordinator can retrieve from the vector index, load full evidence from SQLite, and still preserve citation traceability.",
+      "source_id": "hybrid_memory_design",
+      "chunk_id": "hybrid_memory_design#chunk-2",
+      "quote_start": 0,
+      "quote_end": 125,
+      "score": 2.7318592977134837,
+      "id": "ev_68b5a03989e6",
+      "metadata": {
+        "agent": "reader",
+        "task_question": "Establish the background concepts and scope for: 为什么 DeepResearch Agent 需要引用验证？",
+        "chunk_index": 2,
+        "dedupe_key": "hybrid_memory_design:The coordinator can retrieve from the vector index, load full evidence from SQLite, and still preserve citation traceability.",
+        "source_type": "comparison_note",
+        "topics": [
+          "comparison",
+          "memory",
+          "sqlite",
+          "vector",
+          "architecture"
+        ],
+        "trust_level": "high",
+        "lexical_score": 2.5621358882991925,
+        "vector_score": 0.3420668840408325,
+        "hybrid_score": 2.7318592977134837
+      }
+    },
+    {
+      "task_id": "task_3245a55894e7",
+      "title": "SQLite and Vector Retrieval Tradeoffs",
+      "text": "SQLite and vector retrieval solve different parts of an agent memory problem. SQLite is strong for durable records, relational queries, audit trails, and exact traceability from runs to tasks, evidence, claims, reports, and events. Vector retrieval is strong for semantic similarity, fuzzy recall, and reusing evidence when a new query is related but does not share exact keywords.",
+      "url": "local://comparison/sqlite-vector-tradeoffs",
+      "quote": "SQLite is strong for durable records, relational queries, audit trails, and exact traceability from runs to tasks, evidence, claims, reports, and events.",
+      "source_id": "sqlite_vector_tradeoffs",
+      "chunk_id": "sqlite_vector_tradeoffs#chunk-1",
+      "quote_start": 78,
+      "quote_end": 231,
+      "score": 2.6430390502988828,
+      "id": "ev_59afbb3813de",
+      "metadata": {
+        "agent": "reader",
+        "task_question": "Identify failure modes, reliability risks, and affected claims for: 为什么 DeepResearch Agent 需要引用验证？",
+        "chunk_index": 1,
+        "dedupe_key": "sqlite_vector_tradeoffs:SQLite is strong for durable records, relational queries, audit trails, and exact traceability from runs to tasks, evidence, claims, reports, and events.",
+        "source_type": "comparison_note",
+        "topics": [
+          "comparison",
+          "sqlite",
+          "memory",
+          "retrieval",
+          "vector"
+        ],
+        "trust_level": "high",
+        "lexical_score": 2.49757353921528,
+        "vector_score": 0.2727586030960083,
+        "hybrid_score": 2.6430390502988828
+      }
+    },
+    {
+      "task_id": "task_881068c52430",
+      "title": "Resume Alignment for Agent Projects",
+      "text": "A credible resume project should avoid inflated claims. Each bullet should point to working code, experiment results, and a clear explanation. Metrics such as citation coverage and hallucination rate should come from reproducible evaluation scripts.",
+      "url": "local://career/resume",
+      "quote": "Metrics such as citation coverage and hallucination rate should come from reproducible evaluation scripts.",
+      "source_id": "resume_alignment",
+      "chunk_id": "resume_alignment#chunk-1",
+      "quote_start": 143,
+      "quote_end": 249,
+      "score": 2.2577635090881936,
+      "id": "ev_d1e5373a7cab",
+      "metadata": {
+        "agent": "reader",
+        "task_question": "Define evaluation metrics and verification criteria for: 为什么 DeepResearch Agent 需要引用验证？",
+        "chunk_index": 1,
+        "dedupe_key": "resume_alignment:Metrics such as citation coverage and hallucination rate should come from reproducible evaluation scripts.",
+        "source_type": "local_note",
+        "topics": [
+          "resume"
+        ],
+        "trust_level": "medium",
+        "lexical_score": 2.1062650796109788,
+        "vector_score": 0.4328526556491852,
+        "hybrid_score": 2.2577635090881936
+      }
+    },
+    {
+      "task_id": "task_414a0c73c3e2",
+      "title": "Vector Database Strengths and Limitations",
+      "text": "Vector databases and vector indexes are useful when semantic retrieval is more important than exact matching. They rank chunks by embedding similarity and can recover related evidence across paraphrases. Their limitations include weaker exact auditing, sensitivity to embedding quality, extra indexing cost, and the need to keep vector ids synchronized with source records.",
+      "url": "local://comparison/vector-database-limits",
+      "quote": "Their limitations include weaker exact auditing, sensitivity to embedding quality, extra indexing cost, and the need to keep vector ids synchronized with source records.",
+      "source_id": "vector_database_limits",
+      "chunk_id": "vector_database_limits#chunk-1",
+      "quote_start": 204,
+      "quote_end": 373,
+      "score": 2.1973480693424263,
+      "id": "ev_ebe5862a15c0",
+      "metadata": {
+        "agent": "reader",
+        "task_question": "Analyze residual tradeoffs and limitations after mitigation for: 为什么 DeepResearch Agent 需要引用验证？",
+        "chunk_index": 1,
+        "dedupe_key": "vector_database_limits:Their limitations include weaker exact auditing, sensitivity to embedding quality, extra indexing cost, and the need to keep vector ids synchronized with source records.",
+        "source_type": "comparison_note",
+        "topics": [
+          "comparison",
+          "vector",
+          "retrieval",
+          "embedding",
+          "database"
+        ],
+        "trust_level": "high",
+        "lexical_score": 1.9914456776702922,
+        "vector_score": 0.44543540477752686,
+        "hybrid_score": 2.1973480693424263
+      }
+    },
+    {
+      "task_id": "task_414a0c73c3e2",
+      "title": "Vector Database Strengths and Limitations",
+      "text": "For small offline projects, a numpy index can teach cosine similarity before introducing a production vector database.",
+      "url": "local://comparison/vector-database-limits",
+      "quote": "For small offline projects, a numpy index can teach cosine similarity before introducing a production vector database.",
+      "source_id": "vector_database_limits",
+      "chunk_id": "vector_database_limits#chunk-2",
+      "quote_start": 0,
+      "quote_end": 118,
+      "score": 2.1973480693424263,
+      "id": "ev_d7a311294ba8",
+      "metadata": {
+        "agent": "reader",
+        "task_question": "Analyze residual tradeoffs and limitations after mitigation for: 为什么 DeepResearch Agent 需要引用验证？",
+        "chunk_index": 2,
+        "dedupe_key": "vector_database_limits:For small offline projects, a numpy index can teach cosine similarity before introducing a production vector database.",
+        "source_type": "comparison_note",
+        "topics": [
+          "comparison",
+          "vector",
+          "retrieval",
+          "embedding",
+          "database"
+        ],
+        "trust_level": "high",
+        "lexical_score": 1.9914456776702922,
+        "vector_score": 0.44543540477752686,
+        "hybrid_score": 2.1973480693424263
+      }
+    },
+    {
+      "task_id": "task_bb068818900a",
+      "title": "TextRank Context Compression",
+      "text": "TextRank scores sentences by building a sentence similarity graph and running a PageRank-style iteration. In deep research, compression should keep high-salience sentences while preserving quoted evidence needed for citation checks. Compression that drops the cited quote can make later verification unreliable.",
+      "url": "local://compression/textrank",
+      "quote": "In deep research, compression should keep high-salience sentences while preserving quoted evidence needed for citation checks.",
+      "source_id": "textrank_context",
+      "chunk_id": "textrank_context#chunk-1",
+      "quote_start": 106,
+      "quote_end": 232,
+      "score": 2.1309102021209094,
+      "id": "ev_3eac11c84514",
+      "metadata": {
+        "agent": "reader",
+        "task_question": "Establish the background concepts and scope for: 为什么 DeepResearch Agent 需要引用验证？",
+        "chunk_index": 1,
+        "dedupe_key": "textrank_context:In deep research, compression should keep high-salience sentences while preserving quoted evidence needed for citation checks.",
+        "source_type": "local_note",
+        "topics": [
+          "textrank"
+        ],
+        "trust_level": "medium",
+        "lexical_score": 2.0808488667062615,
+        "vector_score": 0.14303238689899445,
+        "hybrid_score": 2.1309102021209094
+      }
+    },
+    {
+      "task_id": "task_bfb72162976e",
+      "title": "Hallucination Detection in Research Agents",
+      "text": "Hallucination detection checks whether claims are supported by retrieved evidence. Unsupported claims, missing citations, and contradictions should be surfaced with a reason. A simple first verifier can combine citation presence, lexical overlap, and contradiction heuristics before using an LLM verifier.",
+      "url": "local://trust/hallucination",
+      "quote": "A simple first verifier can combine citation presence, lexical overlap, and contradiction heuristics before using an LLM verifier.",
+      "source_id": "hallucination_detection",
+      "chunk_id": "hallucination_detection#chunk-1",
+      "quote_start": 175,
+      "quote_end": 305,
+      "score": 1.9061589083515367,
+      "id": "ev_d07db64e3d8a",
+      "metadata": {
+        "agent": "reader",
+        "task_question": "Investigate implementation mechanisms and mitigations for: 为什么 DeepResearch Agent 需要引用验证？",
+        "chunk_index": 1,
+        "dedupe_key": "hallucination_detection:A simple first verifier can combine citation presence, lexical overlap, and contradiction heuristics before using an LLM verifier.",
+        "source_type": "trust_note",
+        "topics": [
+          "hallucination"
+        ],
+        "trust_level": "medium",
+        "lexical_score": 1.8232300660453995,
+        "vector_score": 0.23693954944610596,
+        "hybrid_score": 1.9061589083515367
+      }
+    }
+  ],
+  "sections": [
+    {
+      "title": "Failure Modes",
+      "body": "The answer should identify how research agents can fail through missing evidence, weak citations, or hidden contradictions.",
+      "claim_ids": [
+        "claim_c934ffb7afa5"
+      ]
+    },
+    {
+      "title": "Mitigation and Verification",
+      "body": "The system should make reliability mechanisms observable through verifier traces, citation checks, and repair actions.",
+      "claim_ids": [
+        "claim_8b7b6f62908c",
+        "claim_f234c8c6cc04"
+      ]
+    },
+    {
+      "title": "Compressed Evidence Snapshot",
+      "body": "[ev_2f0c39f70b19] SQLite keeps structured tables for runs, tasks, evidence, claims, reports, verification traces, and repair actions.\n[ev_ee689cbfa994] SQLite and vector retrieval solve different parts of an agent memory problem.\n[ev_ebe5862a15c0] Their limitations include weaker exact auditing, sensitivity to embedding quality, extra indexing cost, and the need to keep vector ids synchronized with source records.\n[ev_7c5b3d3b9b3a] Runs, tasks, evidence, claims, reports, and agent events can be stored in relational tables.\n[ev_a8843be46ccf] A practical DeepResearch Agent often combines both: SQLite stores canonical records and the vector index stores ids for similarity search.\n[ev_59afbb3813de] SQLite is strong for durable records, relational queries, audit trails, and exact traceability from runs to tasks, evidence, claims, reports, and events.\n[ev_d1e5373a7cab] Metrics such as citation coverage and hallucination rate should come from reproducible evaluation scripts.\n[ev_68b5a03989e6] The coordinator can retrieve from the vector index, load full evidence from SQLite, and still preserve citation traceability.\n[ev_18272e560282] Common failure modes include shallow planning, duplicat",
+      "claim_ids": []
+    }
+  ],
+  "limitations": [
+    "This offline v1 uses deterministic local retrieval and heuristic verification.",
+    "Real LLM backends are adapter-ready but should be enabled only after the offline pipeline is stable.",
+    "Some retrieved evidence was not fully synthesized; future runs should expand coverage."
+  ],
+  "repair_actions": [
+    {
+      "action_type": "modify",
+      "target_claim_id": "claim_f234c8c6cc04",
+      "reason": "Claim is only partially supported by cited evidence.",
+      "patch": "Qualified wording for partially supported claim.",
+      "before": "Verifier and Red-Blue repair loops make weak support visible and provide explicit ADD, DELETE, MODIFY, or VERIFY actions.",
+      "after": "Evidence suggests that Verifier and Red-Blue repair loops make weak support visible and provide explicit ADD, DELETE, MODIFY, or VERIFY actions.",
+      "id": "repair_a3b8a8990ed9"
+    },
+    {
+      "action_type": "add",
+      "target_claim_id": "report.limitations",
+      "reason": "Some high-ranked evidence is not reflected in the claims.",
+      "patch": "Some retrieved evidence was not fully synthesized; future runs should expand coverage.",
+      "before": null,
+      "after": "Some retrieved evidence was not fully synthesized; future runs should expand coverage.",
+      "id": "repair_ede9a403f47d"
+    }
+  ],
+  "repair_loop_trace": [
+    {
+      "round_index": 0,
+      "finding_count": 2,
+      "weak_claim_count": 1,
+      "repair_action_count": 2,
+      "claim_fingerprint_before": "7da7760eeec2927d715f1f739b55f9b478193dab",
+      "claim_fingerprint_after": "3bbf2f839ed10df3f42aeb422e026176af4f9ed6",
+      "converged": false,
+      "oscillating": false,
+      "stop_reason": "",
+      "id": "repair_loop_a03dbc394208"
+    },
+    {
+      "round_index": 1,
+      "finding_count": 1,
+      "weak_claim_count": 1,
+      "repair_action_count": 0,
+      "claim_fingerprint_before": "3bbf2f839ed10df3f42aeb422e026176af4f9ed6",
+      "claim_fingerprint_after": "3bbf2f839ed10df3f42aeb422e026176af4f9ed6",
+      "converged": true,
+      "oscillating": true,
+      "stop_reason": "OSCILLATION",
+      "id": "repair_loop_338a92c0d311"
+    }
+  ],
+  "run_id": "run_0c981f9a098d",
+  "run_summary": {
+    "run_id": "run_0c981f9a098d",
+    "total_latency_seconds": 0.8012258997187018,
+    "task_count": 9,
+    "succeeded_tasks": 9,
+    "failed_tasks": 0,
+    "timed_out_tasks": 0,
+    "blocked_tasks": 0,
+    "retry_count": 0,
+    "evidence_count": 14,
+    "recalled_evidence_count": 5,
+    "repair_count": 2,
+    "repair_success_rate": 1.0,
+    "compression_ratio": 0.44605433376455367,
+    "avg_task_latency": 0.014637145138676129,
+    "fallback_level": 0,
+    "replan_count": 0,
+    "batch_failure_events": [],
+    "repair_rounds_used": 2,
+    "repair_converged": true,
+    "repair_oscillation_detected": true,
+    "repair_stop_reason": "OSCILLATION",
+    "llm_backend": "mock",
+    "model": "mock-researcher-v0",
+    "llm_timeout_seconds": 60.0,
+    "llm_max_retries": 2,
+    "llm_vllm_base_url": "http://localhost:8000/v1",
+    "llm_status": {
+      "backend": "mock",
+      "model": "mock-researcher-v0",
+      "timeout_seconds": 60.0,
+      "max_retries": 2,
+      "env_var": null,
+      "env_configured": true,
+      "offline_safe": true,
+      "base_url": "local://mock"
+    },
+    "planner_mode": "heuristic"
+  },
+  "created_at": "2026-07-02T10:26:03.007652+00:00"
+}

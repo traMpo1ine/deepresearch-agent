@@ -1,0 +1,317 @@
+{
+  "protocol": {
+    "dataset": "synthetic_balanced_verifier",
+    "repetitions": 3,
+    "case_count_per_repetition": 120,
+    "status_labels": [
+      "supported",
+      "partial",
+      "unsupported",
+      "contradicted"
+    ],
+    "judge": "deepseek",
+    "model": "deepseek-v4-flash",
+    "run_real": true,
+    "boundary": "Formal verifier benchmark for claim/evidence classification; not an end-to-end DeepResearch benchmark and not a production factuality guarantee.",
+    "cases_path": "data/examples/llm_verifier_cases_extended.jsonl",
+    "output_dir": "reports\\verifier_benchmark\\formal_deepseek_v4_flash_120x3"
+  },
+  "summary": {
+    "total_cases": 360,
+    "total_attempted": 360,
+    "total_correct": 303,
+    "accuracy": 0.8416666666666667,
+    "accuracy_mean": 0.8416666666666667,
+    "accuracy_std": 0.0,
+    "heuristic_accuracy_mean": 0.4666666666666666,
+    "heuristic_accuracy_std": 6.798699777552591e-17,
+    "macro_precision": 0.856558391686102,
+    "macro_recall": 0.8416666666666667,
+    "macro_f1": 0.830781834161506,
+    "total_tokens": 63211,
+    "estimated_cost_rmb": 0.05893803,
+    "latency_seconds_mean": 143.31035096663982,
+    "latency_seconds_std": 1.6391059736160296
+  },
+  "per_class": {
+    "supported": {
+      "support": 90,
+      "predicted": 87,
+      "true_positive": 84,
+      "precision": 0.9655172413793104,
+      "recall": 0.9333333333333333,
+      "f1": 0.9491525423728815
+    },
+    "partial": {
+      "support": 90,
+      "predicted": 51,
+      "true_positive": 45,
+      "precision": 0.8823529411764706,
+      "recall": 0.5,
+      "f1": 0.6382978723404256
+    },
+    "unsupported": {
+      "support": 90,
+      "predicted": 119,
+      "true_positive": 85,
+      "precision": 0.7142857142857143,
+      "recall": 0.9444444444444444,
+      "f1": 0.813397129186603
+    },
+    "contradicted": {
+      "support": 90,
+      "predicted": 103,
+      "true_positive": 89,
+      "precision": 0.8640776699029126,
+      "recall": 0.9888888888888889,
+      "f1": 0.9222797927461138
+    }
+  },
+  "confusion_matrix": {
+    "supported": {
+      "supported": 84,
+      "partial": 6,
+      "unsupported": 0,
+      "contradicted": 0,
+      "skipped": 0
+    },
+    "partial": {
+      "supported": 3,
+      "partial": 45,
+      "unsupported": 33,
+      "contradicted": 9,
+      "skipped": 0
+    },
+    "unsupported": {
+      "supported": 0,
+      "partial": 0,
+      "unsupported": 85,
+      "contradicted": 5,
+      "skipped": 0
+    },
+    "contradicted": {
+      "supported": 0,
+      "partial": 0,
+      "unsupported": 1,
+      "contradicted": 89,
+      "skipped": 0
+    }
+  },
+  "repetitions": [
+    {
+      "index": 1,
+      "llm_accuracy": 0.8416666666666667,
+      "llm_error_count": 19,
+      "total_tokens": 21100,
+      "estimated_cost_rmb": 0.01970623,
+      "latency_seconds": 143.57207829970866
+    },
+    {
+      "index": 2,
+      "llm_accuracy": 0.8416666666666667,
+      "llm_error_count": 19,
+      "total_tokens": 21074,
+      "estimated_cost_rmb": 0.01965345,
+      "latency_seconds": 144.8028457001783
+    },
+    {
+      "index": 3,
+      "llm_accuracy": 0.8416666666666667,
+      "llm_error_count": 19,
+      "total_tokens": 21037,
+      "estimated_cost_rmb": 0.01957835,
+      "latency_seconds": 141.5561289000325
+    }
+  ],
+  "error_cases": [
+    {
+      "run_index": 1,
+      "id": "lve_002_p",
+      "expected_status": "partial",
+      "heuristic_status": "partial",
+      "llm_status": "unsupported",
+      "claim": "SQLite stores run traces and also guarantees distributed multi-node scheduling.",
+      "llm_reason": "The evidence confirms that SQLite stores run traces (e.g., runs, verification traces), but it says nothing about guaranteeing distributed multi-node scheduling. The claim includes an additional, unsupported assertion that is not addressed by the evidence."
+    },
+    {
+      "run_index": 1,
+      "id": "lve_003_p",
+      "expected_status": "partial",
+      "heuristic_status": "partial",
+      "llm_status": "unsupported",
+      "claim": "The numpy vector index performs similarity recall and uses a production FAISS cluster by default.",
+      "llm_reason": "The claim states that the numpy vector index uses a production FAISS cluster by default, but the evidence only mentions that it performs lightweight similarity recall and does not mention FAISS or any production cluster."
+    },
+    {
+      "run_index": 1,
+      "id": "lve_004_p",
+      "expected_status": "partial",
+      "heuristic_status": "partial",
+      "llm_status": "unsupported",
+      "claim": "TextRank compression preserves citation quotes and guarantees that no relevant context is ever lost.",
+      "llm_reason": "The evidence states that TextRank preserves citation quotes but calls it a 'heuristic compressor,' which implies it is not guaranteed to preserve all relevant context. The claim asserts that 'no relevant context is ever lost,' which contradicts the heuristic nature of the method."
+    },
+    {
+      "run_index": 1,
+      "id": "lve_006_p",
+      "expected_status": "partial",
+      "heuristic_status": "partial",
+      "llm_status": "unsupported",
+      "claim": "Blue repair actions include ADD, DELETE, MODIFY, VERIFY, and automatic database migration.",
+      "llm_reason": "The claim includes 'automatic database migration' as a blue repair action, but the evidence explicitly states that blue repair actions are limited to ADD, DELETE, MODIFY, and VERIFY, with no mention of automatic database migration."
+    },
+    {
+      "run_index": 1,
+      "id": "lve_008_s",
+      "expected_status": "supported",
+      "heuristic_status": "supported",
+      "llm_status": "partial",
+      "claim": "StructuredOutputParser supports strict JSON, extraction fallback, and schema-default repair.",
+      "llm_reason": "The claim states 'extraction fallback' and 'schema-default repair', while the evidence mentions 'fenced or substring extraction' and 'common repair with schema defaults'. The evidence supports the general idea but uses different terminology for extraction and repair, making it a partial match."
+    },
+    {
+      "run_index": 1,
+      "id": "lve_008_p",
+      "expected_status": "partial",
+      "heuristic_status": "partial",
+      "llm_status": "unsupported",
+      "claim": "StructuredOutputParser repairs common JSON issues and guarantees semantic factual correctness.",
+      "llm_reason": "The evidence shows that StructuredOutputParser supports 'common repair with schema defaults,' but it does not mention guaranteeing 'semantic factual correctness.' The claim goes beyond what the evidence provides."
+    },
+    {
+      "run_index": 1,
+      "id": "lve_009_p",
+      "expected_status": "partial",
+      "heuristic_status": "partial",
+      "llm_status": "unsupported",
+      "claim": "Claim Preflight flags overstrong assertions and replaces the full verifier in all benchmarks.",
+      "llm_reason": "The evidence states that Claim Preflight flags overstrong assertions before final verification, but it does not mention replacing the full verifier in all benchmarks."
+    },
+    {
+      "run_index": 1,
+      "id": "lve_010_p",
+      "expected_status": "partial",
+      "heuristic_status": "unsupported",
+      "llm_status": "unsupported",
+      "claim": "The Web Demo shows trace views and implements production multi-user authentication.",
+      "llm_reason": "The evidence only mentions that the Web Demo shows Overview, Plan DAG, Report, Evidence & Memory, and Verification & Repair, but does not mention trace views or production multi-user authentication."
+    },
+    {
+      "run_index": 1,
+      "id": "lve_012_p",
+      "expected_status": "partial",
+      "heuristic_status": "partial",
+      "llm_status": "supported",
+      "claim": "DeepSeek provider smoke is dry-run by default and contributes to offline benchmark scores.",
+      "llm_reason": "The evidence explicitly states that 'DeepSeek provider smoke is dry-run by default', which directly matches the claim. The claim's mention of 'contributes to offline benchmark scores' is a reasonable inference from the dry-run behavior, as dry-runs typically simulate requests without real API calls, which aligns with offline benchmarking."
+    },
+    {
+      "run_index": 1,
+      "id": "lve_014_p",
+      "expected_status": "partial",
+      "heuristic_status": "partial",
+      "llm_status": "unsupported",
+      "claim": "Offline benchmark metrics are reproducible and therefore prove production generalization.",
+      "llm_reason": "The evidence only states that offline benchmark metrics are kept separate to preserve reproducibility, but it does not address whether reproducibility proves production generalization. The claim asserts that reproducibility implies proof of production generalization, which is a logical leap not supported by the evidence."
+    },
+    {
+      "run_index": 1,
+      "id": "lve_016_p",
+      "expected_status": "partial",
+      "heuristic_status": "partial",
+      "llm_status": "unsupported",
+      "claim": "The extended ablation run compares several profiles and includes production user traffic.",
+      "llm_reason": "The claim states the run includes production user traffic, but the evidence only mentions comparing profiles on a 60-case extended dataset, with no mention of production user traffic."
+    },
+    {
+      "run_index": 1,
+      "id": "lve_017_p",
+      "expected_status": "partial",
+      "heuristic_status": "partial",
+      "llm_status": "unsupported",
+      "claim": "Bootstrap confidence intervals report uncertainty and prove the system is unbiased.",
+      "llm_reason": "The evidence only states that experiment summaries report bootstrap confidence intervals and means, but it does not mention anything about proving the system is unbiased. The claim that bootstrap confidence intervals 'prove the system is unbiased' is not supported by the provided evidence."
+    },
+    {
+      "run_index": 1,
+      "id": "lve_018_p",
+      "expected_status": "partial",
+      "heuristic_status": "partial",
+      "llm_status": "contradicted",
+      "claim": "Cohen's d reports effect size and replaces all other benchmark metrics.",
+      "llm_reason": "The evidence states that Cohen's d is an offline profile comparison effect-size metric, not as production proof, which directly contradicts the claim that it 'replaces all other benchmark metrics.'"
+    },
+    {
+      "run_index": 1,
+      "id": "lve_018_u",
+      "expected_status": "unsupported",
+      "heuristic_status": "partial",
+      "llm_status": "contradicted",
+      "claim": "Cohen's d configures the DeepSeek base URL.",
+      "llm_reason": "The evidence states that Cohen's d is an effect-size metric, not a configuration for a DeepSeek base URL, directly contradicting the claim."
+    },
+    {
+      "run_index": 1,
+      "id": "lve_019_c",
+      "expected_status": "contradicted",
+      "heuristic_status": "supported",
+      "llm_status": "unsupported",
+      "claim": "Local corpus profiles require live open-web search for every run.",
+      "llm_reason": "The evidence describes that local corpus profiles build JSONL corpora from local source folders, but it does not mention any requirement for live open-web search for every run."
+    },
+    {
+      "run_index": 1,
+      "id": "lve_022_p",
+      "expected_status": "partial",
+      "heuristic_status": "partial",
+      "llm_status": "contradicted",
+      "claim": "The task state machine records lifecycle states and guarantees no task can fail.",
+      "llm_reason": "The evidence explicitly lists 'failed' as one of the lifecycle states recorded by the task state machine, which directly contradicts the claim that it guarantees no task can fail."
+    },
+    {
+      "run_index": 1,
+      "id": "lve_025_s",
+      "expected_status": "supported",
+      "heuristic_status": "supported",
+      "llm_status": "partial",
+      "claim": "build_showcase writes report, trace, verifier, redblue, and backend artifact files.",
+      "llm_reason": "The evidence confirms that build_showcase writes report, verifier trace, redblue trace, and backend notes, which partially match the claim's 'report, trace, verifier, redblue, and backend artifact files.' However, the claim mentions 'trace' as a single file while the evidence lists multiple specific traces (memory, compression, verifier, redblue), and the claim omits plan, run summary, memory trace, compression trace, and interview notes that are present in the evidence."
+    },
+    {
+      "run_index": 1,
+      "id": "lve_027_p",
+      "expected_status": "partial",
+      "heuristic_status": "partial",
+      "llm_status": "unsupported",
+      "claim": "Experiment reports include failure cases and automatically prove every future run will pass.",
+      "llm_reason": "The claim states that experiment reports 'automatically prove every future run will pass,' but the evidence only mentions that reports include failure cases. There is no mention of automatic proof or guarantee of future success."
+    },
+    {
+      "run_index": 1,
+      "id": "lve_030_p",
+      "expected_status": "partial",
+      "heuristic_status": "partial",
+      "llm_status": "contradicted",
+      "claim": "The current system is a local portfolio demo and already supports enterprise billing.",
+      "llm_reason": "The evidence explicitly states the system is 'a local portfolio demo and reproducible engineering project, not a production multi-tenant SaaS,' which directly contradicts the claim that it 'already supports enterprise billing.'"
+    },
+    {
+      "run_index": 2,
+      "id": "lve_029_p",
+      "expected_status": "partial",
+      "heuristic_status": "partial",
+      "llm_status": "unsupported",
+      "claim": "Real provider calls read environment variables and automatically rotate keys across accounts.",
+      "llm_reason": "The evidence only states that provider calls read API keys from environment variables and do not require keys in project files, but it does not mention anything about automatically rotating keys across accounts."
+    },
+    {
+      "run_index": 2,
+      "id": "lve_030_u",
+      "expected_status": "unsupported",
+      "heuristic_status": "partial",
+      "llm_status": "contradicted",
+      "claim": "The portfolio boundary determines vector cosine similarity.",
+      "llm_reason": "The evidence describes a portfolio demo boundary as a local, non-production system, while the claim asserts that a portfolio boundary determines vector cosine similarity, which is a mathematical concept unrelated to the system's deployment context."
+    }
+  ]
+}

@@ -1,0 +1,81 @@
+[runtime]
+max_concurrency = 4
+task_timeout_seconds = 60
+
+[memory]
+sqlite_path = "data/memory/deepresearch.sqlite3"
+vector_dim = 64
+vector_path = "data/memory/vector_index.npz"
+
+[llm]
+backend = "mock"
+model = "mock-researcher-v0"
+temperature = 0.2
+vllm_base_url = "http://localhost:8000/v1"
+
+[pipeline]
+repair_rounds = 2
+planner_mode = "heuristic"
+plan_dir = "reports/plans"
+corpus_path = "data/corpus/offline_corpus.jsonl"
+
+[evaluation]
+bootstrap_samples = 1000
+confidence_level = 0.95
+dataset = "data/benchmarks/researchbench.jsonl"
+suite = "researchbench"
+experiments = "full"
+
+[[experiments.profiles]]
+key = "baseline"
+name = "baseline"
+use_memory_recall = false
+use_compression = false
+use_verifier = false
+use_redblue = false
+planner_mode = "template"
+
+[[experiments.profiles]]
+key = "memory"
+name = "+memory"
+use_memory_recall = true
+use_compression = false
+use_verifier = false
+use_redblue = false
+planner_mode = "heuristic"
+
+[[experiments.profiles]]
+key = "compression"
+name = "+compression"
+use_memory_recall = true
+use_compression = true
+use_verifier = false
+use_redblue = false
+planner_mode = "heuristic"
+
+[[experiments.profiles]]
+key = "verifier"
+name = "+verifier"
+use_memory_recall = true
+use_compression = true
+use_verifier = true
+use_redblue = false
+planner_mode = "heuristic"
+
+[[experiments.profiles]]
+key = "redblue"
+name = "+redblue"
+use_memory_recall = true
+use_compression = true
+use_verifier = true
+use_redblue = true
+planner_mode = "heuristic"
+
+[[experiments.profiles]]
+key = "full"
+name = "full"
+use_memory_recall = true
+use_compression = true
+use_verifier = true
+use_redblue = true
+planner_mode = "heuristic"

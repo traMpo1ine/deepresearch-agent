@@ -1,0 +1,2 @@
+{"id":"rb_001","question":"为什么 DeepResearch Agent 需要引用追踪和幻觉检测？","gold_points":["复杂研究任务需要将结论绑定到可检查证据。","引用追踪可以定位 unsupported claim。","幻觉检测和修复机制可以提升报告可信度。"],"tags":["citation","hallucination","verification"]}
+{"id":"rb_002","question":"多 Agent 深度研究系统中 Planner 和 Verifier 的职责有什么不同？","gold_points":["Planner 负责拆解任务和构建执行计划。","Verifier 负责检查 claim 是否被 evidence 支持。","两者分别对应执行前规划和生成后验证。"],"tags":["planner","verifier","multi-agent"]}
