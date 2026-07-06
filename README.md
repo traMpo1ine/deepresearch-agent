@@ -43,6 +43,7 @@
 - 写简历前冻结证据包：[`reports/final/pre_resume_evidence_pack/index.md`](reports/final/pre_resume_evidence_pack/index.md)
 - 逐条证据追踪矩阵：[`docs/TRACEABILITY_MATRIX.md`](docs/TRACEABILITY_MATRIX.md)
 - 面试讲解与候选 bullet：[`docs/RESUME_NOTES.md`](docs/RESUME_NOTES.md)
+- 简历第二项目最终版：[`docs/RESUME_SECOND_PROJECT_FINAL.md`](docs/RESUME_SECOND_PROJECT_FINAL.md)
 - GitHub 作品集配置清单：[`docs/GITHUB_PORTFOLIO.md`](docs/GITHUB_PORTFOLIO.md)
 - Web Demo 默认 showcase：[`reports/showcase/final_check/index.md`](reports/showcase/final_check/index.md)
 - Formal verifier benchmark：[`reports/verifier_benchmark/formal_deepseek_v4_flash_120x3/report.md`](reports/verifier_benchmark/formal_deepseek_v4_flash_120x3/report.md)
@@ -434,6 +435,7 @@ Web Demo 需要手动启动后在浏览器检查：`uv run python scripts/run_de
 - [Build log](docs/BUILD_LOG.md)：记录每次关键优化的问题、方案、验证和面试故事。
 - [Interview QA](docs/INTERVIEW_QA.md)：整理 Planner、Searcher、Verifier、Red-Blue、Evaluation 的面试问答。
 - [Traceability matrix](docs/TRACEABILITY_MATRIX.md)：把每条简历 bullet 映射到代码、测试、命令、实验产物和边界。
+- [Final resume project](docs/RESUME_SECOND_PROJECT_FINAL.md)：第二项目最终简历 bullet、3 分钟讲稿和投递边界。
 - [GitHub portfolio checklist](docs/GITHUB_PORTFOLIO.md)：仓库 description、topics、public visibility 和 first-click route。
 - [Core schemas](docs/learning_core_schemas.md)：解释 `ResearchTask`、`ResearchPlan`、`Evidence`、`Claim` 等核心对象。
 - [Adaptive planner](docs/learning_adaptive_planner.md)：解释 Template Planner 与 Heuristic Planner 如何生成不同 DAG。

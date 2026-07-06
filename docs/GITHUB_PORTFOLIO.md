@@ -65,7 +65,8 @@ GitHub repo -> Settings -> General -> Danger Zone -> Change repository visibilit
 1. README 顶部 30 秒速览和 Web Demo GIF。
 2. `reports/final/pre_resume_evidence_pack/index.md` 看冻结指标。
 3. `docs/TRACEABILITY_MATRIX.md` 看每条说法对应的代码、测试、命令和产物。
-4. `docs/RESUME_NOTES.md` 看面试讲解版本。
+4. `docs/RESUME_SECOND_PROJECT_FINAL.md` 看最终简历项目 bullet 和 3 分钟讲稿。
+5. `docs/RESUME_NOTES.md` 看更完整的面试讲解素材。
 
 ## Do Not Upload
 
