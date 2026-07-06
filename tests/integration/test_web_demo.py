@@ -27,7 +27,11 @@ def test_web_lists_corpus_profiles() -> None:
     profiles = response.json()["profiles"]
 
     assert response.status_code == 200
-    assert {profile["key"] for profile in profiles} >= {"offline_agent_docs", "resume_agent_docs"}
+    assert {profile["key"] for profile in profiles} >= {
+        "offline_agent_docs",
+        "resume_agent_docs",
+        "local_kb_docs",
+    }
 
 
 def test_default_showcase_returns_clear_error_when_missing(tmp_path, monkeypatch) -> None:

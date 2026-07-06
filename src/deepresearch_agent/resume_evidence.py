@@ -263,7 +263,7 @@ RESUME_EVIDENCE: tuple[ResumeEvidence, ...] = (
     ResumeEvidence(
         evidence_id="corpus_profiles",
         resume_bullet=(
-            "构建 local corpus profile 知识库模式，将本地 Markdown/TXT/HTML 资料构建为"
+            "构建 local corpus profile 知识库模式，将本地 Markdown/TXT/HTML/PDF 资料构建为"
             "Searcher-compatible JSONL，并在 Web Demo 中选择不同知识库 profile。"
         ),
         code_paths=[
@@ -286,13 +286,15 @@ RESUME_EVIDENCE: tuple[ResumeEvidence, ...] = (
             "data/corpus_profiles/offline_agent_docs/agent_reliability.md",
             "data/corpus_profiles/resume_agent_docs/resume_story.md",
             "data/corpus_profiles/paper_reading_docs/paper_reading_workflow.md",
+            "data/corpus_profiles/local_kb_docs/README.md",
             "data/corpus/profiles/offline_agent_docs.jsonl",
             "data/corpus/profiles/resume_agent_docs.jsonl",
             "data/corpus/profiles/paper_reading_docs.jsonl",
+            "data/corpus/profiles/local_kb_docs.jsonl",
         ],
         learning_story=(
             "为了增强 RAG/AI 应用真实感，先做稳定的本地知识库 profile，而不是不稳定的全网搜索；"
-            "这样面试现场能稳定展示 chunk、citation 和 quote。"
+            "这样面试现场能稳定展示 Markdown/PDF chunk、citation 和 quote。"
         ),
         boundary=(
             "当前是本地资料目录构建，不是线上上传、多租户知识库或全网搜索。"

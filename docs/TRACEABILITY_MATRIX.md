@@ -211,7 +211,7 @@ uv run python scripts/inspect_resume_evidence.py --bullet verifier_redblue --jso
 
 ## 8. Local Corpus Profiles
 
-**可写说法：** 构建 local corpus profile 模式，从本地 Markdown/TXT/HTML 资料生成 Searcher-compatible JSONL corpus，并在 Web Demo 中选择不同知识库 profile，增强企业知识库式 RAG 演示真实感。
+**可写说法：** 构建 local corpus profile 模式，从本地 Markdown/TXT/HTML/PDF 资料生成 Searcher-compatible JSONL corpus，并在 Web Demo 中选择不同知识库 profile，增强企业知识库式 RAG 演示真实感。
 
 **代码证据：**
 
@@ -220,14 +220,16 @@ uv run python scripts/inspect_resume_evidence.py --bullet verifier_redblue --jso
 - `data/corpus_profiles/offline_agent_docs/agent_reliability.md`
 - `data/corpus_profiles/resume_agent_docs/resume_story.md`
 - `data/corpus_profiles/paper_reading_docs/paper_reading_workflow.md`
+- `data/corpus_profiles/local_kb_docs/README.md`
 - `data/corpus/profiles/resume_agent_docs.jsonl`
+- `data/corpus/profiles/local_kb_docs.jsonl`
 
 **测试证据：**
 
 - `tests/unit/test_corpus_profiles.py`
 - `tests/integration/test_web_demo.py`
 
-**怎么讲：** 这一步不做不稳定的全网搜索，而是先做本地知识库 RAG：资料目录可控，chunk/citation/quote 可追踪，面试现场更稳定。
+**怎么讲：** 这一步不做不稳定的全网搜索，而是先做本地知识库 RAG：资料目录可控，Markdown/PDF 都会转成 chunk/citation/quote，可追踪且面试现场更稳定。
 
 **边界：** 当前 profile 是本地资料目录构建，不是线上上传、多租户知识库，也不声称覆盖全网。
 

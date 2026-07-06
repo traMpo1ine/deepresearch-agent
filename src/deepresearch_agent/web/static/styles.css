@@ -72,9 +72,16 @@ h3 {
 }
 
 .topbar p,
-.status {
+.status,
+.hint {
   margin-bottom: 0;
   color: var(--muted);
+}
+
+.hint {
+  margin-top: -4px;
+  font-size: 12px;
+  line-height: 1.45;
 }
 
 .layout {

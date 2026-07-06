@@ -56,12 +56,13 @@ GitHub repo -> Settings -> General -> Danger Zone -> Change repository visibilit
 - 能本地运行：FastAPI Web Demo + mock/offline pipeline。
 - 有 Agent 工程链路：DAG orchestration + memory + verifier + repair。
 - 有可复查证据：ResearchBench ablation + DeepSeek verifier benchmark + traceability matrix。
+- 有可视化入口：README 顶部的 Demo GIF 能在 20-30 秒内展示默认 evidence pack、本地知识库 run、report 和 verification trace。
 
 ## First-Click Route
 
 面试官或 HR 打开仓库后，推荐阅读路径：
 
-1. README 顶部 30 秒速览和 Web Demo 截图。
+1. README 顶部 30 秒速览和 Web Demo GIF。
 2. `reports/final/pre_resume_evidence_pack/index.md` 看冻结指标。
 3. `docs/TRACEABILITY_MATRIX.md` 看每条说法对应的代码、测试、命令和产物。
 4. `docs/RESUME_NOTES.md` 看面试讲解版本。

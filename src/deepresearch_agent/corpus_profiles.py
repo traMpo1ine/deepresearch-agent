@@ -34,6 +34,7 @@ DEFAULT_PROFILES = {
     "offline_agent_docs": ("Offline Agent Docs", "默认 DeepResearch Agent 工程说明资料。"),
     "resume_agent_docs": ("Resume Agent Docs", "面向简历与面试讲解的 Agent 项目资料。"),
     "paper_reading_docs": ("Paper Reading Docs", "面向论文阅读/文献调研场景的知识库资料。"),
+    "local_kb_docs": ("Local KB Docs", "本地 Markdown/PDF 企业知识库式资料入口。"),
 }
 
 
@@ -78,7 +79,7 @@ def build_profile(profile: CorpusProfile) -> Path:
     profile.output_path.parent.mkdir(parents=True, exist_ok=True)
     rows = []
     for doc_index, path in enumerate(docs, start=1):
-        text = _normalize_text(path.read_text(encoding="utf-8"))
+        text = _normalize_text(_read_source_text(path))
         if not text:
             continue
         for chunk_index, chunk in enumerate(_chunk_text(text), start=1):
@@ -89,6 +90,7 @@ def build_profile(profile: CorpusProfile) -> Path:
                     "url": f"profile://{profile.key}/{path.name}#chunk-{chunk_index}",
                     "text": chunk,
                     "source_type": "corpus_profile",
+                    "source_format": path.suffix.lower().lstrip("."),
                     "topics": _infer_topics(profile.key, path, chunk),
                     "trust_level": "high",
                     "profile": profile.key,
@@ -107,8 +109,36 @@ def _iter_source_files(source_dir: Path) -> Iterable[Path]:
     return sorted(
         path
         for path in source_dir.rglob("*")
-        if path.is_file() and path.suffix.lower() in {".md", ".txt", ".html"}
+        if path.is_file() and path.suffix.lower() in {".md", ".txt", ".html", ".pdf"}
     )
+
+
+def _read_source_text(path: Path) -> str:
+    suffix = path.suffix.lower()
+    if suffix == ".pdf":
+        return _read_pdf_text(path)
+    return path.read_text(encoding="utf-8")
+
+
+def _read_pdf_text(path: Path) -> str:
+    try:
+        from pypdf import PdfReader
+
+        reader = PdfReader(str(path))
+        pages = [page.extract_text() or "" for page in reader.pages]
+        text = "\n".join(page for page in pages if page.strip())
+        if text.strip():
+            return text
+    except Exception:  # noqa: BLE001 - bad local PDFs should not break corpus building.
+        pass
+    return _extract_pdf_literal_text(path.read_bytes())
+
+
+def _extract_pdf_literal_text(data: bytes) -> str:
+    raw = data.decode("latin-1", errors="ignore")
+    literals = re.findall(r"\(([^()]*)\)", raw)
+    cleaned = [item.replace(r"\(", "(").replace(r"\)", ")") for item in literals]
+    return " ".join(cleaned)
 
 
 def _normalize_text(text: str) -> str:
@@ -134,7 +164,8 @@ def _chunk_text(text: str, max_chars: int = 520) -> list[str]:
 
 
 def _title_from_path(path: Path) -> str:
-    first = path.read_text(encoding="utf-8").splitlines()[0].strip()
+    lines = _read_source_text(path).splitlines()
+    first = lines[0].strip() if lines else ""
     if first.startswith("#"):
         return first.lstrip("#").strip()
     return path.stem.replace("_", " ").title()

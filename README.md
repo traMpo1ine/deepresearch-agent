@@ -1,5 +1,7 @@
 # DeepResearch Agent
 
+[![CI](https://github.com/traMpo1ine/deepresearch-agent/actions/workflows/ci.yml/badge.svg)](https://github.com/traMpo1ine/deepresearch-agent/actions/workflows/ci.yml)
+
 面向复杂深度研究任务的多 Agent 可信生成系统。项目重点不是“调一次 LLM 得到回答”，而是把规划、执行、共享记忆、上下文压缩、引用验证、Red-Blue 修复和自动评测做成一个可本地演示、可复现、可追踪的 AI Agent / RAG 工程作品。
 
 当前阶段：portfolio-ready。全链路覆盖 Planner、DAG、Searcher、Reader、SQLite Memory、numpy Vector Index、TextRank、Writer、atomic Verifier、Red-Blue Repair、三层 JSON fallback、Claim Preflight、ResearchBench-style 评测、adversarial suite、DeepSeek verifier benchmark 和本地 Web Demo。
@@ -11,13 +13,15 @@
 | Demo | FastAPI + 静态前端，支持默认 evidence pack 展示和新问题 mock/offline run |
 | Agent 编排 | Planner 生成 DAG，Coordinator 按拓扑批次并发执行，TaskStateMachine 记录任务生命周期 |
 | 可信生成 | SQLite 共享记忆、numpy vector recall、TextRank 压缩、claim-level citation、atomic Verifier、Red-Blue repair |
-| RAG 真实感 | 支持 local corpus profile，可切换 `offline_agent_docs`、`resume_agent_docs`、`paper_reading_docs` |
+| RAG 真实感 | 支持 local corpus profile，可切换 `offline_agent_docs`、`resume_agent_docs`、`paper_reading_docs`、`local_kb_docs` |
 | 评测 | 35 题冻结 ResearchBench、10 题 adversarial suite、60 题 extended ablation、80 条 Red-Blue fixtures |
 | 真实 API | DeepSeek `deepseek-v4-flash` 只做 provider / verifier showcase，不混入 offline/mock 主指标 |
 
 ## Web Demo
 
-![DeepResearch Agent Web Demo](docs/assets/web_demo_showcase.png)
+![DeepResearch Agent Web Demo walkthrough](docs/assets/web_demo_walkthrough.gif)
+
+静态截图备份：[`docs/assets/web_demo_showcase.png`](docs/assets/web_demo_showcase.png)
 
 ## 关键结果
 
@@ -31,7 +35,7 @@
 ## 3 分钟演示
 
 1. `uv run python scripts/run_demo_server.py`，打开 `http://127.0.0.1:8000` 看默认 evidence pack。
-2. 在 Web Demo 选择 corpus profile，输入问题，启动一次 mock/offline run，展示 Plan DAG、Evidence & Memory、Verification & Repair。
+2. 在 Web Demo 选择 `local_kb_docs` 或其他 corpus profile，输入问题，启动一次 mock/offline run，展示 Plan DAG、Evidence & Memory、Verification & Repair。
 3. 运行 `uv run python scripts/inspect_resume_metrics.py --json` 或打开 `reports/final/pre_resume_evidence_pack/index.md`，说明指标、formal verifier benchmark 和真实 API 成本边界。
 
 ## 证据入口
@@ -63,8 +67,11 @@ uv run python scripts/run_demo_server.py
 
 ```powershell
 uv run python scripts/build_corpus_profiles.py
+uv run python scripts/build_corpus_profiles.py --profile local_kb_docs
 uv run python scripts/run_showcase.py "如何把 DeepResearch Agent 写进 AI 应用实习简历？" --corpus-path data/corpus/profiles/resume_agent_docs.jsonl
 ```
+
+`data/corpus_profiles/local_kb_docs/` 支持 Markdown/TXT/HTML/PDF 混合资料，构建后生成 `data/corpus/profiles/local_kb_docs.jsonl`，用于演示本地企业知识库式 RAG。
 
 ```powershell
 uv run python scripts/run_research.py "为什么需要对 DeepResearch Agent 做引用验证和 Red-Blue 修复？" --output reports/example.md --output-json reports/example.json
