@@ -1,27 +1,47 @@
 # DeepResearch Agent
 
-面向复杂深度研究任务的多智能体协作系统。这个仓库会按长期项目推进，目标是把规划、执行、记忆、压缩、对抗修复和自动评测做成一个可运行、可解释、可写进简历的真实工程。
+面向复杂深度研究任务的多 Agent 可信生成系统。项目重点不是“调一次 LLM 得到回答”，而是把规划、执行、共享记忆、上下文压缩、引用验证、Red-Blue 修复和自动评测做成一个可本地演示、可复现、可追踪的 AI Agent / RAG 工程作品。
 
-当前阶段：离线 V3+ 收尾版，全链路覆盖 Planner、DAG、Searcher、Reader、SQLite Memory、numpy Vector Index、TextRank、Writer、atomic Verifier、Red-Blue Repair、三层 JSON fallback、Claim Preflight、ResearchBench-style 评测、adversarial suite、LLM backend smoke matrix 和 Showcase Pack。
+当前阶段：portfolio-ready。全链路覆盖 Planner、DAG、Searcher、Reader、SQLite Memory、numpy Vector Index、TextRank、Writer、atomic Verifier、Red-Blue Repair、三层 JSON fallback、Claim Preflight、ResearchBench-style 评测、adversarial suite、DeepSeek verifier benchmark 和本地 Web Demo。
 
-## 投递版亮点
+## 30 秒速览
 
-这个项目现在可以按“AI Agent / RAG / AI 应用实习作品”来讲：它不是只调用一次 LLM 的问答 Demo，而是一个能本地打开、能跑新问题、能展示证据链路、能解释失败边界的 DeepResearch Agent。
+| 维度 | 当前状态 |
+|---|---|
+| Demo | FastAPI + 静态前端，支持默认 evidence pack 展示和新问题 mock/offline run |
+| Agent 编排 | Planner 生成 DAG，Coordinator 按拓扑批次并发执行，TaskStateMachine 记录任务生命周期 |
+| 可信生成 | SQLite 共享记忆、numpy vector recall、TextRank 压缩、claim-level citation、atomic Verifier、Red-Blue repair |
+| RAG 真实感 | 支持 local corpus profile，可切换 `offline_agent_docs`、`resume_agent_docs`、`paper_reading_docs` |
+| 评测 | 35 题冻结 ResearchBench、10 题 adversarial suite、60 题 extended ablation、80 条 Red-Blue fixtures |
+| 真实 API | DeepSeek `deepseek-v4-flash` 只做 provider / verifier showcase，不混入 offline/mock 主指标 |
+
+## Web Demo
 
 ![DeepResearch Agent Web Demo](docs/assets/web_demo_showcase.png)
 
-- **可演示产品面：** FastAPI + 静态前端 Web Demo，默认加载 final evidence pack，也支持输入问题启动新的 mock/offline run。
-- **多 Agent 编排：** Planner 生成 DAG，Coordinator 执行拓扑批次，TaskStateMachine 记录 queued/running/succeeded/failed/blocked/timeout 等状态。
-- **可信生成链路：** SQLite 共享记忆 + numpy vector recall + TextRank 压缩 + claim-level citation + atomic Verifier + Red-Blue repair trace。
-- **RAG 真实感补强：** 新增 local corpus profile，可从本地 Markdown/TXT/HTML 资料构建知识库 corpus，Web Demo 可选择 `offline_agent_docs`、`resume_agent_docs`、`paper_reading_docs`。
-- **真实 API 边界：** DeepSeek `deepseek-v4-flash` 只作为 provider smoke 和 formal LLM verifier benchmark，可记录 token/cost，不混入 offline/mock benchmark。
-- **评测包装：** 保留 35 题冻结 ResearchBench，对 60 题 `researchbench_extended.jsonl` 跑通 baseline / verifier / redblue / full ablation，五类 answer_type 各 12 题。
+## 关键结果
 
-3 分钟演示路径：
+- 60 题 `researchbench_extended.jsonl` ablation：baseline judge mean `0.764` -> full `0.880`，full-baseline `+0.115`。
+- weak_support_rate：baseline `1.000` -> full `0.431`，说明 Verifier / Red-Blue 后弱支持 claim 明显减少。
+- full repair_precision：`0.944`，repair_coverage：`1.000`。
+- Formal DeepSeek verifier benchmark：120 个 balanced claim/evidence cases 重复 3 轮，共 360 次真实判断，accuracy `0.842`，macro-F1 `0.831`。
+- 固定 Red-Blue fixtures：80 条 adversarial fixtures，repair_success `0.425 -> 1.000`，repair_precision `1.000`。
+- 以上主评测均为 offline/mock benchmark；真实 DeepSeek 输出只作为 provider/verifier 接入证据。
+
+## 3 分钟演示
 
 1. `uv run python scripts/run_demo_server.py`，打开 `http://127.0.0.1:8000` 看默认 evidence pack。
 2. 在 Web Demo 选择 corpus profile，输入问题，启动一次 mock/offline run，展示 Plan DAG、Evidence & Memory、Verification & Repair。
 3. 运行 `uv run python scripts/inspect_resume_metrics.py --json` 或打开 `reports/final/pre_resume_evidence_pack/index.md`，说明指标、formal verifier benchmark 和真实 API 成本边界。
+
+## 证据入口
+
+- 写简历前冻结证据包：[`reports/final/pre_resume_evidence_pack/index.md`](reports/final/pre_resume_evidence_pack/index.md)
+- 逐条证据追踪矩阵：[`docs/TRACEABILITY_MATRIX.md`](docs/TRACEABILITY_MATRIX.md)
+- 面试讲解与候选 bullet：[`docs/RESUME_NOTES.md`](docs/RESUME_NOTES.md)
+- GitHub 作品集配置清单：[`docs/GITHUB_PORTFOLIO.md`](docs/GITHUB_PORTFOLIO.md)
+- Web Demo 默认 showcase：[`reports/showcase/final_check/index.md`](reports/showcase/final_check/index.md)
+- Formal verifier benchmark：[`reports/verifier_benchmark/formal_deepseek_v4_flash_120x3/report.md`](reports/verifier_benchmark/formal_deepseek_v4_flash_120x3/report.md)
 
 ## 快速开始
 
@@ -407,6 +427,7 @@ Web Demo 需要手动启动后在浏览器检查：`uv run python scripts/run_de
 - [Build log](docs/BUILD_LOG.md)：记录每次关键优化的问题、方案、验证和面试故事。
 - [Interview QA](docs/INTERVIEW_QA.md)：整理 Planner、Searcher、Verifier、Red-Blue、Evaluation 的面试问答。
 - [Traceability matrix](docs/TRACEABILITY_MATRIX.md)：把每条简历 bullet 映射到代码、测试、命令、实验产物和边界。
+- [GitHub portfolio checklist](docs/GITHUB_PORTFOLIO.md)：仓库 description、topics、public visibility 和 first-click route。
 - [Core schemas](docs/learning_core_schemas.md)：解释 `ResearchTask`、`ResearchPlan`、`Evidence`、`Claim` 等核心对象。
 - [Adaptive planner](docs/learning_adaptive_planner.md)：解释 Template Planner 与 Heuristic Planner 如何生成不同 DAG。
 - [Orchestration trace](docs/learning_orchestration_trace.md)：解释一次 run 如何从 Planner 走到 DAG、Coordinator 和 Memory。
