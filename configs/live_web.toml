@@ -1,0 +1,38 @@
+[runtime]
+max_concurrency = 4
+task_timeout_seconds = 60
+
+[memory]
+sqlite_path = "data/memory/deepresearch_live.sqlite3"
+vector_dim = 64
+vector_path = "data/memory/vector_index_live.npz"
+
+[llm]
+backend = "mock"
+model = "mock-researcher-v0"
+temperature = 0.2
+vllm_base_url = "http://localhost:8000/v1"
+
+[pipeline]
+repair_rounds = 2
+planner_mode = "heuristic"
+plan_dir = "reports/plans/live_web"
+corpus_path = "data/corpus/offline_corpus.jsonl"
+use_iterative_search = true
+max_follow_up_queries = 1
+source_quality_threshold = 0.58
+enable_web_search = true
+web_search_provider = "url,tavily,wikipedia,arxiv"
+max_web_results = 6
+writer_mode = "extractive"
+web_search_cache_path = "data/memory/web_search_cache.sqlite3"
+web_search_cache_ttl_seconds = 3600
+web_search_cache_backend = "sqlite"
+web_search_redis_url = ""
+
+[evaluation]
+bootstrap_samples = 1000
+confidence_level = 0.95
+dataset = "data/benchmarks/researchbench.jsonl"
+suite = "researchbench"
+experiments = "full"

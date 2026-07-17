@@ -26,11 +26,27 @@
             <option value="offline_agent_docs">Offline Agent Docs</option>
           </select>
           <p id="corpusHint" class="hint">Supports local Markdown/TXT/HTML/PDF knowledge-base profiles.</p>
+          <label for="corpusUpload">Upload real document</label>
+          <input id="corpusUpload" type="file" accept=".pdf,.md,.txt,.html" />
+          <button id="uploadCorpusBtn" class="secondary" type="button">Upload & Build Corpus</button>
+          <p id="uploadStatus" class="status">PDF/Markdown/TXT/HTML, up to 10 MiB.</p>
           <div class="row">
             <label for="repairRounds">Repair rounds</label>
             <input id="repairRounds" min="0" max="5" value="2" type="number" />
           </div>
-          <button id="startRunBtn" type="button">Start Mock Run</button>
+          <label class="checkline">
+            <input id="enableWebSearch" type="checkbox" />
+            Read real external data
+          </label>
+          <label for="webSearchProvider">External sources</label>
+          <select id="webSearchProvider">
+            <option value="url,wikipedia,arxiv">Direct URL/PDF + Wikipedia + arXiv</option>
+            <option value="wikipedia,arxiv">Wikipedia + arXiv (keyless)</option>
+            <option value="wikipedia,arxiv,github">Wikipedia + arXiv + GitHub</option>
+            <option value="tavily,wikipedia,arxiv">Tavily + Wikipedia + arXiv</option>
+            <option value="searxng,wikipedia,arxiv">SearXNG + Wikipedia + arXiv</option>
+          </select>
+          <button id="startRunBtn" type="button">Start Research Run</button>
           <p id="runStatus" class="status">No demo run started.</p>
         </section>
 

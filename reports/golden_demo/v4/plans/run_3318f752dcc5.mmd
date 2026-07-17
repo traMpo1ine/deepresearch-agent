@@ -1,0 +1,26 @@
+flowchart TD
+    task_6cef738f7259["root: 请基于下面三份公开资料，为一个可审计的 DeepResearch Agent 设计工"]
+    task_f26f0bdfa5c2["search: Establish the background concepts and scop"]
+    task_14ed117f7078["search: Identify failure modes, reliability risks,"]
+    task_5fabd6304924["search: Investigate implementation mechanisms and "]
+    task_6a6e6d244122["search: Define evaluation metrics and verification"]
+    task_0e38f5bdb97f["search: Analyze residual tradeoffs and limitations"]
+    task_647c784e0a01["synthesize: Synthesize evidence into a cited research "]
+    task_078a27fba7ba["verify: Verify claim-evidence alignment for: 请基于下面"]
+    task_328dbba2cb04["repair: Repair weak claims for: 请基于下面三份公开资料，为一个可审计"]
+    task_6cef738f7259 --> task_f26f0bdfa5c2
+    task_6cef738f7259 --> task_14ed117f7078
+    task_6cef738f7259 --> task_5fabd6304924
+    task_14ed117f7078 --> task_5fabd6304924
+    task_6cef738f7259 --> task_6a6e6d244122
+    task_14ed117f7078 --> task_6a6e6d244122
+    task_5fabd6304924 --> task_6a6e6d244122
+    task_6cef738f7259 --> task_0e38f5bdb97f
+    task_5fabd6304924 --> task_0e38f5bdb97f
+    task_f26f0bdfa5c2 --> task_647c784e0a01
+    task_14ed117f7078 --> task_647c784e0a01
+    task_5fabd6304924 --> task_647c784e0a01
+    task_6a6e6d244122 --> task_647c784e0a01
+    task_0e38f5bdb97f --> task_647c784e0a01
+    task_647c784e0a01 --> task_078a27fba7ba
+    task_078a27fba7ba --> task_328dbba2cb04

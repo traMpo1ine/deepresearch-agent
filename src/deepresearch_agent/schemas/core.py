@@ -335,7 +335,9 @@ class ResearchReport:
         for item in self.evidence:
             quote = f" Quote: {item.quote}" if item.quote else ""
             chunk = f", chunk={item.chunk_id}" if item.chunk_id else ""
-            lines.append(f"- [{item.id}] {item.title} ({item.url}{chunk}).{quote}")
+            locator_value = item.metadata.get("citation_locator")
+            locator = f", locator={locator_value}" if locator_value else ""
+            lines.append(f"- [{item.id}] {item.title} ({item.url}{chunk}{locator}).{quote}")
         if self.limitations:
             lines.extend(["", "## Limitations", ""])
             for limitation in self.limitations:

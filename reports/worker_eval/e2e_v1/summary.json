@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "observed_at": "2026-07-17T02:22:57+08:00",
+  "run_id": "demo_04a791cbcddd",
+  "run_store_schema_version": 4,
+  "execution_mode": "worker",
+  "queued_status": "queued",
+  "finished_status": "succeeded",
+  "worker_id": "e2e-worker",
+  "attempt_count": 1,
+  "artifacts_http_status": 200,
+  "evidence_count": 5,
+  "docker_verified": false
+}

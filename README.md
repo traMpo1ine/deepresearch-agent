@@ -15,7 +15,11 @@
 | 可信生成 | SQLite 共享记忆、numpy vector recall、TextRank 压缩、claim-level citation、atomic Verifier、Red-Blue repair |
 | RAG 真实感 | 支持 local corpus profile，可切换 `offline_agent_docs`、`resume_agent_docs`、`paper_reading_docs`、`local_kb_docs` |
 | 评测 | 35 题冻结 ResearchBench、10 题 adversarial suite、60 题 extended ablation、80 条 Red-Blue fixtures |
+| 检索质量 | 35 题开发回归集 + 80 条冻结 held-out v1，输出 Recall@K、MRR、nDCG、语言/风格/多跳分层与漏召案例 |
+| Dense embedding | 默认 64 维 hashing 离线基线；可切 OpenAI-compatible 批量 embeddings，并用 WAL SQLite 按模型/内容缓存 |
+| Durable worker | Web 可切独立 worker 模式：SQLite FIFO 原子领取、ownership heartbeat、lease expiry 重排与有界失败 |
 | 真实 API | DeepSeek `deepseek-v4-flash` 只做 provider / verifier showcase，不混入 offline/mock 主指标 |
+| 真实多源检索 | Tavily/Wikipedia/arXiv/GitHub/SearXNG、HTML/PDF 安全读取、SQLite/Redis TTL cache 与 live eval |
 
 ## Web Demo
 
@@ -30,6 +34,10 @@
 - full repair_precision：`0.944`，repair_coverage：`1.000`。
 - Formal DeepSeek verifier benchmark：120 个 balanced claim/evidence cases 重复 3 轮，共 360 次真实判断，accuracy `0.842`，macro-F1 `0.831`。
 - 固定 Red-Blue fixtures：80 条 adversarial fixtures，repair_success `0.425 -> 1.000`，repair_precision `1.000`。
+- 冻结本地检索消融：hybrid Recall@5 `0.843`、Hit@5 `0.943`、MRR@5 `0.852`、nDCG@5 `0.804`；相比 lexical 的 MRR@5 `0.843` 略有提升，但 hashing vector 单独 Recall@5 仅 `0.610`，不包装成生产语义检索。
+- 真实百炼 `text-embedding-v4`：35题 vector Recall@5 `0.943`、Hit@5 `1.000`、MRR@5 `0.910`，相对 hashing vector 在15题改善、0题退化；首跑58个唯一输入共1706 tokens，估算费用约 `0.000853` 元，缓存复跑远程请求为0。
+- 独立冻结 held-out v1：80 条新问题（47 中文/33 英文，40 条 2–5 hop），不进入 CI、不用于调参；真实 vector Recall@5 `0.920`、Hit@5 `0.988`、MRR@5 `0.915`，而 hashing vector Recall@5 仅 `0.371`。真实向量中文 Recall@5 `0.925`，直接暴露并修复了原 hashing 对中文泛化不足的问题。
+- 黄金全链路案例：真实读取 NIST、OWASP、arXiv 三个公开来源，百炼真实 Embedding 生成 29 条 Evidence，3 条确定性抽取主张分别引用真实来源，lineage 完整率 `1.000`，3/3 生成 verification trace；没有 DeepSeek Key 时明确标注为 extractive generation。
 - 以上主评测均为 offline/mock benchmark；真实 DeepSeek 输出只作为 provider/verifier 接入证据。
 
 ## 3 分钟演示
@@ -45,8 +53,17 @@
 - 面试讲解与候选 bullet：[`docs/RESUME_NOTES.md`](docs/RESUME_NOTES.md)
 - 简历第二项目最终版：[`docs/RESUME_SECOND_PROJECT_FINAL.md`](docs/RESUME_SECOND_PROJECT_FINAL.md)
 - GitHub 作品集配置清单：[`docs/GITHUB_PORTFOLIO.md`](docs/GITHUB_PORTFOLIO.md)
+- 开源 DeepResearch 对照：[`docs/OPEN_SOURCE_COMPARISON.md`](docs/OPEN_SOURCE_COMPARISON.md)
+- 深圳 Agent 实习 JD 与项目差异化：[`docs/SHENZHEN_AGENT_INTERNSHIP_JD_2026.md`](docs/SHENZHEN_AGENT_INTERNSHIP_JD_2026.md)
+- 真实数据架构、安全与缓存设计：[`docs/REAL_DATA_ARCHITECTURE.md`](docs/REAL_DATA_ARCHITECTURE.md)
 - Web Demo 默认 showcase：[`reports/showcase/final_check/index.md`](reports/showcase/final_check/index.md)
 - Formal verifier benchmark：[`reports/verifier_benchmark/formal_deepseek_v4_flash_120x3/report.md`](reports/verifier_benchmark/formal_deepseek_v4_flash_120x3/report.md)
+- 冻结检索质量报告：[`reports/retrieval_eval/benchmark_v3/report.md`](reports/retrieval_eval/benchmark_v3/report.md)
+- 真实百炼Embedding报告：[`reports/retrieval_eval/dashscope_text_embedding_v4_formal_v1/report.md`](reports/retrieval_eval/dashscope_text_embedding_v4_formal_v1/report.md)
+- 80 条 held-out 真实 Embedding 报告：[`reports/retrieval_eval/holdout_v1_dashscope/report.md`](reports/retrieval_eval/holdout_v1_dashscope/report.md)
+- Golden DeepResearch Demo：[`reports/golden_demo/v4/golden_summary.md`](reports/golden_demo/v4/golden_summary.md)
+- 黄金案例设计与边界：[`docs/GOLDEN_DEMO.md`](docs/GOLDEN_DEMO.md)
+- 检索评测设计与指标解释：[`docs/RETRIEVAL_EVALUATION.md`](docs/RETRIEVAL_EVALUATION.md)
 
 ## 快速开始
 
@@ -64,15 +81,37 @@ uv sync --extra web --extra dev
 uv run python scripts/run_demo_server.py
 ```
 
+默认本地模式仍使用 FastAPI BackgroundTasks，便于一条命令演示。需要演示 API/worker 解耦时，开两个终端并共享同一个 WAL SQLite run store：
+
+```powershell
+# 终端 1：API 只持久化 queued run
+$env:DEMO_EXECUTION_MODE='worker'
+$env:DEMO_RUN_STORE_PATH='reports/demo_runs/run_registry.sqlite3'
+uv run python scripts/run_demo_server.py
+
+# 终端 2：原子领取、心跳续租并执行
+uv run python scripts/run_demo_worker.py `
+  --run-store-path reports/demo_runs/run_registry.sqlite3
+```
+
+worker 每次只执行一个 run；启动多个进程即可竞争领取且不会重复消费。同一 run 的 `worker_id/lease_expires_at/attempt_count` 可从 `/api/runs/{run_id}` 查看。异常退出后，过期 lease 在未达到 3 次时重排，达到上限后标记 failed。详见 [Durable Worker Operations](docs/DURABLE_WORKER_OPERATIONS.md)。
+
+本地进程级 E2E 已真实跑通：API 将 `demo_04a791cbcddd` 保持为 queued，独立 worker 领取 1 次后 succeeded，artifacts endpoint 返回 HTTP 200 和 5 条 Evidence。冻结记录见 [`reports/worker_eval/e2e_v1/report.md`](reports/worker_eval/e2e_v1/report.md)；这仍不是 Docker/跨主机验证。
+
 构建本地知识库 corpus profiles：
 
 ```powershell
 uv run python scripts/build_corpus_profiles.py
 uv run python scripts/build_corpus_profiles.py --profile local_kb_docs
+uv run python scripts/build_corpus_profiles.py --source-path "D:\path\paper.pdf" --output data/corpus/profiles/custom_docs.jsonl
 uv run python scripts/run_showcase.py "如何把 DeepResearch Agent 写进 AI 应用实习简历？" --corpus-path data/corpus/profiles/resume_agent_docs.jsonl
 ```
 
-`data/corpus_profiles/local_kb_docs/` 支持 Markdown/TXT/HTML/PDF 混合资料，构建后生成 `data/corpus/profiles/local_kb_docs.jsonl`，用于演示本地企业知识库式 RAG。
+`data/corpus_profiles/local_kb_docs/` 支持 Markdown/TXT/HTML/PDF 混合资料，构建后生成 `data/corpus/profiles/local_kb_docs.jsonl`，用于演示本地企业知识库式 RAG。PDF 按页提取并在页内切块，生成 `p003` 稳定 chunk id、`#page=3&chunk=N` URL、`page_start/page_end` 和 `citation_locator="p. 3"`，这些字段会继续进入 Reader、Evidence、SQLite、报告 Markdown 与 Web Demo。
+
+已用真实 ASCC 论文 `论文_ASCC26_conference_Mamh_0517.pdf` 实跑：识别 6 页并生成 64 个 page-aware chunks；针对 bilateral-constraint slitting 的检索可回到第 1–2 页的具体证据。生成文件放在忽略目录 `data/memory/ascc_paper_corpus_page_aware.jsonl`，不提交用户论文正文。
+
+Web Demo 现在也支持直接上传真实文档。上传采用 64 KiB 流式写入、10 MiB 默认上限、PDF magic/UTF-8/NUL 校验、SHA-256 内容寻址去重、临时文件清理和原子 manifest/corpus 发布。真实 ASCC PDF 经 multipart API 生成同样的 6 页/64 chunks，随后研究 run 产出 16 条带 p.1/p.2/p.3/p.5 与 upload hash 的 Evidence。安全设计和边界见 [Upload Ingestion](docs/UPLOAD_INGESTION.md)。
 
 ```powershell
 uv run python scripts/run_research.py "为什么需要对 DeepResearch Agent 做引用验证和 Red-Blue 修复？" --output reports/example.md --output-json reports/example.json
@@ -86,11 +125,75 @@ uv run python scripts/run_showcase.py "为什么 DeepResearch Agent 需要引用
 
 默认输出到 `reports/showcase/<timestamp>/`，入口文件是 `index.md`。
 
+运行冻结黄金案例。脚本会从 `.env` 读取百炼配置，真实抓取 NIST、OWASP 和 arXiv，使用真实 Embedding，并对“公开来源是否被主张实际引用”做硬门禁：
+
+```powershell
+uv run python scripts/run_golden_demo.py
+```
+
+默认使用 `writer_mode=extractive`，保证无需第二个付费 Key 也能复现真实 source -> evidence -> citation -> verification 链路。以后配置 `DEEPSEEK_API_KEY` 后可显式运行 `uv run python scripts/run_golden_demo.py --llm-backend deepseek`；此时 LLM writer 只接受提供的 evidence id，无法把虚构 citation id 写进报告。
+
+可选启用一轮轻量补充检索：当第一轮 evidence 为空、source quality 偏低或 quote 覆盖不足时，Coordinator 会生成 follow-up query 并把 `follow_up_queries`、`supplemental_evidence_count` 和 `source_quality` 写入 run summary。该开关默认关闭，避免污染冻结 offline/mock benchmark。
+
+```powershell
+uv run python scripts/run_research.py "为什么 DeepResearch Agent 需要引用验证？" --use-iterative-search
+uv run python scripts/run_showcase.py "为什么 DeepResearch Agent 需要引用验证？" --use-iterative-search
+```
+
+真实搜索仍然默认关闭，避免污染冻结 offline/mock benchmark。显式开启后支持逗号分隔的多 provider：Tavily 返回网页原始正文，Wikipedia 返回 MediaWiki extract，arXiv 返回真实论文摘要，GitHub 通过官方 API 搜索仓库并读取 README，SearXNG 负责自托管搜索发现并继续安全抓取 HTML/PDF 正文。外部结果经过 URL 去重、source diversity、来源血缘和风险标记后进入同一套 Searcher -> Reader -> Evidence -> Verifier 链路。
+
+```powershell
+$env:WIKIPEDIA_LANGUAGE='zh'
+uv run python scripts/inspect_web_search.py "Deep Research" --provider wikipedia
+uv run python scripts/run_research.py "Deep Research 是什么？" --enable-web-search --web-search-provider wikipedia
+uv run python scripts/inspect_web_search.py "deep research agent" --provider wikipedia,arxiv,github
+uv run python scripts/inspect_web_search.py "读取 https://example.com/report.pdf" --provider url
+
+$env:TAVILY_API_KEY='你的 Tavily API key'
+uv run python scripts/run_research.py "最近 DeepResearch Agent 开源项目有什么共性？" --enable-web-search --web-search-provider tavily
+
+$env:SEARXNG_URL='http://127.0.0.1:8080'
+uv run python scripts/run_research.py "Agent 评测框架有哪些？" --enable-web-search --web-search-provider searxng,wikipedia
+```
+
+`configs/live_web.toml` 默认使用 `url,tavily,wikipedia,arxiv`：问题里有公开 URL/PDF 时直接读取，有 Tavily key 时增加通用网页搜索，没有 key 时仍可用 Wikipedia 和 arXiv 完成真实联网研究。每个 Provider 都经过并发限制、硬超时、指数退避重试和熔断包装，并记录脱敏 query hash、延迟、attempt/retry、状态与 circuit state。搜索结果默认写入 WAL 模式 SQLite TTL cache；可选 Redis 共享缓存并在连接失败时自动回退 SQLite。默认 Writer 使用确定性 extractive 模式，真实 LLM 写作必须显式选择 `writer_mode=llm`。
+
+```powershell
+$env:TAVILY_API_KEY='你的 Tavily API key'
+uv run python scripts/run_research.py "最近 DeepResearch Agent 开源项目有什么共性？" --config configs/live_web.toml
+```
+
+运行 12 案例真实来源评测，覆盖 Wikipedia、arXiv、GitHub 和 Direct URL，检查结果正文、URL、lineage、Provider 遥测、标题相关性和二次缓存命中：
+
+```powershell
+uv run python scripts/run_live_source_eval.py --fail-on-error
+```
+
+最近一次保留报告为 `reports/live_source_eval/resilience_12_cases_v2/report.md`：12/12 通过，lineage、transport telemetry 和第二次查询 cache hit rate 均为 1.000。该结果证明当前链路可运行，不等价于生产 SLA。
+
+`.github/workflows/live-source-monitor.yml` 支持每周一和手动运行：先执行 12 案例评测，再把 snapshot 追加到 GitHub cache 中的 JSONL history，生成最近 30 次趋势表并上传 30 天 artifact。即使最新观测失败，history/report 也会先落盘，随后 job 才失败。首次本地真实观测为 12/12、mean first latency 1.641s、P95 6.159s；目前只有 1 个观测，仍不能称为 SLA。
+
+```powershell
+uv run python scripts/update_live_source_history.py `
+  --metrics reports/live_source_eval/resilience_12_cases_v2/metrics.json `
+  --history reports/live_source_history/history.jsonl `
+  --report reports/live_source_history/report.md
+```
+
+可选 Redis 企业缓存：
+
+```powershell
+uv sync --extra enterprise --extra web --extra dev
+docker compose -f compose.redis.yml up -d
+$env:REDIS_URL='redis://127.0.0.1:6379/0'
+uv run python scripts/inspect_web_search.py "deep research agent" --provider wikipedia,arxiv,github --cache-backend redis
+```
+
 Showcase 也支持记录 LLM 后端配置：
 
 ```powershell
 uv run python scripts/run_showcase.py "为什么 DeepResearch Agent 需要引用验证？" --llm-backend mock --model mock-researcher-v0
-uv run python scripts/run_showcase.py "为什么 DeepResearch Agent 需要引用验证？" --llm-backend deepseek
+uv run python scripts/run_showcase.py "为什么 DeepResearch Agent 需要引用验证？" --llm-backend deepseek --writer-mode llm
 ```
 
 展示包会生成 `llm_backend.md`，用于查看 backend、model、base url、env 配置和 run summary 中的后端字段。
@@ -138,6 +241,37 @@ uv run pytest
 ```powershell
 uv run python scripts/run_eval.py --dataset data/benchmarks/researchbench.jsonl --experiments baseline,memory,compression,verifier,redblue,full
 ```
+
+单独评测 Searcher 的本地召回质量，并对 lexical / vector / hybrid 做同集消融：
+
+```powershell
+uv run python scripts/run_retrieval_eval.py `
+  --output-dir reports/retrieval_eval/latest `
+  --min-hybrid-recall-at-max-k 0.84
+```
+
+该命令固定读取 35 题 `researchbench.jsonl` 的 `required_sources`，校验所有 relevance label 都存在于 corpus，记录 benchmark/corpus SHA-256，输出 Recall@1/3/5、Hit@K、All-relevant@K、MRR@5、nDCG@5、分组指标和逐例漏召。CI 使用相同命令做 Recall@5 回归门禁；详细边界见 [Retrieval Evaluation](docs/RETRIEVAL_EVALUATION.md)。
+
+可选用真实 OpenAI-compatible embedding 服务复跑同一基准。API key 只从指定环境变量读取，向量以 `base_url + model + text SHA-256` 为 cache key 写入 WAL SQLite；报告只记录 provider/model/cache hit 等脱敏状态。项目已使用阿里云百炼 `text-embedding-v4` 完成35题实跑：
+
+```powershell
+$env:EMBEDDING_API_KEY='你的 key'
+$env:EMBEDDING_BASE_URL='https://你的兼容服务/v1'
+$env:EMBEDDING_MODEL='你的 embedding 模型'
+
+uv run python scripts/run_retrieval_eval.py `
+  --embedding-provider openai-compatible `
+  --embedding-base-url $env:EMBEDDING_BASE_URL `
+  --embedding-model $env:EMBEDDING_MODEL `
+  --output-dir reports/retrieval_eval/real_embedding
+
+uv run python scripts/run_research.py "为什么需要引用验证？" `
+  --embedding-provider openai-compatible `
+  --embedding-base-url $env:EMBEDDING_BASE_URL `
+  --embedding-model $env:EMBEDDING_MODEL
+```
+
+实现与生产边界见 [Embedding Integration](docs/EMBEDDING_INTEGRATION.md)。
 
 使用配置文件运行默认评测：
 
@@ -404,13 +538,40 @@ uv run python scripts/run_demo_server.py
 API 入口：
 
 - `GET /api/health`
+- `GET /api/health/live`：只判断进程存活，供容器 liveness 使用。
+- `GET /api/health/ready`：检查静态资源、corpus profile 和报告目录，供 readiness 使用。
+- `GET /metrics`：Prometheus 文本指标，包含 HTTP 请求量/耗时、run 状态、active capacity 和 uptime。
+- `POST /api/corpora/uploads`
+- `GET /api/corpora/uploads`
+- `GET /api/corpora/uploads/{corpus_id}`
 - `GET /api/showcase/default`
 - `POST /api/runs`
+- `GET /api/runs?status=succeeded&limit=20`
 - `GET /api/runs/{run_id}`
 - `GET /api/runs/{run_id}/artifacts`
 - `POST /api/deepseek-showcase`
 
 新 run 默认只允许 `backend="mock"`。DeepSeek 真实调用只通过 `/api/deepseek-showcase` 显式触发，并且只从环境变量读取 `DEEPSEEK_API_KEY`。
+
+所有 HTTP 响应都返回 `X-Request-ID`；合法的调用方 request id 会被透传，非法或缺失值由服务生成。访问日志与后台 run 状态使用单行 JSON，包含 request id、run id、路径、状态码和耗时，不记录请求正文或 API key。Demo run 不再存于进程内字典，而是写入 WAL SQLite：状态转换使用条件更新防止重复领取，服务重启后仍可查询，readiness 会实际检查 run store。
+
+`POST /api/runs` 支持 `Idempotency-Key`：相同 key + 相同规范化请求返回原 run 和 `X-Idempotent-Replay: true`，相同 key + 不同请求返回 409。任务创建在 `BEGIN IMMEDIATE` 事务内同时检查 active capacity，默认最多 2 个 queued/running 任务，超限返回 429 + `Retry-After: 5`；可通过 `DEMO_MAX_ACTIVE_RUNS` 调整。实现和边界见 [Service Operations](docs/SERVICE_OPERATIONS.md)。
+
+```powershell
+Invoke-WebRequest http://127.0.0.1:8000/metrics | Select-Object -ExpandProperty Content
+```
+
+HTTP 指标使用 `/api/runs/{run_id}` 这样的路由模板作为 label，不使用实际 run id，避免高基数；进程请求计数属于单 worker，`deepresearch_demo_runs` 则从共享 SQLite 即时读取。当前 Compose 只启动一个应用 worker。
+
+Docker Compose 同时启动非 root FastAPI 应用与 Redis，应用 readiness 通过后容器才标记 healthy：
+
+```powershell
+docker compose up --build
+Invoke-RestMethod http://127.0.0.1:8000/api/health/ready
+docker compose down
+```
+
+镜像只复制约 362 KB 的冻结默认 showcase，不复制约 175 MB 的其余本地评测产物、`.env`、缓存或备份压缩包。当前开发机没有 Docker CLI，因此仓库内完成了 YAML/文件级检查和 FastAPI 探针测试；首次在安装 Docker Desktop 的机器上还应执行一次真实 build/health 验证。
 
 ## 最终质量门
 

@@ -1,8 +1,10 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import re
 from dataclasses import dataclass
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Iterable
 
@@ -28,6 +30,13 @@ class CorpusProfile:
             "source_dir": str(self.source_dir),
             "output_path": str(self.output_path),
         }
+
+
+@dataclass(frozen=True, slots=True)
+class SourceSection:
+    text: str
+    page_number: int | None = None
+    page_count: int | None = None
 
 
 DEFAULT_PROFILES = {
@@ -79,23 +88,69 @@ def build_profile(profile: CorpusProfile) -> Path:
     profile.output_path.parent.mkdir(parents=True, exist_ok=True)
     rows = []
     for doc_index, path in enumerate(docs, start=1):
-        text = _normalize_text(_read_source_text(path))
-        if not text:
+        sections = _read_source_sections(path)
+        normalized_sections = []
+        for section in sections:
+            normalized = _normalize_text(section.text)
+            if normalized:
+                normalized_sections.append((section, normalized))
+        source_text = " ".join(text for _, text in normalized_sections)
+        if not source_text:
             continue
-        for chunk_index, chunk in enumerate(_chunk_text(text), start=1):
-            rows.append(
-                {
-                    "id": f"{profile.key}_{doc_index:02d}_{chunk_index:02d}",
-                    "title": _title_from_path(path),
-                    "url": f"profile://{profile.key}/{path.name}#chunk-{chunk_index}",
-                    "text": chunk,
-                    "source_type": "corpus_profile",
-                    "source_format": path.suffix.lower().lstrip("."),
-                    "topics": _infer_topics(profile.key, path, chunk),
-                    "trust_level": "high",
-                    "profile": profile.key,
+        source_hash = hashlib.sha256(source_text.encode("utf-8")).hexdigest()
+        source_modified_at = datetime.fromtimestamp(
+            path.stat().st_mtime, tz=timezone.utc
+        ).isoformat()
+        title = _title_from_text(path, "\n".join(section.text for section in sections))
+        global_chunk_index = 0
+        for section, text in normalized_sections:
+            for page_chunk_index, chunk in enumerate(_chunk_text(text), start=1):
+                global_chunk_index += 1
+                page = section.page_number
+                chunk_id = (
+                    f"{profile.key}_{doc_index:02d}_p{page:03d}_{page_chunk_index:02d}"
+                    if page is not None
+                    else f"{profile.key}_{doc_index:02d}_{global_chunk_index:02d}"
+                )
+                anchor = (
+                    f"page={page}&chunk={page_chunk_index}"
+                    if page is not None
+                    else f"chunk-{global_chunk_index}"
+                )
+                metadata: dict[str, object] = {
+                    "content_origin": "local_pdf_page" if page is not None else "local_file",
+                    "fetch_status": "local_read",
+                    "content_sha256": source_hash,
+                    "chunk_sha256": hashlib.sha256(chunk.encode("utf-8")).hexdigest(),
+                    "retrieved_at": source_modified_at,
+                    "source_name": path.name,
+                    "source_size_bytes": path.stat().st_size,
+                    "source_chunk_id": chunk_id,
                 }
-            )
+                if page is not None:
+                    metadata.update(
+                        {
+                            "page_number": page,
+                            "page_start": page,
+                            "page_end": page,
+                            "source_page_count": section.page_count,
+                            "citation_locator": f"p. {page}",
+                        }
+                    )
+                rows.append(
+                    {
+                        "id": chunk_id,
+                        "title": title,
+                        "url": f"profile://{profile.key}/{path.name}#{anchor}",
+                        "text": chunk,
+                        "source_type": "corpus_profile",
+                        "source_format": path.suffix.lower().lstrip("."),
+                        "topics": _infer_topics(profile.key, path, chunk),
+                        "trust_level": "high",
+                        "profile": profile.key,
+                        "metadata": metadata,
+                    }
+                )
     profile.output_path.write_text(
         "\n".join(json.dumps(row, ensure_ascii=False) for row in rows) + ("\n" if rows else ""),
         encoding="utf-8",
@@ -106,6 +161,9 @@ def build_profile(profile: CorpusProfile) -> Path:
 def _iter_source_files(source_dir: Path) -> Iterable[Path]:
     if not source_dir.exists():
         return []
+    if source_dir.is_file():
+        supported = {".md", ".txt", ".html", ".pdf"}
+        return [source_dir] if source_dir.suffix.lower() in supported else []
     return sorted(
         path
         for path in source_dir.rglob("*")
@@ -114,24 +172,36 @@ def _iter_source_files(source_dir: Path) -> Iterable[Path]:
 
 
 def _read_source_text(path: Path) -> str:
-    suffix = path.suffix.lower()
-    if suffix == ".pdf":
-        return _read_pdf_text(path)
-    return path.read_text(encoding="utf-8")
+    return "\n".join(section.text for section in _read_source_sections(path))
 
 
-def _read_pdf_text(path: Path) -> str:
+def _read_source_sections(path: Path) -> list[SourceSection]:
+    if path.suffix.lower() == ".pdf":
+        return _read_pdf_sections(path)
+    return [SourceSection(path.read_text(encoding="utf-8"))]
+
+
+def _read_pdf_sections(path: Path) -> list[SourceSection]:
+    page_count: int | None = None
     try:
         from pypdf import PdfReader
 
         reader = PdfReader(str(path))
-        pages = [page.extract_text() or "" for page in reader.pages]
-        text = "\n".join(page for page in pages if page.strip())
-        if text.strip():
-            return text
+        page_count = len(reader.pages)
+        sections = [
+            SourceSection(page.extract_text() or "", page_number=index, page_count=page_count)
+            for index, page in enumerate(reader.pages, start=1)
+        ]
+        if any(section.text.strip() for section in sections):
+            return [section for section in sections if section.text.strip()]
     except Exception:  # noqa: BLE001 - bad local PDFs should not break corpus building.
         pass
-    return _extract_pdf_literal_text(path.read_bytes())
+    fallback = _extract_pdf_literal_text(path.read_bytes())
+    return [SourceSection(fallback, page_count=page_count)] if fallback else []
+
+
+def _read_pdf_text(path: Path) -> str:
+    return "\n".join(section.text for section in _read_pdf_sections(path))
 
 
 def _extract_pdf_literal_text(data: bytes) -> str:
@@ -163,11 +233,29 @@ def _chunk_text(text: str, max_chars: int = 520) -> list[str]:
     return chunks or [text[:max_chars]]
 
 
-def _title_from_path(path: Path) -> str:
-    lines = _read_source_text(path).splitlines()
+def _title_from_text(path: Path, text: str) -> str:
+    lines = text.splitlines()
     first = lines[0].strip() if lines else ""
     if first.startswith("#"):
         return first.lstrip("#").strip()
+    if path.suffix.lower() == ".pdf":
+        title_parts = []
+        for raw_line in lines[:8]:
+            line = raw_line.strip()
+            if not line:
+                continue
+            if title_parts and re.match(
+                r"^(?:\d+(?:st|nd|rd|th)\b|abstract\b|keywords?\b)",
+                line,
+                flags=re.IGNORECASE,
+            ):
+                break
+            title_parts.append(line)
+            if len(" ".join(title_parts)) >= 160:
+                break
+        title = " ".join(title_parts)
+        if 8 <= len(title) <= 240:
+            return title
     return path.stem.replace("_", " ").title()
 
 

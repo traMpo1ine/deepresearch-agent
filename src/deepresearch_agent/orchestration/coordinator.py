@@ -16,8 +16,17 @@ from deepresearch_agent.agents.searcher import SearcherAgent
 from deepresearch_agent.agents.verifier import VerifierAgent
 from deepresearch_agent.agents.writer import WriterAgent
 from deepresearch_agent.compression import TextRankCompressor
+from deepresearch_agent.evidence_quality import (
+    annotate_source_quality,
+    suggest_follow_up_queries,
+    summarize_source_quality,
+)
 from deepresearch_agent.llm import LLMBackendConfig, backend_status, create_llm_backend
-from deepresearch_agent.memory import NumpyVectorIndex, SQLiteMemoryStore
+from deepresearch_agent.memory import (
+    NumpyVectorIndex,
+    OpenAICompatibleEmbeddingProvider,
+    SQLiteMemoryStore,
+)
 from deepresearch_agent.orchestration.dag import DAGTaskGraph
 from deepresearch_agent.orchestration.state_machine import TaskStateMachine
 from deepresearch_agent.redblue.blue_agent import BlueRepairAgent
@@ -34,6 +43,8 @@ from deepresearch_agent.schemas import (
     VerificationStatus,
 )
 from deepresearch_agent.schemas.core import new_id, utc_now
+from deepresearch_agent.source_observability import summarize_live_sources
+from deepresearch_agent.tools.web_search import web_search_status
 
 
 class ResearchCoordinator:
@@ -57,6 +68,25 @@ class ResearchCoordinator:
         min_evidence_count: int = 1,
         batch_replan_threshold: int = 1,
         corpus_path: str | Path = "data/corpus/offline_corpus.jsonl",
+        use_iterative_search: bool = False,
+        max_follow_up_queries: int = 1,
+        source_quality_threshold: float = 0.58,
+        enable_web_search: bool = False,
+        web_search_provider: str = "disabled",
+        max_web_results: int = 3,
+        web_search_cache_path: str | Path | None = "data/memory/web_search_cache.sqlite3",
+        web_search_cache_ttl_seconds: int = 3600,
+        web_search_cache_backend: str = "sqlite",
+        web_search_redis_url: str | None = None,
+        embedding_provider: str = "hashing",
+        embedding_base_url: str = "https://api.openai.com/v1",
+        embedding_model: str = "text-embedding-3-small",
+        embedding_api_key_env: str = "EMBEDDING_API_KEY",
+        embedding_cache_path: str | Path = "data/memory/embedding_cache.sqlite3",
+        embedding_timeout_seconds: float = 30.0,
+        embedding_max_retries: int = 2,
+        embedding_batch_size: int = 64,
+        writer_mode: str = "template",
     ) -> None:
         self.semaphore = asyncio.Semaphore(max_concurrency)
         self.state_machine = TaskStateMachine()
@@ -77,6 +107,41 @@ class ResearchCoordinator:
         self.min_evidence_count = min_evidence_count
         self.batch_replan_threshold = batch_replan_threshold
         self.corpus_path = str(corpus_path)
+        self.use_iterative_search = use_iterative_search
+        self.max_follow_up_queries = max_follow_up_queries
+        self.source_quality_threshold = source_quality_threshold
+        self.enable_web_search = enable_web_search
+        self.web_search_provider = web_search_provider
+        self.max_web_results = max_web_results
+        self.web_search_cache_path = (
+            str(web_search_cache_path) if web_search_cache_path is not None else None
+        )
+        self.web_search_cache_ttl_seconds = web_search_cache_ttl_seconds
+        self.web_search_cache_backend = web_search_cache_backend
+        self.web_search_redis_url = web_search_redis_url
+        if embedding_provider not in {"hashing", "openai-compatible"}:
+            raise ValueError("embedding_provider must be hashing or openai-compatible")
+        self.embedding_provider_name = embedding_provider
+        if writer_mode not in WriterAgent.MODES:
+            raise ValueError(
+                f"writer_mode must be one of: {', '.join(sorted(WriterAgent.MODES))}"
+            )
+        if writer_mode == "llm" and llm_backend == "mock":
+            raise ValueError("writer_mode=llm requires a non-mock llm_backend")
+        self.writer_mode = writer_mode
+        self.embedding_adapter = (
+            OpenAICompatibleEmbeddingProvider(
+                base_url=embedding_base_url,
+                model=embedding_model,
+                api_key_env=embedding_api_key_env,
+                cache_path=embedding_cache_path,
+                timeout_seconds=embedding_timeout_seconds,
+                max_retries=embedding_max_retries,
+                batch_size=embedding_batch_size,
+            )
+            if embedding_provider == "openai-compatible"
+            else None
+        )
         self.llm_config = LLMBackendConfig(
             backend=llm_backend,
             model=model,
@@ -89,9 +154,22 @@ class ResearchCoordinator:
         self.llm = create_llm_backend(self.llm_config)
         self.planner_mode = planner_mode
         self.planner = PlannerAgent(mode=planner_mode)
-        self.searcher = SearcherAgent(corpus_path=corpus_path)
+        self.searcher = SearcherAgent(
+            corpus_path=corpus_path,
+            enable_web_search=enable_web_search,
+            web_search_provider=web_search_provider,
+            max_web_results=max_web_results,
+            web_search_cache_path=web_search_cache_path,
+            web_search_cache_ttl_seconds=web_search_cache_ttl_seconds,
+            web_search_cache_backend=web_search_cache_backend,
+            web_search_redis_url=web_search_redis_url,
+            embedding_provider=self.embedding_adapter,
+        )
         self.reader = ReaderAgent()
-        self.writer = WriterAgent()
+        self.writer = WriterAgent(
+            mode=writer_mode,
+            llm_backend=self.llm if writer_mode == "llm" else None,
+        )
         self.critic = CriticAgent()
         self.verifier = VerifierAgent()
         self.blue = BlueRepairAgent()
@@ -121,6 +199,18 @@ class ResearchCoordinator:
                 "min_evidence_count": self.min_evidence_count,
                 "batch_replan_threshold": self.batch_replan_threshold,
                 "corpus_path": self.corpus_path,
+                "use_iterative_search": self.use_iterative_search,
+                "max_follow_up_queries": self.max_follow_up_queries,
+                "source_quality_threshold": self.source_quality_threshold,
+                "enable_web_search": self.enable_web_search,
+                "web_search_provider": self.web_search_provider,
+                "max_web_results": self.max_web_results,
+                "web_search_cache_path": self.web_search_cache_path,
+                "web_search_cache_ttl_seconds": self.web_search_cache_ttl_seconds,
+                "web_search_cache_backend": self.web_search_cache_backend,
+                "web_search_redis_configured": bool(self.web_search_redis_url),
+                "web_search_status": web_search_status(self.web_search_provider),
+                "embedding_status": self._embedding_telemetry(),
             },
         )
         plan_output = await self._run_agent(
@@ -179,6 +269,16 @@ class ResearchCoordinator:
             )
             evidence.extend(recalled)
             evidence = self._dedupe_evidence(evidence)
+            follow_up_queries: list[str] = []
+            supplemental_evidence: list[Evidence] = []
+            if self.use_iterative_search:
+                follow_up_queries, supplemental_evidence = await self._run_iterative_follow_up(
+                    run_id,
+                    question,
+                    evidence,
+                )
+                evidence.extend(supplemental_evidence)
+                evidence = self._dedupe_evidence(evidence)
             if len(evidence) < self.min_evidence_count:
                 fallback_level = 3
             context = self.compressor.compress_evidence(question, evidence) if self.use_compression else None
@@ -315,6 +415,8 @@ class ResearchCoordinator:
                 fallback_level=fallback_level,
                 replan_count=replan_count,
                 batch_failure_events=batch_failure_events,
+                follow_up_queries=follow_up_queries,
+                supplemental_evidence_count=len(supplemental_evidence),
             )
             for claim in report.claims:
                 self.memory.add_claim(run_id, claim)
@@ -345,6 +447,7 @@ class ResearchCoordinator:
     def _dedupe_evidence(self, evidence: list[Evidence]) -> list[Evidence]:
         by_key: dict[tuple[str, str], Evidence] = {}
         for item in evidence:
+            annotate_source_quality(item)
             key = (item.source_id, item.quote or item.text)
             if key not in by_key or item.score > by_key[key].score:
                 by_key[key] = item
@@ -473,6 +576,46 @@ class ResearchCoordinator:
                 self._mark_task_recovered(run_id, failed_task, recovery_task.id)
         return recovered
 
+    async def _run_iterative_follow_up(
+        self,
+        run_id: str,
+        question: str,
+        evidence: list[Evidence],
+    ) -> tuple[list[str], list[Evidence]]:
+        queries = suggest_follow_up_queries(
+            question,
+            evidence,
+            quality_threshold=self.source_quality_threshold,
+            max_queries=self.max_follow_up_queries,
+        )
+        if not queries:
+            return [], []
+        supplemental: list[Evidence] = []
+        existing_keys = {(item.source_id, item.quote or item.text) for item in evidence}
+        for index, query in enumerate(queries[: self.max_follow_up_queries], start=1):
+            task = ResearchTask(
+                question=query,
+                task_type=TaskType.SEARCH,
+                priority=250 + index,
+                expected_evidence="Supplemental evidence for low-quality or quote-sparse first pass.",
+                max_retries=0,
+                timeout_seconds=self.llm_timeout_seconds,
+            )
+            self.memory.add_task(run_id, task)
+            items = await self._execute_task(run_id, task, graph=None)
+            for item in items:
+                key = (item.source_id, item.quote or item.text)
+                if key in existing_keys:
+                    continue
+                existing_keys.add(key)
+                item.metadata["iterative_search"] = True
+                item.metadata["follow_up_query"] = query
+                item.metadata["follow_up_index"] = index
+                annotate_source_quality(item)
+                self.memory.add_evidence(item, run_id=run_id)
+                supplemental.append(item)
+        return queries, supplemental
+
     def _mark_task_recovered(self, run_id: str, task: ResearchTask, recovery_task_id: str) -> None:
         try:
             self.state_machine.transition(task, TaskStatus.READY)
@@ -514,6 +657,16 @@ class ResearchCoordinator:
                 lines.append(f"    {dep_id} --> {task.id}")
         (self.plan_dir / f"{run_id}.mmd").write_text("\n".join(lines), encoding="utf-8")
 
+    def _embedding_telemetry(self) -> dict[str, object]:
+        telemetry_reader = getattr(self.searcher, "embedding_telemetry", None)
+        if callable(telemetry_reader):
+            return telemetry_reader()
+        return {
+            "provider": "unknown",
+            "available": False,
+            "reason": "searcher does not expose embedding telemetry",
+        }
+
     def _build_run_summary(
         self,
         run_id: str,
@@ -527,10 +680,32 @@ class ResearchCoordinator:
         fallback_level: int,
         replan_count: int,
         batch_failure_events: list[dict[str, Any]],
+        follow_up_queries: list[str],
+        supplemental_evidence_count: int,
     ) -> dict:
         events = self.memory.list_agent_events(run_id)
         after_repair_weak = sum(1 for claim in report.claims if claim.needs_verification)
         repair_rounds_used = len(report.repair_loop_trace)
+        source_quality = summarize_source_quality(evidence).to_dict()
+        live_sources = summarize_live_sources(evidence).to_dict()
+        telemetry_reader = getattr(self.searcher, "web_search_telemetry", None)
+        web_search_telemetry = (
+            telemetry_reader()
+            if callable(telemetry_reader)
+            else {
+                "summary": {
+                    "event_count": 0,
+                    "status_counts": {},
+                    "provider_counts": {},
+                    "operational_rate": 0.0,
+                    "total_retries": 0,
+                    "mean_latency_seconds": 0.0,
+                    "max_latency_seconds": 0.0,
+                    "circuit_open_count": 0,
+                },
+                "events": [],
+            }
+        )
         repair_stop_reason = (
             report.repair_loop_trace[-1].stop_reason if report.repair_loop_trace else "NOT_RUN"
         )
@@ -573,6 +748,14 @@ class ResearchCoordinator:
             "fallback_level": fallback_level,
             "replan_count": replan_count,
             "batch_failure_events": batch_failure_events,
+            "iterative_search_enabled": self.use_iterative_search,
+            "follow_up_queries": follow_up_queries,
+            "follow_up_query_count": len(follow_up_queries),
+            "supplemental_evidence_count": supplemental_evidence_count,
+            "source_quality": source_quality,
+            "live_sources": live_sources,
+            "web_search_telemetry": web_search_telemetry,
+            "embedding_telemetry": self._embedding_telemetry(),
             "repair_rounds_used": repair_rounds_used,
             "repair_converged": any(trace.converged for trace in report.repair_loop_trace),
             "repair_oscillation_detected": any(
@@ -585,8 +768,21 @@ class ResearchCoordinator:
             "llm_max_retries": self.llm_max_retries,
             "llm_vllm_base_url": self.llm_vllm_base_url,
             "llm_status": self.llm_status,
+            "writer_mode": self.writer_mode,
+            "writer_generation": self.writer.last_generation,
+            "llm_usage": getattr(self.llm, "last_usage", {}),
+            "llm_total_cost_estimate": getattr(self.llm, "total_cost_estimate", 0.0),
             "planner_mode": self.planner_mode,
             "corpus_path": self.corpus_path,
+            "source_quality_threshold": self.source_quality_threshold,
+            "enable_web_search": self.enable_web_search,
+            "web_search_provider": self.web_search_provider,
+            "max_web_results": self.max_web_results,
+            "web_search_cache_path": self.web_search_cache_path,
+            "web_search_cache_ttl_seconds": self.web_search_cache_ttl_seconds,
+            "web_search_cache_backend": self.web_search_cache_backend,
+            "web_search_redis_configured": bool(self.web_search_redis_url),
+            "web_search_status": web_search_status(self.web_search_provider),
         }
 
     def _weak_claim_count(self, report: ResearchReport) -> int:

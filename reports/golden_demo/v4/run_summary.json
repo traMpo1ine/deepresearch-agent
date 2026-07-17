@@ -1,0 +1,204 @@
+{
+  "run_id": "run_3318f752dcc5",
+  "total_latency_seconds": 17.869141899980605,
+  "task_count": 9,
+  "succeeded_tasks": 9,
+  "failed_tasks": 0,
+  "timed_out_tasks": 0,
+  "blocked_tasks": 0,
+  "retry_count": 0,
+  "timeout_recovery_rate": 0.0,
+  "batch_replan_success_rate": 0.0,
+  "fallback_report_rate": 0.0,
+  "evidence_count": 29,
+  "recalled_evidence_count": 0,
+  "repair_count": 0,
+  "repair_success_rate": 1.0,
+  "compression_ratio": 0.7960711768851304,
+  "avg_task_latency": 2.2022013119980692,
+  "fallback_level": 0,
+  "replan_count": 0,
+  "batch_failure_events": [],
+  "iterative_search_enabled": false,
+  "follow_up_queries": [],
+  "follow_up_query_count": 0,
+  "supplemental_evidence_count": 0,
+  "source_quality": {
+    "evidence_count": 29,
+    "mean_quality": 0.894,
+    "high_quality_count": 22,
+    "low_quality_count": 0,
+    "quote_coverage": 1.0
+  },
+  "live_sources": {
+    "source_count": 3,
+    "provider_counts": {
+      "url": 3
+    },
+    "content_origin_counts": {
+      "direct_url_fetch": 3
+    },
+    "fetch_status_counts": {
+      "ok": 3
+    },
+    "cache_hit_count": 0,
+    "cache_hit_rate": 0.0,
+    "lineage_complete_count": 3,
+    "lineage_complete_rate": 1.0,
+    "risk_flag_source_count": 1,
+    "duplicate_url_rate": 0.0
+  },
+  "web_search_telemetry": {
+    "summary": {
+      "event_count": 5,
+      "status_counts": {
+        "success": 5
+      },
+      "provider_counts": {
+        "url": 5
+      },
+      "operational_rate": 1.0,
+      "total_retries": 0,
+      "mean_latency_seconds": 4.38526,
+      "max_latency_seconds": 5.3191,
+      "circuit_open_count": 0
+    },
+    "events": [
+      {
+        "provider": "url",
+        "query_preview": "Identify failure modes, reliability risks, and affected claims for: 请基于下面三份公开资料，为一个可审计的 DeepResearch Agent 设计工程方案：说明为什么要",
+        "query_sha256": "95c7a20dfea388fd7e18923bec42b5edde468699c5a8c2991a288c4c00efbefa",
+        "status": "success",
+        "result_count": 3,
+        "latency_seconds": 3.7847,
+        "attempts": 1,
+        "retries": 0,
+        "circuit_state": "closed",
+        "error_type": null,
+        "created_at": "2026-07-17T08:34:48.087894+00:00"
+      },
+      {
+        "provider": "url",
+        "query_preview": "Establish the background concepts and scope for: 请基于下面三份公开资料，为一个可审计的 DeepResearch Agent 设计工程方案：说明为什么要分别评测检索与生成、如何保留引用溯源，",
+        "query_sha256": "5de5e0a86c7d045ec317bc4f87bcf2589f260d60f434770547950a5b27995efb",
+        "status": "success",
+        "result_count": 3,
+        "latency_seconds": 4.6096,
+        "attempts": 1,
+        "retries": 0,
+        "circuit_state": "closed",
+        "error_type": null,
+        "created_at": "2026-07-17T08:34:48.913045+00:00"
+      },
+      {
+        "provider": "url",
+        "query_preview": "Investigate implementation mechanisms and mitigations for: 请基于下面三份公开资料，为一个可审计的 DeepResearch Agent 设计工程方案：说明为什么要分别评测检索与生成",
+        "query_sha256": "81036147e2c18cc3d9827bf24ae45a6bf42d89eb858a118e3d369ede9330ee6c",
+        "status": "success",
+        "result_count": 3,
+        "latency_seconds": 5.3191,
+        "attempts": 1,
+        "retries": 0,
+        "circuit_state": "closed",
+        "error_type": null,
+        "created_at": "2026-07-17T08:34:56.272282+00:00"
+      },
+      {
+        "provider": "url",
+        "query_preview": "Define evaluation metrics and verification criteria for: 请基于下面三份公开资料，为一个可审计的 DeepResearch Agent 设计工程方案：说明为什么要分别评测检索与生成、如",
+        "query_sha256": "e0a1e37d9c852ef3cdb74fee9ba41cb25e948e3ec5fa6fe289cbba71baf77b26",
+        "status": "success",
+        "result_count": 3,
+        "latency_seconds": 4.1116,
+        "attempts": 1,
+        "retries": 0,
+        "circuit_state": "closed",
+        "error_type": null,
+        "created_at": "2026-07-17T08:35:01.087502+00:00"
+      },
+      {
+        "provider": "url",
+        "query_preview": "Analyze residual tradeoffs and limitations after mitigation for: 请基于下面三份公开资料，为一个可审计的 DeepResearch Agent 设计工程方案：说明为什么要分别评",
+        "query_sha256": "de44d0d5c0378aac8f7586edb3c98a8bebf7827691d579a1fc62fe07217ac2a5",
+        "status": "success",
+        "result_count": 3,
+        "latency_seconds": 4.1013,
+        "attempts": 1,
+        "retries": 0,
+        "circuit_state": "closed",
+        "error_type": null,
+        "created_at": "2026-07-17T08:35:01.096968+00:00"
+      }
+    ]
+  },
+  "embedding_telemetry": {
+    "provider": "openai_compatible",
+    "base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1",
+    "model": "text-embedding-v4",
+    "api_key_env": "EMBEDDING_API_KEY",
+    "env_configured": true,
+    "cache_backend": "sqlite",
+    "cache_path": "reports/golden_demo/v4/embedding_cache.sqlite3",
+    "batch_size": 10,
+    "requested_batch_size": 64,
+    "requests": 8,
+    "remote_inputs": 48,
+    "cache_hits": 87,
+    "cache_misses": 48,
+    "retries": 0,
+    "errors": 0,
+    "prompt_tokens": 8480,
+    "total_tokens": 8480,
+    "last_latency_seconds": 0.593558
+  },
+  "repair_rounds_used": 1,
+  "repair_converged": true,
+  "repair_oscillation_detected": false,
+  "repair_stop_reason": "CONVERGED",
+  "llm_backend": "mock",
+  "model": "mock-researcher-v0",
+  "llm_timeout_seconds": 60.0,
+  "llm_max_retries": 2,
+  "llm_vllm_base_url": "http://localhost:8000/v1",
+  "llm_status": {
+    "backend": "mock",
+    "model": "mock-researcher-v0",
+    "timeout_seconds": 60.0,
+    "max_retries": 2,
+    "max_tokens": null,
+    "env_var": null,
+    "env_configured": true,
+    "offline_safe": true,
+    "base_url": "local://mock"
+  },
+  "writer_mode": "extractive",
+  "writer_generation": {
+    "mode": "extractive",
+    "fallback": false,
+    "claim_count": 3
+  },
+  "llm_usage": {},
+  "llm_total_cost_estimate": 0.0,
+  "planner_mode": "heuristic",
+  "corpus_path": "data/corpus/offline_corpus.jsonl",
+  "source_quality_threshold": 0.58,
+  "enable_web_search": true,
+  "web_search_provider": "url",
+  "max_web_results": 3,
+  "web_search_cache_path": "reports\\golden_demo\\v4\\web_search_cache.sqlite3",
+  "web_search_cache_ttl_seconds": 3600,
+  "web_search_cache_backend": "sqlite",
+  "web_search_redis_configured": false,
+  "web_search_status": {
+    "provider": "url",
+    "providers": [
+      {
+        "provider": "url",
+        "env_var": null,
+        "configured": true
+      }
+    ],
+    "env_configured": true,
+    "enabled_by_default": false
+  }
+}

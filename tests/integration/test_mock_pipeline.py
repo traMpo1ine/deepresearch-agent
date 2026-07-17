@@ -125,3 +125,24 @@ async def test_evidence_threshold_fallback_keeps_report_readable(tmp_path) -> No
     assert report.claims
     assert report.run_summary["fallback_level"] == 3
     assert any("Fallback synthesis" in item for item in report.limitations)
+
+
+@pytest.mark.asyncio
+async def test_iterative_search_records_follow_up_trace(tmp_path) -> None:
+    coordinator = ResearchCoordinator(
+        max_concurrency=2,
+        memory_path=tmp_path / "memory.sqlite3",
+        vector_path=tmp_path / "vector_index.npz",
+        plan_dir=tmp_path / "plans",
+        use_iterative_search=True,
+        source_quality_threshold=1.1,
+        max_follow_up_queries=1,
+    )
+
+    report = await coordinator.run("Why should deep research agents preserve citation quotes?")
+
+    assert report.run_summary["iterative_search_enabled"] is True
+    assert report.run_summary["follow_up_query_count"] == 1
+    assert report.run_summary["follow_up_queries"]
+    assert "source_quality" in report.run_summary
+    assert report.run_summary["source_quality"]["evidence_count"] == report.run_summary["evidence_count"]

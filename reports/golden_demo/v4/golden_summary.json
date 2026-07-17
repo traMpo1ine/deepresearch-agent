@@ -1,0 +1,107 @@
+{
+  "schema_version": 1,
+  "generated_at_utc": "2026-07-17T08:35:02.223409+00:00",
+  "status": "PASS",
+  "run_id": "run_3318f752dcc5",
+  "question": "请基于下面三份公开资料，为一个可审计的 DeepResearch Agent 设计工程方案：说明为什么要分别评测检索与生成、如何保留引用溯源，以及如何把提示注入作为不可信输入处理。请区分资料明确支持的结论与工程推断，并给出可以落地的最小检查清单。\nhttps://www.nist.gov/publications/artificial-intelligence-risk-management-framework-generative-artificial-intelligence\nhttps://genai.owasp.org/llm-top-10/\nhttps://arxiv.org/abs/2405.07437",
+  "source_urls": [
+    "https://www.nist.gov/publications/artificial-intelligence-risk-management-framework-generative-artificial-intelligence",
+    "https://genai.owasp.org/llm-top-10/",
+    "https://arxiv.org/abs/2405.07437"
+  ],
+  "public_source_hosts": [
+    "arxiv.org",
+    "genai.owasp.org",
+    "www.nist.gov"
+  ],
+  "generation_backend": "mock",
+  "generation_is_real_llm": false,
+  "embedding_model": "text-embedding-v4",
+  "embedding_telemetry": {
+    "provider": "openai_compatible",
+    "base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1",
+    "model": "text-embedding-v4",
+    "api_key_env": "EMBEDDING_API_KEY",
+    "env_configured": true,
+    "cache_backend": "sqlite",
+    "cache_path": "reports/golden_demo/v4/embedding_cache.sqlite3",
+    "batch_size": 10,
+    "requested_batch_size": 64,
+    "requests": 8,
+    "remote_inputs": 48,
+    "cache_hits": 87,
+    "cache_misses": 48,
+    "retries": 0,
+    "errors": 0,
+    "prompt_tokens": 8480,
+    "total_tokens": 8480,
+    "last_latency_seconds": 0.593558
+  },
+  "live_source_summary": {
+    "source_count": 3,
+    "provider_counts": {
+      "url": 3
+    },
+    "content_origin_counts": {
+      "direct_url_fetch": 3
+    },
+    "fetch_status_counts": {
+      "ok": 3
+    },
+    "cache_hit_count": 0,
+    "cache_hit_rate": 0.0,
+    "lineage_complete_count": 3,
+    "lineage_complete_rate": 1.0,
+    "risk_flag_source_count": 1,
+    "duplicate_url_rate": 0.0
+  },
+  "checks": {
+    "real_embedding_configured": {
+      "passed": true,
+      "observed": "openai_compatible"
+    },
+    "embedding_model_expected": {
+      "passed": true,
+      "observed": "text-embedding-v4"
+    },
+    "public_sources_retrieved": {
+      "passed": true,
+      "observed": 3
+    },
+    "source_lineage_complete": {
+      "passed": true,
+      "observed": 1.0
+    },
+    "evidence_created": {
+      "passed": true,
+      "observed": 29
+    },
+    "claims_created": {
+      "passed": true,
+      "observed": 3
+    },
+    "public_source_cited": {
+      "passed": true,
+      "observed": 3
+    },
+    "verification_trace_created": {
+      "passed": true,
+      "observed": 3
+    }
+  },
+  "artifacts": {
+    "plan_md": "plan.md",
+    "report_md": "report.md",
+    "report_json": "report.json",
+    "run_summary_json": "run_summary.json",
+    "memory_trace_md": "memory_trace.md",
+    "compression_trace_md": "compression_trace.md",
+    "verifier_trace_md": "verifier_trace.md",
+    "redblue_trace_md": "redblue_trace.md",
+    "llm_backend_md": "llm_backend.md",
+    "eval_summary_md": "eval_summary.md",
+    "interview_notes_md": "interview_notes.md",
+    "index_md": "index.md"
+  },
+  "interpretation_boundary": "Controlled real-source and real-embedding demo. Mock generation is deterministic and is not evidence of real-LLM generation quality."
+}

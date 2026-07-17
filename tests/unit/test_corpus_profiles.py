@@ -3,6 +3,7 @@ import json
 import pytest
 
 from deepresearch_agent.corpus_profiles import (
+    SourceSection,
     build_profile,
     get_corpus_profile,
     list_corpus_profiles,
@@ -45,6 +46,8 @@ def test_build_profile_writes_searcher_compatible_jsonl(tmp_path) -> None:
     assert rows[0]["profile"] == "resume_agent_docs"
     assert "citation" in rows[0]["topics"]
     assert rows[0]["url"].startswith("profile://resume_agent_docs/")
+    assert rows[0]["metadata"]["content_origin"] == "local_file"
+    assert len(rows[0]["metadata"]["content_sha256"]) == 64
 
 
 def test_build_profile_reads_pdf_sources(tmp_path) -> None:
@@ -74,6 +77,56 @@ def test_build_profile_reads_pdf_sources(tmp_path) -> None:
     assert rows[0]["source_format"] == "pdf"
     assert rows[0]["profile"] == "local_kb_docs"
     assert "DeepResearch PDF knowledge base citation" in rows[0]["text"]
+    assert rows[0]["metadata"]["fetch_status"] == "local_read"
+
+
+def test_build_profile_preserves_pdf_page_locators(tmp_path, monkeypatch) -> None:
+    source_file = tmp_path / "paper.pdf"
+    source_file.write_bytes(b"%PDF-fake-for-page-metadata")
+    monkeypatch.setattr(
+        "deepresearch_agent.corpus_profiles._read_pdf_sections",
+        lambda path: [
+            SourceSection("Paper Title\nFirst-page evidence.", page_number=1, page_count=2),
+            SourceSection("Second-page citation evidence.", page_number=2, page_count=2),
+        ],
+    )
+    profile = get_corpus_profile("paper_reading_docs")
+    local_profile = type(profile)(
+        key="paper_pages",
+        name="Paper Pages",
+        description="page-aware paper",
+        source_dir=source_file,
+        output_path=tmp_path / "paper_pages.jsonl",
+    )
+
+    output = build_profile(local_profile)
+    rows = [json.loads(line) for line in output.read_text(encoding="utf-8").splitlines()]
+
+    assert [row["metadata"]["page_number"] for row in rows] == [1, 2]
+    assert rows[0]["id"] == "paper_pages_01_p001_01"
+    assert rows[1]["metadata"]["citation_locator"] == "p. 2"
+    assert rows[1]["metadata"]["source_page_count"] == 2
+    assert rows[1]["url"].endswith("#page=2&chunk=1")
+
+
+def test_build_profile_accepts_a_single_real_document_path(tmp_path) -> None:
+    source_file = tmp_path / "real_note.md"
+    source_file.write_text("# Real source\n\nInspectable local evidence.", encoding="utf-8")
+    profile = get_corpus_profile("local_kb_docs")
+    local_profile = type(profile)(
+        key="custom_docs",
+        name="Custom Documents",
+        description="one file",
+        source_dir=source_file,
+        output_path=tmp_path / "custom.jsonl",
+    )
+
+    output = build_profile(local_profile)
+    rows = [json.loads(line) for line in output.read_text(encoding="utf-8").splitlines()]
+
+    assert rows[0]["profile"] == "custom_docs"
+    assert rows[0]["title"] == "Real source"
+    assert rows[0]["metadata"]["source_name"] == "real_note.md"
 
 
 def test_unknown_profile_has_clear_error() -> None:

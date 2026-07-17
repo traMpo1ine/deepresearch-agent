@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
   bindTabs();
   $("loadDefaultBtn").addEventListener("click", loadDefaultShowcase);
   $("startRunBtn").addEventListener("click", startRun);
+  $("uploadCorpusBtn").addEventListener("click", uploadCorpus);
   $("deepseekBtn").addEventListener("click", runDeepSeekSmoke);
   loadHealth();
   loadCorpusProfiles();
@@ -41,7 +42,8 @@ async function loadCorpusProfiles() {
     const payload = await fetchJson("/api/corpus-profiles");
     const select = $("corpusProfile");
     const profiles = payload.profiles || [];
-    if (!profiles.length) {
+    const uploads = payload.uploads || [];
+    if (!profiles.length && !uploads.length) {
       return;
     }
     select.replaceChildren(
@@ -51,9 +53,52 @@ async function loadCorpusProfiles() {
         option.textContent = `${profile.name} - ${profile.description}`;
         return option;
       }),
+      ...uploads.map(uploadOption),
     );
   } catch (error) {
     setStatus("runStatus", `corpus profiles failed: ${error.message}`, "error");
+  }
+}
+
+function uploadOption(upload) {
+  const option = document.createElement("option");
+  option.value = `upload:${upload.corpus_id}`;
+  const pages = upload.page_count ? `, ${upload.page_count} pages` : "";
+  option.textContent = `Uploaded: ${upload.title} (${upload.chunk_count} chunks${pages})`;
+  return option;
+}
+
+async function uploadCorpus() {
+  const input = $("corpusUpload");
+  const file = input.files && input.files[0];
+  if (!file) {
+    setStatus("uploadStatus", "Choose a PDF, Markdown, TXT or HTML file.", "error");
+    return;
+  }
+  $("uploadCorpusBtn").disabled = true;
+  setStatus("uploadStatus", "Uploading and building page-aware corpus...");
+  try {
+    const body = new FormData();
+    body.append("file", file, file.name);
+    const upload = await fetchJson("/api/corpora/uploads", { method: "POST", body });
+    const select = $("corpusProfile");
+    const value = `upload:${upload.corpus_id}`;
+    let option = [...select.options].find((item) => item.value === value);
+    if (!option) {
+      option = uploadOption(upload);
+      select.append(option);
+    }
+    select.value = value;
+    const action = upload.deduplicated ? "reused" : "built";
+    setStatus(
+      "uploadStatus",
+      `${action}: ${upload.chunk_count} chunks, sha256=${upload.content_sha256.slice(0, 12)}…`,
+      "ok",
+    );
+  } catch (error) {
+    setStatus("uploadStatus", error.message, "error");
+  } finally {
+    $("uploadCorpusBtn").disabled = false;
   }
 }
 
@@ -75,16 +120,27 @@ async function startRun() {
     return;
   }
   $("startRunBtn").disabled = true;
-  setStatus("runStatus", "Queueing mock run...");
+  setStatus("runStatus", "Queueing research run...");
   try {
+    const selectedCorpus = $("corpusProfile").value || "offline_agent_docs";
+    const uploadedCorpusId = selectedCorpus.startsWith("upload:")
+      ? selectedCorpus.slice("upload:".length)
+      : null;
     const run = await fetchJson("/api/runs", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        "Idempotency-Key": crypto.randomUUID(),
+      },
       body: JSON.stringify({
         question,
         backend: "mock",
         repair_rounds: Number($("repairRounds").value || 2),
-        corpus_profile: $("corpusProfile").value || "offline_agent_docs",
+        corpus_profile: uploadedCorpusId ? "offline_agent_docs" : selectedCorpus,
+        uploaded_corpus_id: uploadedCorpusId,
+        enable_web_search: $("enableWebSearch").checked,
+        web_search_provider: $("webSearchProvider").value || "wikipedia,arxiv",
+        max_web_results: 4,
       }),
     });
     state.currentRunId = run.run_id;
@@ -162,6 +218,14 @@ function renderOverview(overview) {
     ["Claims", overview.claim_count ?? ""],
     ["Repairs", overview.repair_count ?? ""],
     ["Corpus", overview.corpus_path || ""],
+    ["External sources", overview.web_search_provider || "disabled"],
+    ["Live sources", overview.live_source_count ?? 0],
+    ["Lineage complete", overview.lineage_complete_rate ?? 0],
+    ["Cache hit rate", overview.cache_hit_rate ?? 0],
+    ["Provider events", overview.provider_event_count ?? 0],
+    ["Provider operational", overview.provider_operational_rate ?? 0],
+    ["Provider retries", overview.provider_retry_count ?? 0],
+    ["Circuit open", overview.provider_circuit_open_count ?? 0],
   ];
   $("overviewGrid").replaceChildren(...metrics.map(([label, value]) => metric(label, value)));
 }
@@ -207,8 +271,25 @@ function renderEvidence(evidence, memory) {
       ...evidence.map((item) => {
         const node = document.createElement("article");
         node.className = "evidence";
+        const lineage = item.metadata || {};
         node.append(textBlock(item.title || item.id || "evidence", item.quote || item.text || ""));
         node.append(meta(`id=${item.id || ""} source=${item.source_id || ""} score=${item.score ?? ""}`));
+        node.append(
+          meta(
+            `provider=${lineage.provider || "local"} origin=${lineage.content_origin || "local"} ` +
+              `fetch=${lineage.fetch_status || "n/a"} cache=${lineage.cache_backend || "n/a"} ` +
+              `hit=${lineage.cache_hit ?? false} page=${lineage.citation_locator || "n/a"} ` +
+              `risks=${(lineage.risk_flags || []).join(",") || "none"}`,
+          ),
+        );
+        if ((item.url || "").startsWith("http")) {
+          const link = document.createElement("a");
+          link.href = item.url;
+          link.target = "_blank";
+          link.rel = "noopener noreferrer";
+          link.textContent = item.url;
+          node.append(link);
+        }
         return node;
       }),
     );

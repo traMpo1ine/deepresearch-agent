@@ -4,6 +4,7 @@ import re
 
 from deepresearch_agent.agents.base import BaseAgent
 from deepresearch_agent.agents.searcher import SearchResult
+from deepresearch_agent.evidence_quality import annotate_source_quality
 from deepresearch_agent.schemas import Evidence, ResearchTask
 
 
@@ -30,32 +31,39 @@ class ReaderAgent(BaseAgent):
                     continue
                 seen.add(dedupe_key)
                 quote_start = chunk.find(quote)
-                evidence.append(
-                    Evidence(
-                        task_id=task.id,
-                        title=result.title,
-                        text=chunk,
-                        url=result.url,
-                        quote=quote,
-                        source_id=result.source_id,
-                        chunk_id=f"{result.source_id}#chunk-{index}",
-                        quote_start=quote_start if quote_start >= 0 else None,
-                        quote_end=quote_start + len(quote) if quote_start >= 0 else None,
-                        score=result.score,
-                        metadata={
-                            "agent": self.name,
-                            "task_question": task.question,
-                            "chunk_index": index,
-                            "dedupe_key": f"{result.source_id}:{quote}",
-                            "source_type": result.source_type,
-                            "topics": result.topics or [],
-                            "trust_level": result.trust_level,
-                            "lexical_score": result.lexical_score,
-                            "vector_score": result.vector_score,
-                            "hybrid_score": result.hybrid_score,
-                        },
-                    )
+                metadata = {
+                    "agent": self.name,
+                    "task_question": task.question,
+                    "chunk_index": index,
+                    "dedupe_key": f"{result.source_id}:{quote}",
+                    "source_type": result.source_type,
+                    "topics": result.topics or [],
+                    "trust_level": result.trust_level,
+                    "lexical_score": result.lexical_score,
+                    "vector_score": result.vector_score,
+                    "hybrid_score": result.hybrid_score,
+                }
+                metadata.update(result.metadata or {})
+                page_number = metadata.get("page_number")
+                chunk_locator = (
+                    f"{result.source_id}#page-{page_number}-chunk-{index}"
+                    if page_number is not None
+                    else f"{result.source_id}#chunk-{index}"
                 )
+                item = Evidence(
+                    task_id=task.id,
+                    title=result.title,
+                    text=chunk,
+                    url=result.url,
+                    quote=quote,
+                    source_id=result.source_id,
+                    chunk_id=chunk_locator,
+                    quote_start=quote_start if quote_start >= 0 else None,
+                    quote_end=quote_start + len(quote) if quote_start >= 0 else None,
+                    score=result.score,
+                    metadata=metadata,
+                )
+                evidence.append(annotate_source_quality(item))
         return evidence
 
     def _chunks(self, text: str, max_chars: int = 420) -> list[str]:

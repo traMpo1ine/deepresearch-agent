@@ -32,6 +32,12 @@ jobs:
       - name: Compile
         run: uv run python -m compileall src scripts tests
 
+      - name: Retrieval regression gate
+        run: >-
+          uv run python scripts/run_retrieval_eval.py
+          --output-dir reports/retrieval_eval/ci
+          --min-hybrid-recall-at-max-k 0.84
+
       - name: Completion check
         run: uv run python scripts/check_project_completion.py
 

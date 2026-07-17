@@ -18,6 +18,25 @@ repair_rounds = 2
 planner_mode = "heuristic"
 plan_dir = "reports/plans"
 corpus_path = "data/corpus/offline_corpus.jsonl"
+use_iterative_search = false
+max_follow_up_queries = 1
+source_quality_threshold = 0.58
+enable_web_search = false
+web_search_provider = "disabled"
+max_web_results = 3
+web_search_cache_path = "data/memory/web_search_cache.sqlite3"
+web_search_cache_ttl_seconds = 3600
+web_search_cache_backend = "sqlite"
+web_search_redis_url = ""
+embedding_provider = "hashing"
+embedding_base_url = "https://api.openai.com/v1"
+embedding_model = "text-embedding-3-small"
+embedding_api_key_env = "EMBEDDING_API_KEY"
+embedding_cache_path = "data/memory/embedding_cache.sqlite3"
+embedding_timeout_seconds = 30
+embedding_max_retries = 2
+embedding_batch_size = 64
+writer_mode = "template"
 
 [evaluation]
 bootstrap_samples = 1000

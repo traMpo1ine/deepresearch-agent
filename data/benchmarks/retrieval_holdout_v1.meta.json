@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "name": "retrieval_holdout_v1",
+  "frozen_at": "2026-07-17",
+  "case_count": 80,
+  "purpose": "One-time held-out evaluation of local retrieval generalization.",
+  "construction": {
+    "source": "Human-curated queries written separately from researchbench.jsonl.",
+    "languages": ["zh", "en"],
+    "query_styles": [
+      "paraphrase",
+      "contrast",
+      "colloquial",
+      "scenario",
+      "negative",
+      "definition",
+      "question",
+      "long_query",
+      "comparison",
+      "multi_hop"
+    ],
+    "required_hops_range": [1, 5],
+    "labels": "One to five manually assigned source ids from the frozen 23-document corpus."
+  },
+  "protocol": {
+    "web_search": false,
+    "corpus": "data/corpus/offline_corpus.jsonl",
+    "cutoffs": [1, 3, 5],
+    "no_tuning_rule": "Do not change retrieval weights, query expansion, corpus text, or labels based on this set.",
+    "reporting_rule": "Report all modes, all 80 cases, failures, language/style/hop breakdowns, and file hashes.",
+    "ci_policy": "Do not run this holdout in CI. CI continues to use the development regression set."
+  },
+  "limitations": [
+    "This is a project-scale held-out set, not an independent third-party benchmark.",
+    "Queries and labels become public after repository publication, so v1 must not be reused to tune v2.",
+    "The corpus is small and project-specific; metrics do not imply production search accuracy."
+  ]
+}

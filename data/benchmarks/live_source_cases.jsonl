@@ -1,0 +1,12 @@
+{"id":"wikipedia_deep_research","provider":"wikipedia","query":"Deep Research","expected_domain":"wikipedia.org","expected_title_contains":"deep research","min_results":1,"min_content_chars":120}
+{"id":"wikipedia_sqlite","provider":"wikipedia","query":"SQLite","expected_domain":"wikipedia.org","expected_title_contains":"sqlite","min_results":1,"min_content_chars":120}
+{"id":"wikipedia_redis","provider":"wikipedia","query":"Redis 数据库","expected_domain":"wikipedia.org","expected_title_contains":"redis","min_results":1,"min_content_chars":120}
+{"id":"arxiv_research_agent","provider":"arxiv","query":"deep research agent","expected_domain":"arxiv.org","expected_title_contains":"research","min_results":1,"min_content_chars":120}
+{"id":"arxiv_rag","provider":"arxiv","query":"retrieval augmented generation","expected_domain":"arxiv.org","expected_title_contains":"retrieval","min_results":1,"min_content_chars":120}
+{"id":"arxiv_agent_evaluation","provider":"arxiv","query":"agent evaluation benchmark","expected_domain":"arxiv.org","expected_title_contains":"agent","min_results":1,"min_content_chars":120}
+{"id":"arxiv_multi_agent","provider":"arxiv","query":"multi-agent systems large language models","expected_domain":"arxiv.org","expected_title_contains":"agent","min_results":1,"min_content_chars":120}
+{"id":"github_research_agent","provider":"github","query":"gpt-researcher in:name","expected_domain":"github.com","expected_title_contains":"gpt-researcher","max_results":1,"min_results":1,"min_content_chars":120}
+{"id":"github_langgraph","provider":"github","query":"langgraph in:name","expected_domain":"github.com","expected_title_contains":"langgraph","max_results":1,"min_results":1,"min_content_chars":120}
+{"id":"github_ragas","provider":"github","query":"ragas evaluation","expected_domain":"github.com","expected_title_contains":"ragas","max_results":1,"min_results":1,"min_content_chars":120}
+{"id":"direct_url_open_deep_research","provider":"url","query":"Read https://raw.githubusercontent.com/langchain-ai/open_deep_research/main/README.md","expected_domain":"raw.githubusercontent.com","expected_title_contains":"readme","min_results":1,"min_content_chars":500}
+{"id":"direct_url_storm","provider":"url","query":"Read https://raw.githubusercontent.com/stanford-oval/storm/main/README.md","expected_domain":"raw.githubusercontent.com","expected_title_contains":"readme","min_results":1,"min_content_chars":500}

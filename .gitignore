@@ -20,11 +20,16 @@ build/
 # Secrets
 .env
 
+# Local archive snapshots (the resume backup is ~130 MB and must stay out of Git history)
+deepsearch简历版备份.zip
+*.backup.zip
+
 # Runtime databases / vector stores
 *.sqlite3
 *.db
 *.npz
 data/memory/
+data/uploads/
 
 # Keep source datasets, docs, and selected frozen evidence.
 # Ignore ad-hoc report outputs by default.
@@ -64,6 +69,30 @@ reports/experiments/*
 reports/verifier_benchmark/*
 !reports/verifier_benchmark/formal_deepseek_v4_flash_120x3/
 !reports/verifier_benchmark/formal_deepseek_v4_flash_120x3/**
+
+# Frozen local-retrieval ablation referenced by README and CI documentation.
+!reports/retrieval_eval/
+reports/retrieval_eval/*
+!reports/retrieval_eval/benchmark_v3/
+!reports/retrieval_eval/benchmark_v3/**
+!reports/retrieval_eval/dashscope_text_embedding_v4_formal_v1/
+!reports/retrieval_eval/dashscope_text_embedding_v4_formal_v1/**
+!reports/retrieval_eval/holdout_v1_hashing/
+!reports/retrieval_eval/holdout_v1_hashing/**
+!reports/retrieval_eval/holdout_v1_dashscope/
+!reports/retrieval_eval/holdout_v1_dashscope/**
+
+# Frozen real-source + real-embedding golden demo.
+!reports/golden_demo/
+reports/golden_demo/*
+!reports/golden_demo/v4/
+!reports/golden_demo/v4/**
+
+# Frozen API -> standalone worker -> artifacts smoke evidence.
+!reports/worker_eval/
+reports/worker_eval/*
+!reports/worker_eval/e2e_v1/
+!reports/worker_eval/e2e_v1/**
 
 # Re-apply binary/runtime ignores inside selected report directories.
 reports/**/*.sqlite3

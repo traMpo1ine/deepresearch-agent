@@ -38,6 +38,21 @@ async def build_showcase(
     max_retries: int = 2,
     vllm_base_url: str = "http://localhost:8000/v1",
     corpus_path: str | Path = "data/corpus/offline_corpus.jsonl",
+    use_iterative_search: bool = False,
+    max_follow_up_queries: int = 1,
+    source_quality_threshold: float = 0.58,
+    enable_web_search: bool = False,
+    web_search_provider: str = "disabled",
+    max_web_results: int = 3,
+    embedding_provider: str = "hashing",
+    embedding_base_url: str = "https://api.openai.com/v1",
+    embedding_model: str = "text-embedding-3-small",
+    embedding_api_key_env: str = "EMBEDDING_API_KEY",
+    embedding_cache_path: str | Path | None = None,
+    embedding_timeout_seconds: float = 30.0,
+    embedding_max_retries: int = 2,
+    embedding_batch_size: int = 64,
+    writer_mode: str = "template",
 ) -> ShowcaseResult:
     target_dir = _resolve_output_dir(output_dir)
     target_dir.mkdir(parents=True, exist_ok=True)
@@ -60,6 +75,22 @@ async def build_showcase(
         llm_max_retries=max_retries,
         llm_vllm_base_url=vllm_base_url,
         corpus_path=corpus_path,
+        use_iterative_search=use_iterative_search,
+        max_follow_up_queries=max_follow_up_queries,
+        source_quality_threshold=source_quality_threshold,
+        enable_web_search=enable_web_search,
+        web_search_provider=web_search_provider,
+        max_web_results=max_web_results,
+        web_search_cache_path=target_dir / "web_search_cache.sqlite3",
+        embedding_provider=embedding_provider,
+        embedding_base_url=embedding_base_url,
+        embedding_model=embedding_model,
+        embedding_api_key_env=embedding_api_key_env,
+        embedding_cache_path=embedding_cache_path or target_dir / "embedding_cache.sqlite3",
+        embedding_timeout_seconds=embedding_timeout_seconds,
+        embedding_max_retries=embedding_max_retries,
+        embedding_batch_size=embedding_batch_size,
+        writer_mode=writer_mode,
     )
     report = await coordinator.run(question)
     run_id = report.run_id or "run_unknown"
@@ -156,7 +187,11 @@ def _memory_trace_markdown(
         if item is None:
             lines.append(f"- `{evidence_id}` was not found in SQLite.")
         else:
-            lines.append(f"- `{evidence_id}` {item.title} | source={item.source_id} | quote={item.quote}")
+            locator = item.metadata.get("citation_locator", "n/a")
+            lines.append(
+                f"- `{evidence_id}` {item.title} | source={item.source_id} "
+                f"| locator={locator} | quote={item.quote}"
+            )
     lines.extend(["", "## Vector Recall", ""])
     if not vector_hits:
         lines.append("- No vector hits.")
@@ -333,10 +368,21 @@ def _interview_notes_markdown(question: str, report: ResearchReport) -> str:
             f"- tasks: `{summary.get('task_count', 0)}`",
             f"- evidence: `{summary.get('evidence_count', 0)}`",
             f"- recalled evidence: `{summary.get('recalled_evidence_count', 0)}`",
+            f"- live sources: `{summary.get('live_sources', {}).get('source_count', 0)}`",
+            f"- live-source lineage complete rate: `{summary.get('live_sources', {}).get('lineage_complete_rate', 0.0)}`",
+            f"- live-source cache hit rate: `{summary.get('live_sources', {}).get('cache_hit_rate', 0.0)}`",
+            f"- provider operational rate: `{summary.get('web_search_telemetry', {}).get('summary', {}).get('operational_rate', 0.0)}`",
+            f"- provider retries: `{summary.get('web_search_telemetry', {}).get('summary', {}).get('total_retries', 0)}`",
+            f"- circuit-open events: `{summary.get('web_search_telemetry', {}).get('summary', {}).get('circuit_open_count', 0)}`",
             f"- compression ratio: `{summary.get('compression_ratio', 1.0):.3f}`",
             f"- repair actions: `{summary.get('repair_count', 0)}`",
             f"- planner mode: `{summary.get('planner_mode', 'unknown')}`",
             f"- llm backend: `{summary.get('llm_backend', 'unknown')}`",
+            f"- writer mode: `{summary.get('writer_mode', 'unknown')}`",
+            f"- embedding provider: `{summary.get('embedding_telemetry', {}).get('provider', 'unknown')}`",
+            f"- embedding model: `{summary.get('embedding_telemetry', {}).get('model', 'unknown')}`",
+            f"- embedding remote inputs: `{summary.get('embedding_telemetry', {}).get('remote_inputs', 0)}`",
+            f"- embedding cache hits: `{summary.get('embedding_telemetry', {}).get('cache_hits', 0)}`",
             "",
             "## Tradeoff",
             "",
