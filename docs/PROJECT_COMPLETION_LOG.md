@@ -338,7 +338,7 @@ Showcase Pack 使用独立 output directory、memory path、vector path、plan d
 
 - `.gitignore` 标记 `.venv/`、`.uv-cache/`、`data/memory/*`、`reports/showcase/*`、`reports/experiments/*` 等运行产物。
 - `clean_artifacts.py` 支持清理 pycache、egg-info、pytest/ruff cache、memory、plans、reports。
-- README、PROJECT_DESIGN、EXPERIMENTS、RESUME_NOTES、INTERVIEW_QA 对齐到当前实现。
+- README、PROJECT_DESIGN、EXPERIMENTS 与最终项目报告对齐到当前实现。
 - `check_project_completion.py` 提供最终完成验收入口，检查源码、文档、数据集、showcase 产物和正式实验产物。
 
 ### 统一 AgentResult 运行轨迹
@@ -439,7 +439,7 @@ uv run python scripts/check_project_completion.py
 - ResearchBench 主集：35 题，11 个 domain，13 个 multi-hop case，6 个 Hotpot-style case。
 - Adversarial suite：10 题，7 个 multi-hop case。
 - 指标补齐 `repair_convergence_rate`、`repair_oscillation_rate`、`avg_repair_rounds`、per-domain、multi-hop subset、Hotpot-style subset。
-- 更新 README、EXPERIMENTS、FINAL_PROJECT_REPORT、RESUME_NOTES 和完成清单到同一组 V3 run id。
+- 更新 README、EXPERIMENTS、FINAL_PROJECT_REPORT 和完成清单到同一组 V3 run id。
 
 ### 遇到的问题
 
@@ -530,4 +530,4 @@ uv run python scripts/check_project_completion.py
 3. 读本文件，理解每个模块为什么做。
 4. 按 `docs/LEARNING_INDEX.md` 一章一章学习。
 5. 每学一个模块，就打开对应源码和 tests。
-6. 最后读 `docs/RESUME_NOTES.md`，把技术实现转成复试表达。
+6. 最后读 `docs/FINAL_PROJECT_REPORT.md`，把技术实现串成完整工程故事。

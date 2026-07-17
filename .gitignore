@@ -16,6 +16,7 @@ build/
 # Local Codex/app metadata
 .agents/
 .codex/
+/private_notes/
 
 # Secrets
 .env
@@ -94,6 +95,10 @@ reports/golden_demo/deepseek_v3/*
 !reports/golden_demo/deepseek_v3/report.md
 !reports/golden_demo/deepseek_v3/report.json
 !reports/golden_demo/deepseek_v3/run_summary.json
+!reports/golden_demo/deepseek_v3/plan.md
+!reports/golden_demo/deepseek_v3/memory_trace.md
+!reports/golden_demo/deepseek_v3/compression_trace.md
+!reports/golden_demo/deepseek_v3/eval_summary.md
 !reports/golden_demo/deepseek_v3/verifier_trace.md
 !reports/golden_demo/deepseek_v3/redblue_trace.md
 !reports/golden_demo/deepseek_v3/llm_backend.md

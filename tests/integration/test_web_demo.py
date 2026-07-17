@@ -101,6 +101,22 @@ def test_default_showcase_artifacts_are_structured(tmp_path, monkeypatch) -> Non
     assert "Verifier" in payload["verification"]["markdown"]
 
 
+def test_repository_default_showcase_is_real_deepseek() -> None:
+    client = TestClient(web_app.app)
+
+    response = client.get("/api/showcase/default")
+    payload = response.json()
+
+    assert response.status_code == 200
+    assert payload["showcase_dir"].replace("\\", "/") == "reports/golden_demo/deepseek_v3"
+    assert payload["overview"]["backend"] == "deepseek"
+    assert payload["overview"]["writer_mode"] == "llm"
+    assert payload["overview"]["writer_fallback"] is False
+    assert payload["overview"]["llm_total_tokens"] > 0
+    assert "real DeepSeek Writer" in payload["overview"]["boundary"]
+    assert "https://" not in payload["overview"]["question"]
+
+
 def test_mock_run_generates_artifacts_with_background_job(tmp_path, monkeypatch) -> None:
     monkeypatch.setattr(web_app, "DEMO_RUNS_DIR", tmp_path / "demo_runs")
     received = {}

@@ -256,6 +256,10 @@ button:disabled {
   font-size: 12px;
 }
 
+.metric-wide {
+  grid-column: 1 / -1;
+}
+
 .metric span {
   overflow-wrap: anywhere;
   font-weight: 700;

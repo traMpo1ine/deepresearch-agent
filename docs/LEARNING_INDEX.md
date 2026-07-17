@@ -265,15 +265,15 @@ uv run python scripts/inspect_llm_backend.py --backend vllm --model local-model 
 
 要能讲：真实 LLM 后端是可选增强，默认 mock 保证离线可复现。
 
-## 10. 最后整理表达
+## 10. 最后整理与复盘
 
 读：
 
-- `docs/INTERVIEW_QA.md`
-- `docs/RESUME_NOTES.md`
+- `docs/FINAL_PROJECT_REPORT.md`
+- `docs/GOLDEN_DEMO.md`
 
 练习顺序：
 
 1. 先讲系统整体故事。
 2. 再讲一次真实问题怎么被发现和修复。
-3. 最后讲指标边界：这是 offline/mock benchmark，不夸大成线上效果。
+3. 最后核对指标边界：离线基准与真实链路结果分开陈述。

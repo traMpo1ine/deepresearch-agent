@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>DeepResearch Agent Demo</title>
-    <link rel="stylesheet" href="/static/styles.css" />
+    <link rel="stylesheet" href="/static/styles.css?v=20260717" />
   </head>
   <body>
     <header class="topbar">
@@ -12,7 +12,7 @@
         <h1>DeepResearch Agent Demo</h1>
         <p id="healthText">Loading backend status...</p>
       </div>
-      <button id="loadDefaultBtn" type="button">Load Default Pack</button>
+      <button id="loadDefaultBtn" type="button">Load Golden Run</button>
     </header>
 
     <main class="layout">
@@ -51,7 +51,7 @@
         </section>
 
         <section>
-          <h2>DeepSeek Smoke</h2>
+          <h2>DeepSeek Provider Check</h2>
           <label for="deepseekQuestion">Question</label>
           <textarea id="deepseekQuestion" rows="4">为什么 DeepResearch Agent 需要引用验证和 Red-Blue 修复？</textarea>
           <div class="row">
@@ -62,7 +62,7 @@
             <input id="runRealDeepSeek" type="checkbox" />
             Call real provider
           </label>
-          <button id="deepseekBtn" type="button">Run Provider Smoke</button>
+          <button id="deepseekBtn" type="button">Check Provider</button>
           <p id="deepseekStatus" class="status">Dry-run by default.</p>
         </section>
       </aside>
@@ -115,6 +115,6 @@
       </section>
     </main>
 
-    <script src="/static/app.js"></script>
+    <script src="/static/app.js?v=20260717"></script>
   </body>
 </html>

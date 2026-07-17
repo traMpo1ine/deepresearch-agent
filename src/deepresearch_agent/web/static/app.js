@@ -31,7 +31,7 @@ async function loadHealth() {
   try {
     const payload = await fetchJson("/api/health");
     $("healthText").textContent =
-      `default=${payload.default_backend}, deepseek=${payload.deepseek_env_configured ? "configured" : "not configured"}, model=${payload.deepseek_model}`;
+      `interactive run=${payload.default_backend}, deepseek=${payload.deepseek_env_configured ? "configured" : "not configured"}, model=${payload.deepseek_model}`;
   } catch (error) {
     $("healthText").textContent = `health check failed: ${error.message}`;
   }
@@ -103,11 +103,12 @@ async function uploadCorpus() {
 }
 
 async function loadDefaultShowcase() {
-  setStatus("runStatus", "Loading default evidence pack...");
+  setStatus("runStatus", "Loading frozen golden run...");
   try {
     const payload = await fetchJson("/api/showcase/default");
     renderShowcase(payload);
-    setStatus("runStatus", "Default evidence pack loaded.", "ok");
+    const backend = (payload.overview && payload.overview.backend) || "unknown";
+    setStatus("runStatus", `Frozen ${backend} evidence pack loaded.`, "ok");
   } catch (error) {
     setStatus("runStatus", error.message, "error");
   }
@@ -209,10 +210,14 @@ function renderShowcase(payload) {
 
 function renderOverview(overview) {
   const metrics = [
-    ["Question", overview.question || ""],
+    ["Question", overview.question || "", true],
     ["Run id", overview.run_id || ""],
     ["Backend", overview.backend || "mock"],
     ["Model", overview.model || ""],
+    ["Writer mode", overview.writer_mode || ""],
+    ["Writer fallback", overview.writer_fallback ?? ""],
+    ["LLM tokens", overview.llm_total_tokens ?? 0],
+    ["LLM cost (USD)", overview.llm_cost_usd ?? 0],
     ["Tasks", overview.task_count ?? ""],
     ["Evidence", overview.evidence_count ?? ""],
     ["Claims", overview.claim_count ?? ""],
@@ -226,8 +231,11 @@ function renderOverview(overview) {
     ["Provider operational", overview.provider_operational_rate ?? 0],
     ["Provider retries", overview.provider_retry_count ?? 0],
     ["Circuit open", overview.provider_circuit_open_count ?? 0],
+    ["Run boundary", overview.boundary || "", true],
   ];
-  $("overviewGrid").replaceChildren(...metrics.map(([label, value]) => metric(label, value)));
+  $("overviewGrid").replaceChildren(
+    ...metrics.map(([label, value, wide]) => metric(label, value, wide)),
+  );
 }
 
 function renderPlan(plan) {
@@ -316,9 +324,9 @@ function renderVerification(verification, repair) {
   $("redblueTrace").textContent = repair.markdown || "";
 }
 
-function metric(label, value) {
+function metric(label, value, wide = false) {
   const node = document.createElement("div");
-  node.className = "metric";
+  node.className = wide ? "metric metric-wide" : "metric";
   const strong = document.createElement("strong");
   strong.textContent = label;
   const span = document.createElement("span");

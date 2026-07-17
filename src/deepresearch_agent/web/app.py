@@ -53,8 +53,15 @@ except ImportError as exc:  # pragma: no cover - exercised by users without the 
 ROOT = Path(__file__).resolve().parents[3]
 STATIC_DIR = Path(__file__).resolve().parent / "static"
 DEFAULT_SHOWCASE_CANDIDATES = (
+    ROOT / "reports" / "golden_demo" / "deepseek_v3",
     ROOT / "reports" / "final" / "final_sprint_check" / "showcase",
     ROOT / "reports" / "showcase" / "final_check",
+)
+DEFAULT_SHOWCASE_REQUIRED_FILES = (
+    "plan.md",
+    "report.md",
+    "report.json",
+    "run_summary.json",
 )
 DEMO_RUNS_DIR = ROOT / "reports" / "demo_runs"
 UPLOAD_ROOT = ROOT / "data" / "uploads"
@@ -545,7 +552,7 @@ def _log_job_event(job: DemoRun, status: str, error_type: str | None = None) -> 
 
 def _find_default_showcase() -> Path | None:
     for candidate in DEFAULT_SHOWCASE_CANDIDATES:
-        if (candidate / "index.md").exists():
+        if all((candidate / name).is_file() for name in DEFAULT_SHOWCASE_REQUIRED_FILES):
             return candidate
     return None
 
@@ -591,11 +598,37 @@ def _load_showcase_payload(showcase_dir: Path, source: str) -> dict[str, Any]:
 
 
 def _overview(report_json: dict[str, Any], run_summary: dict[str, Any]) -> dict[str, Any]:
+    backend = run_summary.get("llm_backend") or "mock"
+    writer_generation = run_summary.get("writer_generation", {})
+    llm_usage = run_summary.get("llm_usage", {})
+    question = report_json.get("question")
+    question_summary = (
+        re.split(r"\s+https?://", question, maxsplit=1)[0].strip()
+        if isinstance(question, str)
+        else question
+    )
+    if backend == "deepseek" and writer_generation.get("fallback") is False:
+        boundary = (
+            "Frozen real-source, real-embedding, real DeepSeek Writer run; "
+            "one controlled run, not a production SLA."
+        )
+    else:
+        boundary = (
+            "Real-source demo runs may use mock generation and stay separate "
+            "from frozen benchmark metrics."
+        )
     return {
-        "question": report_json.get("question"),
+        "question": question_summary,
         "run_id": report_json.get("run_id") or run_summary.get("run_id"),
-        "backend": run_summary.get("llm_backend"),
+        "backend": backend,
         "model": run_summary.get("model"),
+        "writer_mode": run_summary.get("writer_mode") or writer_generation.get("mode"),
+        "writer_fallback": writer_generation.get("fallback"),
+        "llm_total_tokens": llm_usage.get("total_tokens", 0),
+        "llm_cost_usd": llm_usage.get(
+            "cost_estimate_usd",
+            run_summary.get("llm_total_cost_estimate", 0.0),
+        ),
         "task_count": run_summary.get("task_count"),
         "evidence_count": run_summary.get("evidence_count"),
         "claim_count": len(report_json.get("claims", [])),
@@ -619,7 +652,7 @@ def _overview(report_json: dict[str, Any], run_summary: dict[str, Any]) -> dict[
         "provider_circuit_open_count": run_summary.get("web_search_telemetry", {})
         .get("summary", {})
         .get("circuit_open_count", 0),
-        "boundary": "Real source runs still use mock generation and stay separate from frozen benchmarks.",
+        "boundary": boundary,
     }
 
 

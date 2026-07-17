@@ -1,6 +1,6 @@
 # DeepResearch Agent 最终完成清单
 
-这个清单用于判断项目是否已经达到“可复试讲、可简历写、可长期维护”的状态。
+这个清单用于判断项目是否已经达到“可演示、可复现、可长期维护”的状态。
 
 ## A. 必须完成项
 
@@ -27,8 +27,7 @@
 - [x] Web Demo 支持默认 evidence pack 展示、mock/offline run、状态轮询和 DeepSeek provider smoke。
 - [x] Showcase Pack 一条命令生成完整 trace。
 - [x] BUILD_LOG 记录关键优化过程。
-- [x] RESUME_NOTES 包含有边界的简历 bullet 和 3 分钟讲稿。
-- [x] TRACEABILITY_MATRIX 和 inspect_resume_evidence 能把每条 bullet 追踪到代码、测试、命令和产物。
+- [x] TRACEABILITY_MATRIX 能把关键能力追踪到代码、测试、命令和产物。
 
 ## B. 必须有的验证
 
@@ -63,8 +62,7 @@
 - 最终项目报告：`docs/FINAL_PROJECT_REPORT.md`
 - 实验记录：`docs/EXPERIMENTS.md`
 - 学习路线：`docs/LEARNING_INDEX.md`
-- 复试材料：`docs/RESUME_NOTES.md`
-- 简历证据矩阵：`docs/TRACEABILITY_MATRIX.md`
+- 能力证据矩阵：`docs/TRACEABILITY_MATRIX.md`
 - 完成验收脚本：`scripts/check_project_completion.py`
 
 ## D. 已知边界
