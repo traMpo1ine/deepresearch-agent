@@ -19,7 +19,7 @@ from deepresearch_agent.showcase import build_showcase  # noqa: E402
 
 GOLDEN_SOURCES = (
     "https://www.nist.gov/publications/artificial-intelligence-risk-management-framework-generative-artificial-intelligence",
-    "https://genai.owasp.org/llm-top-10/",
+    "https://genai.owasp.org/llmrisk/llm01-prompt-injection/",
     "https://arxiv.org/abs/2405.07437",
 )
 
@@ -136,6 +136,7 @@ async def _run(args: argparse.Namespace) -> int:
         model=args.model,
         timeout_seconds=60.0,
         max_retries=2,
+        llm_max_tokens=args.max_tokens,
         corpus_path="data/corpus/offline_corpus.jsonl",
         use_iterative_search=False,
         enable_web_search=True,
@@ -277,6 +278,7 @@ def main() -> int:
     parser.add_argument("--output-dir", default="reports/golden_demo/v1")
     parser.add_argument("--llm-backend", choices=["mock", "deepseek"], default="mock")
     parser.add_argument("--model")
+    parser.add_argument("--max-tokens", type=int, default=1024)
     return asyncio.run(_run(parser.parse_args()))
 
 

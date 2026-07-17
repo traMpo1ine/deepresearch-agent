@@ -91,6 +91,33 @@ async def test_verifier_marks_contradicted_atomic_claim() -> None:
 
 
 @pytest.mark.asyncio
+async def test_verifier_does_not_match_absolute_cue_inside_another_word() -> None:
+    evidence = Evidence(
+        id="ev_prompt_injection",
+        task_id="task",
+        title="Prompt injection impact",
+        text=(
+            "Prompt injection can lead to unintended outcomes, including disclosure "
+            "of sensitive information and content manipulation."
+        ),
+        quote="Prompt injection can lead to unintended outcomes.",
+    )
+    claim = Claim(
+        text="Generally, prompt injection can lead to unintended outcomes.",
+        citation_ids=["ev_prompt_injection"],
+    )
+
+    verified = await VerifierAgent().verify(claim, [evidence])
+
+    assert verified.verification_status in {
+        VerificationStatus.SUPPORTED,
+        VerificationStatus.PARTIAL,
+    }
+    assert verified.verification_trace is not None
+    assert "absolute claim vs hedged evidence" not in verified.verification_trace.contradiction_cues
+
+
+@pytest.mark.asyncio
 async def test_verifier_aggregates_mixed_atomic_claims_as_partial() -> None:
     evidence = Evidence(
         id="ev_one",

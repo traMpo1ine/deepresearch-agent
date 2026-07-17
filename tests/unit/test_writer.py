@@ -23,6 +23,8 @@ class _FakeGroundedBackend:
 
     async def structured_complete(self, messages: list[LLMMessage]) -> dict:
         assert "untrusted data" in messages[0].content
+        assert "same language as its cited quote" in messages[0].content
+        assert "near-extractive claims" in messages[1].content
         return {
             "title": "Grounded answer",
             "summary": "A source-grounded summary.",

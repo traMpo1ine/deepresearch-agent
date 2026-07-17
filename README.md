@@ -81,7 +81,7 @@ uv run python scripts/run_golden_demo.py `
 
 | 实验 | 数据与设置 | 结果 |
 |---|---|---|
-| 真实数据黄金案例 | NIST、OWASP、arXiv；真实 `text-embedding-v4` | 29 条 Evidence，3/3 主张引用公开来源，lineage 完整率 1.000 |
+| 真实数据黄金案例 | NIST、OWASP、arXiv；真实 `text-embedding-v4` + DeepSeek Writer | 54 条 Evidence，4 条主张全部通过验证，其中 3 条引用公开来源；Writer 无回退 |
 | 独立检索盲测 | 80 条冻结问题，47 中文 / 33 英文，40 条多跳问题 | Vector Recall@5 0.920，Hit@5 0.988，MRR@5 0.915 |
 | DeepSeek Verifier | 120 个平衡样例 × 3 次真实判断 | Accuracy 0.842，Macro-F1 0.831 |
 | Red-Blue 修复 | 80 条对抗性 fixtures | repair success 0.425 → 1.000，repair precision 1.000 |
@@ -89,13 +89,13 @@ uv run python scripts/run_golden_demo.py `
 
 详细结果：
 
-- [黄金案例](reports/golden_demo/v4/golden_summary.md)
+- [DeepSeek Writer 黄金案例](reports/golden_demo/deepseek_v3/golden_summary.md)
 - [80 条独立检索盲测](reports/retrieval_eval/holdout_v1_dashscope/report.md)
 - [DeepSeek Verifier 评测](reports/verifier_benchmark/formal_deepseek_v4_flash_120x3/report.md)
 - [完整项目报告](docs/FINAL_PROJECT_REPORT.md)
 
 ## 结论
 
-当前项目已经跑通真实数据读取、真实 Embedding、证据化生成、引用验证、修复、持久化和 Web 展示。冻结黄金案例使用 extractive Writer，因此只证明真实来源与真实向量链路；DeepSeek 主链路代码和验收门禁已经具备，但只有在配置独立的 `DEEPSEEK_API_KEY` 并产生成功产物后，才能说明真实 DeepSeek Writer 已跑通。
+当前项目已经跑通真实数据读取、真实 Embedding、DeepSeek 证据化生成、引用验证、修复、持久化和 Web 展示。冻结黄金案例中 DeepSeek Writer 处理 1,399 tokens，生成 4 条有效主张且没有回退；4 条主张均通过确定性 Verifier，其中 3 条引用 NIST、OWASP 和 arXiv 公开来源。本次调用估算成本约 0.000232 美元。
 
 这个系统仍是单机研究原型，不把本地实验指标解释为生产环境 SLA。后续重点是扩大真实研究问题覆盖、持续积累失败案例，并分别评估检索质量、生成可信度和端到端稳定性。

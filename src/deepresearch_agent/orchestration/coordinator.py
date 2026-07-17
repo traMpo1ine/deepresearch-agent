@@ -63,6 +63,7 @@ class ResearchCoordinator:
         model: str | None = None,
         llm_timeout_seconds: float = 60.0,
         llm_max_retries: int = 2,
+        llm_max_tokens: int | None = None,
         llm_vllm_base_url: str = "http://localhost:8000/v1",
         planner_mode: str = "heuristic",
         min_evidence_count: int = 1,
@@ -147,6 +148,7 @@ class ResearchCoordinator:
             model=model,
             timeout_seconds=llm_timeout_seconds,
             max_retries=llm_max_retries,
+            max_tokens=llm_max_tokens,
             vllm_base_url=llm_vllm_base_url,
         )
         self.llm_status = backend_status(self.llm_config)

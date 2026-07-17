@@ -87,6 +87,16 @@ reports/retrieval_eval/*
 reports/golden_demo/*
 !reports/golden_demo/v4/
 !reports/golden_demo/v4/**
+!reports/golden_demo/deepseek_v3/
+reports/golden_demo/deepseek_v3/*
+!reports/golden_demo/deepseek_v3/golden_summary.md
+!reports/golden_demo/deepseek_v3/golden_summary.json
+!reports/golden_demo/deepseek_v3/report.md
+!reports/golden_demo/deepseek_v3/report.json
+!reports/golden_demo/deepseek_v3/run_summary.json
+!reports/golden_demo/deepseek_v3/verifier_trace.md
+!reports/golden_demo/deepseek_v3/redblue_trace.md
+!reports/golden_demo/deepseek_v3/llm_backend.md
 
 # Frozen API -> standalone worker -> artifacts smoke evidence.
 !reports/worker_eval/

@@ -1,0 +1,215 @@
+{
+  "run_id": "run_1e7bd1426a19",
+  "total_latency_seconds": 22.876109500066377,
+  "task_count": 9,
+  "succeeded_tasks": 9,
+  "failed_tasks": 0,
+  "timed_out_tasks": 0,
+  "blocked_tasks": 0,
+  "retry_count": 0,
+  "timeout_recovery_rate": 0.0,
+  "batch_replan_success_rate": 0.0,
+  "fallback_report_rate": 0.0,
+  "evidence_count": 54,
+  "recalled_evidence_count": 0,
+  "repair_count": 0,
+  "repair_success_rate": 1.0,
+  "compression_ratio": 0.7273178725728758,
+  "avg_task_latency": 2.279443442302111,
+  "fallback_level": 0,
+  "replan_count": 0,
+  "batch_failure_events": [],
+  "iterative_search_enabled": false,
+  "follow_up_queries": [],
+  "follow_up_query_count": 0,
+  "supplemental_evidence_count": 0,
+  "source_quality": {
+    "evidence_count": 54,
+    "mean_quality": 0.795,
+    "high_quality_count": 22,
+    "low_quality_count": 0,
+    "quote_coverage": 1.0
+  },
+  "live_sources": {
+    "source_count": 3,
+    "provider_counts": {
+      "url": 3
+    },
+    "content_origin_counts": {
+      "direct_url_fetch": 3
+    },
+    "fetch_status_counts": {
+      "ok": 3
+    },
+    "cache_hit_count": 0,
+    "cache_hit_rate": 0.0,
+    "lineage_complete_count": 3,
+    "lineage_complete_rate": 1.0,
+    "risk_flag_source_count": 1,
+    "duplicate_url_rate": 0.0
+  },
+  "web_search_telemetry": {
+    "summary": {
+      "event_count": 5,
+      "status_counts": {
+        "success": 5
+      },
+      "provider_counts": {
+        "url": 5
+      },
+      "operational_rate": 1.0,
+      "total_retries": 0,
+      "mean_latency_seconds": 4.06912,
+      "max_latency_seconds": 4.8861,
+      "circuit_open_count": 0
+    },
+    "events": [
+      {
+        "provider": "url",
+        "query_preview": "Establish the background concepts and scope for: 请基于下面三份公开资料，为一个可审计的 DeepResearch Agent 设计工程方案：说明为什么要分别评测检索与生成、如何保留引用溯源，",
+        "query_sha256": "d7e2517111f8b884960d62c46b7aad8c02c0e3803f2605ac33ad8704d7f31567",
+        "status": "success",
+        "result_count": 3,
+        "latency_seconds": 4.8861,
+        "attempts": 1,
+        "retries": 0,
+        "circuit_state": "closed",
+        "error_type": null,
+        "created_at": "2026-07-17T09:15:02.970170+00:00"
+      },
+      {
+        "provider": "url",
+        "query_preview": "Identify failure modes, reliability risks, and affected claims for: 请基于下面三份公开资料，为一个可审计的 DeepResearch Agent 设计工程方案：说明为什么要",
+        "query_sha256": "312ee827bab53f20b780b9ff504ee1afc775df038d1c7e891136abfc711a049c",
+        "status": "success",
+        "result_count": 3,
+        "latency_seconds": 4.8803,
+        "attempts": 1,
+        "retries": 0,
+        "circuit_state": "closed",
+        "error_type": null,
+        "created_at": "2026-07-17T09:15:02.979344+00:00"
+      },
+      {
+        "provider": "url",
+        "query_preview": "Investigate implementation mechanisms and mitigations for: 请基于下面三份公开资料，为一个可审计的 DeepResearch Agent 设计工程方案：说明为什么要分别评测检索与生成",
+        "query_sha256": "5eeb5badb5ba453e9969d1e597380927c53534e67951d4d9c7243399f22bd467",
+        "status": "success",
+        "result_count": 3,
+        "latency_seconds": 4.3839,
+        "attempts": 1,
+        "retries": 0,
+        "circuit_state": "closed",
+        "error_type": null,
+        "created_at": "2026-07-17T09:15:10.855022+00:00"
+      },
+      {
+        "provider": "url",
+        "query_preview": "Define evaluation metrics and verification criteria for: 请基于下面三份公开资料，为一个可审计的 DeepResearch Agent 设计工程方案：说明为什么要分别评测检索与生成、如",
+        "query_sha256": "09781dff67be4b1f77618f5e9083f98e2a388fd7e28f1cdb783524c4bf684c7b",
+        "status": "success",
+        "result_count": 3,
+        "latency_seconds": 3.0822,
+        "attempts": 1,
+        "retries": 0,
+        "circuit_state": "closed",
+        "error_type": null,
+        "created_at": "2026-07-17T09:15:14.823492+00:00"
+      },
+      {
+        "provider": "url",
+        "query_preview": "Analyze residual tradeoffs and limitations after mitigation for: 请基于下面三份公开资料，为一个可审计的 DeepResearch Agent 设计工程方案：说明为什么要分别评",
+        "query_sha256": "cec34a5262c6b4c7a28dcfaf407cdf8ca74f70dc828f4c9ed0edce0b45abd837",
+        "status": "success",
+        "result_count": 3,
+        "latency_seconds": 3.1131,
+        "attempts": 1,
+        "retries": 0,
+        "circuit_state": "closed",
+        "error_type": null,
+        "created_at": "2026-07-17T09:15:14.835002+00:00"
+      }
+    ]
+  },
+  "embedding_telemetry": {
+    "provider": "openai_compatible",
+    "base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1",
+    "model": "text-embedding-v4",
+    "api_key_env": "EMBEDDING_API_KEY",
+    "env_configured": true,
+    "cache_backend": "sqlite",
+    "cache_path": "reports/golden_demo/deepseek_v3/embedding_cache.sqlite3",
+    "batch_size": 10,
+    "requested_batch_size": 64,
+    "requests": 9,
+    "remote_inputs": 57,
+    "cache_hits": 78,
+    "cache_misses": 57,
+    "retries": 0,
+    "errors": 0,
+    "prompt_tokens": 11772,
+    "total_tokens": 11772,
+    "last_latency_seconds": 0.80007
+  },
+  "repair_rounds_used": 1,
+  "repair_converged": true,
+  "repair_oscillation_detected": false,
+  "repair_stop_reason": "CONVERGED",
+  "llm_backend": "deepseek",
+  "model": "deepseek-v4-flash",
+  "llm_timeout_seconds": 60.0,
+  "llm_max_retries": 2,
+  "llm_vllm_base_url": "http://localhost:8000/v1",
+  "llm_status": {
+    "backend": "deepseek",
+    "model": "deepseek-v4-flash",
+    "timeout_seconds": 60.0,
+    "max_retries": 2,
+    "max_tokens": 1024,
+    "env_var": "DEEPSEEK_API_KEY",
+    "env_configured": true,
+    "offline_safe": false,
+    "base_url": "https://api.deepseek.com"
+  },
+  "writer_mode": "llm",
+  "writer_generation": {
+    "mode": "llm",
+    "fallback": false,
+    "claim_count": 4
+  },
+  "llm_usage": {
+    "model": "deepseek-v4-flash",
+    "prompt_tokens": 891,
+    "completion_tokens": 508,
+    "total_tokens": 1399,
+    "prompt_cache_hit_tokens": 256,
+    "prompt_cache_miss_tokens": 635,
+    "latency_seconds": 4.6055717000272125,
+    "cost_estimate": 0.0002318568,
+    "cost_estimate_usd": 0.0002318568,
+    "pricing_source": "deepseek_api_docs_2026_07"
+  },
+  "llm_total_cost_estimate": 0.0002318568,
+  "planner_mode": "heuristic",
+  "corpus_path": "data/corpus/offline_corpus.jsonl",
+  "source_quality_threshold": 0.58,
+  "enable_web_search": true,
+  "web_search_provider": "url",
+  "max_web_results": 3,
+  "web_search_cache_path": "reports\\golden_demo\\deepseek_v3\\web_search_cache.sqlite3",
+  "web_search_cache_ttl_seconds": 3600,
+  "web_search_cache_backend": "sqlite",
+  "web_search_redis_configured": false,
+  "web_search_status": {
+    "provider": "url",
+    "providers": [
+      {
+        "provider": "url",
+        "env_var": null,
+        "configured": true
+      }
+    ],
+    "env_configured": true,
+    "enabled_by_default": false
+  }
+}

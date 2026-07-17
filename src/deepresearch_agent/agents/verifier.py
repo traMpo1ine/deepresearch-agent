@@ -242,7 +242,8 @@ class VerifierAgent(BaseAgent):
         cues = [
             f"{left} vs {right}"
             for left, right in contradiction_pairs
-            if left in claim_lower and right in evidence_text
+            if self._contains_cue(claim_lower, left)
+            and self._contains_cue(evidence_text, right)
         ]
         absolute_terms = {
             "always",
@@ -267,8 +268,8 @@ class VerifierAgent(BaseAgent):
             "降低",
             "不一定",
         }
-        if any(term in claim_lower for term in absolute_terms) and any(
-            term in evidence_text for term in hedge_terms
+        if any(self._contains_cue(claim_lower, term) for term in absolute_terms) and any(
+            self._contains_cue(evidence_text, term) for term in hedge_terms
         ):
             cues.append("absolute claim vs hedged evidence")
         claim_numbers = set(re.findall(r"\d+(?:\.\d+)?%?", claim_lower))
@@ -278,6 +279,12 @@ class VerifierAgent(BaseAgent):
                 f"quantity mismatch: claim={sorted(claim_numbers)} evidence={sorted(evidence_numbers)}"
             )
         return sorted(set(cues))
+
+    def _contains_cue(self, text: str, cue: str) -> bool:
+        if re.search(r"[\u4e00-\u9fff]", cue):
+            return cue in text
+        pattern = rf"(?<![a-z0-9_]){re.escape(cue)}(?![a-z0-9_])"
+        return re.search(pattern, text, flags=re.IGNORECASE) is not None
 
     def _quote_overlap(self, claim_text: str, cited: list[Evidence]) -> float:
         claim_terms = self._important_terms(claim_text)

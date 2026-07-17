@@ -219,6 +219,16 @@ GENERATED_REQUIREMENTS = {
         "reports/golden_demo/v4/run_summary.json",
         "reports/golden_demo/v4/verifier_trace.md",
     ],
+    "deepseek writer golden demo": [
+        "reports/golden_demo/deepseek_v3/golden_summary.md",
+        "reports/golden_demo/deepseek_v3/golden_summary.json",
+        "reports/golden_demo/deepseek_v3/report.md",
+        "reports/golden_demo/deepseek_v3/report.json",
+        "reports/golden_demo/deepseek_v3/run_summary.json",
+        "reports/golden_demo/deepseek_v3/verifier_trace.md",
+        "reports/golden_demo/deepseek_v3/redblue_trace.md",
+        "reports/golden_demo/deepseek_v3/llm_backend.md",
+    ],
     "durable worker smoke": [
         "reports/worker_eval/e2e_v1/report.md",
         "reports/worker_eval/e2e_v1/summary.json",
