@@ -42,6 +42,17 @@ def test_resume_evidence_paths_are_real_project_evidence() -> None:
     assert all(check["exists"] for check in checks), [
         check["path"] for check in checks if not check["exists"]
     ]
+    tracked = set(
+        subprocess.run(
+            ["git", "ls-files"],
+            check=True,
+            capture_output=True,
+            text=True,
+        ).stdout.splitlines()
+    )
+    assert all(check["path"] in tracked for check in checks), [
+        check["path"] for check in checks if check["path"] not in tracked
+    ]
 
 
 def test_resume_evidence_markdown_is_study_friendly() -> None:

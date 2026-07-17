@@ -53,7 +53,7 @@ RESUME_EVIDENCE: tuple[ResumeEvidence, ...] = (
         artifacts=[
             "reports/showcase/final_check/plan.md",
             "reports/showcase/final_check/run_summary.json",
-            "reports/showcase/final_check/memory.sqlite3",
+            "reports/showcase/final_check/memory_trace.md",
             "docs/generated/day09_orchestration_failure_trace.md",
         ],
         learning_story=(
@@ -89,7 +89,7 @@ RESUME_EVIDENCE: tuple[ResumeEvidence, ...] = (
         artifacts=[
             "reports/showcase/final_check/memory_trace.md",
             "reports/showcase/final_check/report.json",
-            "reports/showcase/final_check/memory.sqlite3",
+            "reports/golden_demo/v4/memory_trace.md",
         ],
         learning_story=(
             "SQLite 负责审计链路，numpy index 只负责相似召回。两者分离后，即使以后换成"
@@ -328,9 +328,9 @@ RESUME_EVIDENCE: tuple[ResumeEvidence, ...] = (
         artifacts=[
             "data/examples/llm_verifier_cases.jsonl",
             "data/examples/llm_verifier_cases_extended.jsonl",
-            "reports/llm_verifier_smoke.md",
             "reports/verifier_benchmark/formal_deepseek_v4_flash_120x3/report.md",
             "reports/verifier_benchmark/formal_deepseek_v4_flash_120x3/aggregate.json",
+            "reports/verifier_benchmark/formal_deepseek_v4_flash_120x3/repetitions/run_01.json",
         ],
         learning_story=(
             "heuristic verifier 可解释但不等于语义蕴含判断，所以加一个可重复的 LLM 二级判断实验；"
