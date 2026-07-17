@@ -8,6 +8,7 @@ from deepresearch_agent.llm import (
     backend_status,
     create_llm_backend,
 )
+from deepresearch_agent.llm.openai_compatible import LLMProviderHTTPError
 from deepresearch_agent.orchestration import ResearchCoordinator
 
 
@@ -21,6 +22,48 @@ async def test_mock_backend_factory_runs_offline() -> None:
     assert isinstance(backend, MockLLMBackend)
     assert "Mock response" in text
     assert len(embedding) == 64
+
+
+@pytest.mark.asyncio
+async def test_deepseek_structured_completion_requests_json_output(monkeypatch) -> None:
+    backend = DeepSeekBackend(max_tokens=256)
+    captured_payload = {}
+
+    async def fake_post_json(path, payload):
+        captured_payload.update(payload)
+        return {
+            "choices": [{"message": {"content": '{"claims": []}'}}],
+            "usage": {"prompt_tokens": 10, "completion_tokens": 4},
+        }
+
+    monkeypatch.setattr(backend, "_post_json", fake_post_json)
+
+    result = await backend.structured_complete(
+        [LLMMessage(role="user", content="Return JSON with a claims array.")]
+    )
+
+    assert result["claims"] == []
+    assert captured_payload["response_format"] == {"type": "json_object"}
+    assert captured_payload["thinking"] == {"type": "disabled"}
+
+
+@pytest.mark.asyncio
+async def test_deepseek_does_not_retry_non_retryable_provider_error(monkeypatch) -> None:
+    backend = DeepSeekBackend(max_retries=2)
+    attempts = 0
+
+    def fake_send(request):
+        nonlocal attempts
+        attempts += 1
+        raise LLMProviderHTTPError(400, "invalid request")
+
+    monkeypatch.setenv("DEEPSEEK_API_KEY", "test-only")
+    monkeypatch.setattr(backend, "_send", fake_send)
+
+    with pytest.raises(LLMProviderHTTPError, match="invalid request"):
+        await backend.complete([LLMMessage(role="user", content="Hello")])
+
+    assert attempts == 1
 
 
 def test_backend_status_reports_provider_configuration() -> None:

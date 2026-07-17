@@ -9,9 +9,16 @@ import time
 import urllib.request
 from pathlib import Path
 from typing import Protocol
+from urllib.error import HTTPError
 from urllib.parse import urlparse
 
 import numpy as np
+
+
+class EmbeddingProviderHTTPError(RuntimeError):
+    def __init__(self, status_code: int, detail: str) -> None:
+        super().__init__(f"embedding provider returned HTTP {status_code}: {detail}")
+        self.status_code = status_code
 
 
 class EmbeddingProvider(Protocol):
@@ -198,9 +205,20 @@ class OpenAICompatibleEmbeddingProvider:
                 return self._parse_vectors(payload, len(texts))
             except Exception as exc:  # noqa: BLE001 - bounded transport retry.
                 last_error = exc
-                if attempt < self.max_retries:
+                retryable = not isinstance(exc, EmbeddingProviderHTTPError) or exc.status_code in {
+                    408,
+                    409,
+                    429,
+                    500,
+                    502,
+                    503,
+                    504,
+                }
+                if attempt < self.max_retries and retryable:
                     self._telemetry["retries"] = int(self._telemetry["retries"]) + 1
                     await asyncio.sleep(0.25 * (2**attempt))
+                elif not retryable:
+                    break
         self._telemetry["errors"] = int(self._telemetry["errors"]) + 1
         raise RuntimeError(f"embedding request failed: {last_error}") from last_error
 
@@ -216,8 +234,30 @@ class OpenAICompatibleEmbeddingProvider:
         self._telemetry["total_tokens"] = int(self._telemetry["total_tokens"]) + total_tokens
 
     def _send(self, request: urllib.request.Request) -> dict[str, object]:
-        with urllib.request.urlopen(request, timeout=self.timeout_seconds) as response:  # noqa: S310
-            return json.loads(response.read().decode("utf-8"))
+        try:
+            with urllib.request.urlopen(request, timeout=self.timeout_seconds) as response:  # noqa: S310
+                return json.loads(response.read().decode("utf-8"))
+        except HTTPError as exc:
+            raise EmbeddingProviderHTTPError(
+                exc.code,
+                self._safe_error_detail(exc.read()),
+            ) from exc
+
+    @staticmethod
+    def _safe_error_detail(body: bytes) -> str:
+        try:
+            payload = json.loads(body.decode("utf-8", errors="replace"))
+        except json.JSONDecodeError:
+            return "provider rejected the request"
+        if not isinstance(payload, dict):
+            return "provider rejected the request"
+        error = payload.get("error", payload)
+        if not isinstance(error, dict):
+            return "provider rejected the request"
+        code = str(error.get("code", "")).strip()
+        message = str(error.get("message", "")).strip()
+        detail = ": ".join(value for value in (code, message) if value)
+        return detail[:500] or "provider rejected the request"
 
     def _parse_vectors(
         self, payload: dict[str, object], expected_count: int

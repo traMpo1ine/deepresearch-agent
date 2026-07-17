@@ -32,6 +32,8 @@ def test_golden_summary_makes_mock_generation_boundary_explicit() -> None:
         "generation_backend": "mock",
         "embedding_model": "text-embedding-v4",
         "public_source_hosts": ["arxiv.org", "genai.owasp.org", "www.nist.gov"],
+        "writer_generation": {"mode": "extractive", "fallback": False},
+        "llm_usage": {},
         "checks": {
             "real_embedding_configured": {
                 "passed": True,

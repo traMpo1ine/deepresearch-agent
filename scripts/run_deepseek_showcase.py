@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import asyncio
 import json
+import os
 import sys
 from datetime import datetime
 from pathlib import Path
@@ -21,6 +22,20 @@ from deepresearch_agent.llm import (  # noqa: E402
 
 
 DEFAULT_QUESTION = "为什么 DeepResearch Agent 需要引用验证和 Red-Blue 修复？"
+ALLOWED_ENV_KEYS = {"DEEPSEEK_API_KEY"}
+
+
+def _load_env_file(path: Path) -> None:
+    if not path.exists():
+        return
+    for raw_line in path.read_text(encoding="utf-8").splitlines():
+        line = raw_line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        name, value = line.split("=", 1)
+        name = name.strip()
+        if name in ALLOWED_ENV_KEYS:
+            os.environ.setdefault(name, value.strip())
 
 
 async def run(
@@ -82,16 +97,15 @@ def _messages(question: str) -> list[LLMMessage]:
         LLMMessage(
             role="system",
             content=(
-                "You are evaluating a DeepResearch Agent portfolio project. "
-                "Answer concisely in Chinese. Mention practical AI application engineering value, "
-                "but do not invent benchmark numbers."
+                "You are the Writer in a grounded DeepResearch system. "
+                "Answer concisely in Chinese and do not invent benchmark numbers."
             ),
         ),
         LLMMessage(
             role="user",
             content=(
                 f"问题：{question}\n\n"
-                "请用 4 点说明这个项目为什么适合作为 AI Agent / AI 应用实习简历项目，"
+                "请用 4 点说明引用验证和修复对研究系统可靠性的作用，"
                 "并指出 2 个仍需继续优化的工程边界。"
             ),
         ),
@@ -144,8 +158,10 @@ def main() -> None:
     parser.add_argument("--max-tokens", type=int, default=512)
     parser.add_argument("--run-real", action="store_true", help="Call DeepSeek when DEEPSEEK_API_KEY is set.")
     parser.add_argument("--output")
+    parser.add_argument("--env-file", default=".env")
     parser.add_argument("--json", action="store_true", help="Write JSON instead of Markdown.")
     args = parser.parse_args()
+    _load_env_file(Path(args.env_file))
     asyncio.run(
         run(
             question=args.question,

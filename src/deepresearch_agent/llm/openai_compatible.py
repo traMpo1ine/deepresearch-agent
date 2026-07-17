@@ -6,10 +6,17 @@ import os
 import time
 import urllib.request
 from typing import Any
+from urllib.error import HTTPError
 
 from deepresearch_agent.structured_output import StructuredOutputParser
 
 from .base import LLMMessage
+
+
+class LLMProviderHTTPError(RuntimeError):
+    def __init__(self, status_code: int, detail: str) -> None:
+        super().__init__(f"LLM provider returned HTTP {status_code}: {detail}")
+        self.status_code = status_code
 
 
 class OpenAICompatibleBackend:
@@ -35,7 +42,23 @@ class OpenAICompatibleBackend:
 
     async def complete(self, messages: list[LLMMessage]) -> str:
         started = time.perf_counter()
-        payload = {
+        payload = self._completion_payload(messages)
+        response = await self._post_json("/chat/completions", payload)
+        self._record_usage(response, time.perf_counter() - started)
+        return response["choices"][0]["message"]["content"]
+
+    async def structured_complete(self, messages: list[LLMMessage]) -> dict[str, Any]:
+        started = time.perf_counter()
+        payload = self._completion_payload(messages)
+        payload["response_format"] = {"type": "json_object"}
+        response = await self._post_json("/chat/completions", payload)
+        self._record_usage(response, time.perf_counter() - started)
+        text = response["choices"][0]["message"]["content"]
+        result = StructuredOutputParser().parse(text, schema_defaults={"content": text})
+        return {**result.data, "__parse_metadata__": result.metadata()}
+
+    def _completion_payload(self, messages: list[LLMMessage]) -> dict[str, Any]:
+        payload: dict[str, Any] = {
             "model": self.model,
             "messages": [{"role": message.role, "content": message.content} for message in messages],
             "temperature": 0.2,
@@ -43,14 +66,7 @@ class OpenAICompatibleBackend:
         if self.max_tokens is not None:
             payload["max_tokens"] = self.max_tokens
         payload.update(self.extra_payload)
-        response = await self._post_json("/chat/completions", payload)
-        self._record_usage(response, time.perf_counter() - started)
-        return response["choices"][0]["message"]["content"]
-
-    async def structured_complete(self, messages: list[LLMMessage]) -> dict[str, Any]:
-        text = await self.complete(messages)
-        result = StructuredOutputParser().parse(text, schema_defaults={"content": text})
-        return {**result.data, "__parse_metadata__": result.metadata()}
+        return payload
 
     async def embed(self, text: str) -> list[float]:
         payload = {"model": "text-embedding-3-small", "input": text}
@@ -129,12 +145,44 @@ class OpenAICompatibleBackend:
                 return await asyncio.to_thread(self._send, request)
             except Exception as exc:  # noqa: BLE001 - retry wrapper.
                 last_error = exc
+                retryable = not isinstance(exc, LLMProviderHTTPError) or exc.status_code in {
+                    408,
+                    409,
+                    429,
+                    500,
+                    502,
+                    503,
+                    504,
+                }
+                if not retryable:
+                    break
                 await asyncio.sleep(0.5)
+        if isinstance(last_error, LLMProviderHTTPError):
+            raise last_error
         raise RuntimeError(f"LLM request failed: {last_error}")
 
     def _send(self, request: urllib.request.Request) -> dict[str, Any]:
-        with urllib.request.urlopen(request, timeout=self.timeout_seconds) as response:  # noqa: S310
-            return json.loads(response.read().decode("utf-8"))
+        try:
+            with urllib.request.urlopen(request, timeout=self.timeout_seconds) as response:  # noqa: S310
+                return json.loads(response.read().decode("utf-8"))
+        except HTTPError as exc:
+            raise LLMProviderHTTPError(exc.code, self._safe_error_detail(exc.read())) from exc
+
+    @staticmethod
+    def _safe_error_detail(body: bytes) -> str:
+        try:
+            payload = json.loads(body.decode("utf-8", errors="replace"))
+        except json.JSONDecodeError:
+            return "provider rejected the request"
+        if not isinstance(payload, dict):
+            return "provider rejected the request"
+        error = payload.get("error", payload)
+        if not isinstance(error, dict):
+            return "provider rejected the request"
+        code = str(error.get("code", "")).strip()
+        message = str(error.get("message", "")).strip()
+        detail = ": ".join(value for value in (code, message) if value)
+        return detail[:500] or "provider rejected the request"
 
 
 class DeepSeekBackend(OpenAICompatibleBackend):

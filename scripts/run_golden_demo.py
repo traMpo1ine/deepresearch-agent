@@ -63,6 +63,8 @@ def _source_hosts(report: dict[str, object]) -> list[str]:
 
 def _render_summary(payload: dict[str, object]) -> str:
     checks = payload["checks"]
+    writer_generation = payload.get("writer_generation", {})
+    llm_usage = payload.get("llm_usage", {})
     lines = [
         "# Golden DeepResearch Demo",
         "",
@@ -72,6 +74,10 @@ def _render_summary(payload: dict[str, object]) -> str:
         f"- Generation backend: `{payload['generation_backend']}`",
         f"- Embedding model: `{payload['embedding_model']}`",
         f"- Public source hosts: `{', '.join(payload['public_source_hosts'])}`",
+        f"- Writer mode: `{writer_generation.get('mode', 'unknown')}`",
+        f"- Writer fallback: `{writer_generation.get('fallback', 'unknown')}`",
+        f"- LLM tokens: `{llm_usage.get('total_tokens', 0)}`",
+        f"- Estimated LLM cost (USD): `{float(llm_usage.get('cost_estimate_usd', 0.0) or 0.0):.8f}`",
         "",
         "## Acceptance checks",
         "",
@@ -86,16 +92,26 @@ def _render_summary(payload: dict[str, object]) -> str:
             "## Boundary",
             "",
             (
-                "This pack proves a controlled real-source and real-embedding execution. "
-                "When `generation_backend=mock`, the Writer/Verifier/Red-Blue path is deterministic "
-                "and must not be described as real-LLM generation. Run again with "
-                "`--llm-backend deepseek` only after configuring `DEEPSEEK_API_KEY`."
+                (
+                    "This pack proves a controlled real-source, real-embedding, and DeepSeek Writer "
+                    "execution. The Writer acceptance check fails if the model returns no valid cited "
+                    "claims and the system falls back to extractive generation."
+                    if payload["generation_backend"] == "deepseek"
+                    else "This pack proves a controlled real-source and real-embedding execution. "
+                    "When `generation_backend=mock`, the Writer/Verifier/Red-Blue path is deterministic "
+                    "and must not be described as real-LLM generation. Run again with "
+                    "`--llm-backend deepseek` only after configuring `DEEPSEEK_API_KEY`."
+                )
             ),
             "",
             "## Reproduce",
             "",
             "```powershell",
-            "uv run python scripts/run_golden_demo.py",
+            (
+                "uv run python scripts/run_golden_demo.py --llm-backend deepseek"
+                if payload["generation_backend"] == "deepseek"
+                else "uv run python scripts/run_golden_demo.py"
+            ),
             "```",
         ]
     )
@@ -142,6 +158,8 @@ async def _run(args: argparse.Namespace) -> int:
     run_summary = report["run_summary"]
     embedding = run_summary.get("embedding_telemetry", {})
     live_sources = run_summary.get("live_sources", {})
+    writer_generation = run_summary.get("writer_generation", {})
+    llm_usage = run_summary.get("llm_usage", {})
     hosts = _source_hosts(report)
     checks = {
         "real_embedding_configured": {
@@ -206,6 +224,18 @@ async def _run(args: argparse.Namespace) -> int:
                 if isinstance(claim, dict) and claim.get("verification_trace")
             ),
         },
+        "writer_generation_valid": {
+            "passed": (
+                writer_generation.get("mode") == "llm"
+                and writer_generation.get("fallback") is False
+                if args.llm_backend == "deepseek"
+                else writer_generation.get("mode") == "extractive"
+            ),
+            "observed": {
+                "mode": writer_generation.get("mode"),
+                "fallback": writer_generation.get("fallback"),
+            },
+        },
     }
     status = "PASS" if all(check["passed"] for check in checks.values()) else "FAIL"
     payload = {
@@ -221,6 +251,8 @@ async def _run(args: argparse.Namespace) -> int:
         "embedding_model": embedding.get("model"),
         "embedding_telemetry": embedding,
         "live_source_summary": live_sources,
+        "writer_generation": writer_generation,
+        "llm_usage": llm_usage,
         "checks": checks,
         "artifacts": {name: path.name for name, path in result.files.items()},
         "interpretation_boundary": (

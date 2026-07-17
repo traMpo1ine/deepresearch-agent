@@ -4,7 +4,10 @@ import json
 
 import pytest
 
-from deepresearch_agent.memory.embeddings import OpenAICompatibleEmbeddingProvider
+from deepresearch_agent.memory.embeddings import (
+    EmbeddingProviderHTTPError,
+    OpenAICompatibleEmbeddingProvider,
+)
 
 
 class _FakeEmbeddingProvider(OpenAICompatibleEmbeddingProvider):
@@ -92,3 +95,28 @@ def test_dashscope_text_embedding_v4_clamps_batch_size_to_documented_limit(tmp_p
 
     assert status["requested_batch_size"] == 64
     assert status["batch_size"] == 10
+
+
+@pytest.mark.asyncio
+async def test_embedding_provider_does_not_retry_http_400(monkeypatch, tmp_path) -> None:
+    provider = OpenAICompatibleEmbeddingProvider(
+        base_url="https://embedding.example/v1",
+        model="example",
+        cache_path=tmp_path / "embeddings.sqlite3",
+        max_retries=2,
+    )
+    attempts = 0
+
+    def fake_send(request):
+        nonlocal attempts
+        attempts += 1
+        raise EmbeddingProviderHTTPError(400, "account configuration error")
+
+    monkeypatch.setenv("EMBEDDING_API_KEY", "test-only")
+    monkeypatch.setattr(provider, "_send", fake_send)
+
+    with pytest.raises(RuntimeError, match="account configuration error"):
+        await provider.embed_many(["hello"])
+
+    assert attempts == 1
+    assert provider.status()["retries"] == 0
